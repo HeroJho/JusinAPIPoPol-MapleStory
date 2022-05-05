@@ -135,7 +135,8 @@ void CLineMgr::Test_Line()
 {
 	LINE		tInfo{ 0.f, 500.f, 800.f, 500.f };
 	m_LineList.push_back(new CLine(tInfo));
-
 	LINE		tInfo1{ 400.f, 400.f, 500.f, 400.f };
 	m_LineList.push_back(new CLine(tInfo1));
+	LINE		tInfo2{ 300.f, 350.f, 700.f, 350.f };
+	m_LineList.push_back(new CLine(tInfo2));
 }

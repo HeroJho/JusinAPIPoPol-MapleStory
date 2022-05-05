@@ -30,12 +30,14 @@ void CPlayer::Initialize(void)
 	m_tInfo.fCX = 36.f;
 	m_tInfo.fCY = 64.f;
 
-	m_fSpeed = 10.f;
+	m_fSpeed = 3.f;
 
 	m_fDiagonal = 100.f;
 
+	m_fValY = 0.f;
+	m_bJump = false;
 	m_bOnAir = false;
-	m_fJumpPower = 5.f;
+	m_fJumpPower = 10.f;
 	m_fAirTime = 0.f;
 }
 
@@ -57,32 +59,46 @@ int CPlayer::Update(void)
 
 void CPlayer::Late_Update(void)
 {
+	// 1. 라인을 얻어온다.
 	float		LinefY = 0.f;
 	bool		bLineCol = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &LinefY);
 
-	// 바닥일 때
-	if (LinefY <= m_tInfo.fY)
+	// 3. 공중 여부에 따라 중력 적용한다.
+	if (m_bOnAir)
 	{
+		// m_fAirTime += 0.2f;
+
+		m_fValY += 0.4f;
+
+		// m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
+		m_tInfo.fY += m_fValY;
+	}
+
+
+	if (m_bJump)
+	{
+		m_tInfo.fY -= m_fJumpPower;
+	}
+
+	// 2. 공중인지 아닌지 판단한다.
+	if (LinefY <= m_tInfo.fY)
+	{	// 바닥일 때
+		m_tInfo.fY = LinefY;
 		m_bOnAir = false;
 		//m_fAirTime = 0.f;
-		m_tInfo.fY = LinefY;
+		m_fValY = 0.f;
 	}
-	// 공중일 때
 	else if (LinefY > m_tInfo.fY)
-	{
+	{	// 공중일 때
 		m_bOnAir = true;
 	}
 
-	if (m_bOnAir)
-	{
-		//m_fAirTime += 0.2f;
-		//m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
-		m_tInfo.fY += m_fJumpPower;
-	}
-	else
+	if(!m_bOnAir)
 	{
 		m_tInfo.fY = LinefY;
+		m_bJump = false;
 	}
+
 }
 
 void CPlayer::Jumping(void)
@@ -130,7 +146,7 @@ void CPlayer::Render(HDC hDC)
 
 	GdiTransparentBlt(hDC, 					// 복사 받을, 최종적으로 그림을 그릴 DC
 			int(m_tRect.left + iScrollX),	// 2,3 인자 :  복사받을 위치 X, Y
-			int(m_tRect.top),
+			int(m_tRect.top - m_tInfo.fCY / 2.f),
 			int(m_tInfo.fCX),				// 4,5 인자 : 복사받을 가로, 세로 길이
 			int(m_tInfo.fCY),
 			hMemDC,							// 비트맵을 가지고 있는 DC
@@ -163,6 +179,7 @@ void CPlayer::Key_Input(void)
 
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
+		m_bJump = true;
 		m_bOnAir = true;
 	}
 }
