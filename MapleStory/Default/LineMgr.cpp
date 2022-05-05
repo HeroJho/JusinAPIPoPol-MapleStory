@@ -15,7 +15,7 @@ CLineMgr::~CLineMgr()
 
 void CLineMgr::Initialize(void)
 {
-	Load_Line();
+	Test_Line();
 }
 
 void CLineMgr::Render(HDC hDC)
@@ -30,10 +30,9 @@ void CLineMgr::Release(void)
 	m_LineList.clear();
 }
 
-bool CLineMgr::Collision_Line(float& _fX, float* pY)
+bool CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY)
 {
 	// 직선의 방정식
-
 	// Y - y1 = ((y2 - y1) / (x2 - x1)) * X - x1
 	// Y  = (((y2 - y1) / (x2 - x1)) * (X - x1)) + y1
 
@@ -42,15 +41,42 @@ bool CLineMgr::Collision_Line(float& _fX, float* pY)
 
 	CLine*		pTarget = nullptr;
 
+	float fMinY = 0.f;
 	for (auto& iter : m_LineList)
 	{
+		// 1. 해당 라인의 x축 범위 안에 있다.
 		if (_fX >= iter->Get_Info().tLPoint.fX &&
 			_fX <= iter->Get_Info().tRPoint.fX)
 		{
-			pTarget = iter;
-		}
-	}
+			// 2. L- P에서 음수 제외, 차가 제일 작은 라인을 선택한다.
 
+			float	x1 = iter->Get_Info().tLPoint.fX;
+			float	x2 = iter->Get_Info().tRPoint.fX;
+
+			float	y1 = iter->Get_Info().tLPoint.fY;
+			float	y2 = iter->Get_Info().tRPoint.fY;
+
+			float fTempY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
+			
+			// 음수면 제외 (선이 플레이어 위에 있다)
+			fTempY = fTempY - _fY;
+			if (0.f > fTempY)
+				continue;
+
+			// 제일 작은지 비교
+			if (fTempY < fMinY)
+			{
+				fMinY = fTempY;
+				pTarget = iter;
+			}
+			else if (!pTarget)
+			{
+				fMinY = fTempY;
+				pTarget = iter;
+			}
+		}
+		
+	}
 	if (!pTarget)
 		return false;
 
@@ -61,7 +87,8 @@ bool CLineMgr::Collision_Line(float& _fX, float* pY)
 	float	y2 = pTarget->Get_Info().tRPoint.fY;
 
 	*pY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
-		return true;
+
+	return true;
 }
 
 void CLineMgr::Load_Line()
@@ -102,4 +129,13 @@ void CLineMgr::Load_Line()
 	CloseHandle(hFile);
 
 	MessageBox(g_hWnd, _T("Load 완료"), _T("성공"), MB_OK);
+}
+
+void CLineMgr::Test_Line()
+{
+	LINE		tInfo{ 0.f, 500.f, 800.f, 500.f };
+	m_LineList.push_back(new CLine(tInfo));
+
+	LINE		tInfo1{ 400.f, 400.f, 500.f, 400.f };
+	m_LineList.push_back(new CLine(tInfo1));
 }

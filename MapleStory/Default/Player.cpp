@@ -34,9 +34,9 @@ void CPlayer::Initialize(void)
 
 	m_fDiagonal = 100.f;
 
-	m_bJump = false;
-	m_fJumpPower = 15.f;
-	m_fJumpTime = 0.f;
+	m_bOnAir = false;
+	m_fJumpPower = 5.f;
+	m_fAirTime = 0.f;
 }
 
 int CPlayer::Update(void)
@@ -46,8 +46,8 @@ int CPlayer::Update(void)
 
 	// 연산을 진행
 	Key_Input();
-	Jumping();
-	OffSet();
+	// Jumping();
+	// OffSet();
 
 	// 모든 연산이 끝난 뒤에 최종적인 좌표를 완성
 	Update_Rect();
@@ -57,8 +57,58 @@ int CPlayer::Update(void)
 
 void CPlayer::Late_Update(void)
 {
-	
+	float		LinefY = 0.f;
+	bool		bLineCol = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &LinefY);
+
+	// 바닥일 때
+	if (LinefY <= m_tInfo.fY)
+	{
+		m_bOnAir = false;
+		//m_fAirTime = 0.f;
+		m_tInfo.fY = LinefY;
+	}
+	// 공중일 때
+	else if (LinefY > m_tInfo.fY)
+	{
+		m_bOnAir = true;
+	}
+
+	if (m_bOnAir)
+	{
+		//m_fAirTime += 0.2f;
+		//m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
+		m_tInfo.fY += m_fJumpPower;
+	}
+	else
+	{
+		m_tInfo.fY = LinefY;
+	}
 }
+
+void CPlayer::Jumping(void)
+{
+	//float		fY = 0.f;
+
+	//bool		bLineCol = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, &fY);
+
+	//if (m_bOnAir)
+	//{
+	//	m_tInfo.fY -= m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
+	//	m_fJumpTime += 0.2f;
+
+	//	if (bLineCol && (fY < m_tInfo.fY))
+	//	{
+	//		m_bOnAir = false;
+	//		m_fJumpTime = 0.f;
+	//		m_tInfo.fY = fY;
+	//	}
+	//}
+	//else if (bLineCol)
+	//{
+	//	m_tInfo.fY = fY;
+	//}
+}
+
 
 void CPlayer::Render(HDC hDC)
 {
@@ -111,42 +161,12 @@ void CPlayer::Key_Input(void)
 		m_tInfo.fX += m_fSpeed;
 	}
 
-	if (GetAsyncKeyState(VK_UP))
-		m_tInfo.fY -= m_fSpeed;
-
-	if (GetAsyncKeyState(VK_DOWN))
-		m_tInfo.fY += m_fSpeed;
-
-	if (CKeyMgr::Get_Instance()->Key_Up(VK_SPACE))
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
-		m_bJump = true;
-		return;
+		m_bOnAir = true;
 	}
 }
 
-void CPlayer::Jumping(void)
-{
-	float		fY = 0.f;
-
-	bool		bLineCol = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, &fY);
-
-	if (m_bJump)
-	{
-		m_tInfo.fY -= m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
-		m_fJumpTime += 0.2f;
-
-		if (bLineCol && (fY < m_tInfo.fY))
-		{
-			m_bJump = false;
-			m_fJumpTime = 0.f;
-			m_tInfo.fY = fY;
-		}
-	}
-	else if (bLineCol)
-	{
-		m_tInfo.fY = fY;
-	}
-}
 
 void CPlayer::OffSet(void)
 {

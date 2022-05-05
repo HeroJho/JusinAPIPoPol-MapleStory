@@ -27,5 +27,6 @@ typedef	struct	tagLineInfo
 
 	tagLineInfo()	{	ZeroMemory(this, sizeof(tagLineInfo));	}
 	tagLineInfo(LINEPOINT& tLeft, LINEPOINT& tRight) : tLPoint(tLeft), tRPoint(tRight)	{	}
+	tagLineInfo(float fXL, float fYL, float fXR, float fYR) : tLPoint(fXL, fYL), tRPoint(fXR, fYR) { }
 
 }LINE;

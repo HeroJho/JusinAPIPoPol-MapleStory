@@ -24,8 +24,6 @@ void CBmpMgr::Insert_Bmp(const TCHAR * pFilePath, const TCHAR * pImageKey)
 
 		m_mapBit.emplace(pImageKey, pBmp);
 	}
-
-
 }
 
 HDC CBmpMgr::Find_Image(const TCHAR * pImageKey)
@@ -34,7 +32,6 @@ HDC CBmpMgr::Find_Image(const TCHAR * pImageKey)
 
 	if (iter == m_mapBit.end())
 		return nullptr;
-
 
 	return iter->second->Get_MemDC();
 }

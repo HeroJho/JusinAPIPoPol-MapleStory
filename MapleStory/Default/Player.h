@@ -21,15 +21,13 @@ private:
 	void		OffSet(void);
 
 private:
-
-
 	POINT					m_tPosin;
 	float					m_fDiagonal;
 
 
-	bool					m_bJump;		// 점프 상태 확인
+	bool					m_bOnAir;		// 점프 상태 확인
 	float					m_fJumpPower;	// 점프 힘
-	float					m_fJumpTime;	// 점프 중 진행 시간
+	float					m_fAirTime;		// 점프 중 진행 시간
 
 
 };
