@@ -2,6 +2,9 @@
 
 #include "Include.h"
 
+#include "LineMgr.h"
+#include "Line.h"
+
 class CObj
 {
 public:
@@ -39,6 +42,7 @@ public:
 
 protected:
 	void		Update_Rect(void);
+	void	Update_Gravity(void);
 
 protected:
 	INFO		m_tInfo;
@@ -53,5 +57,13 @@ protected:
 	CObj*		m_pTarget;
 	TCHAR*		m_pFrameKey;
 
+protected:
+	bool					m_bJump;
+	bool					m_bOnAir;		// 점프 상태 확인
+	float					m_fJumpPower;	// 점프 힘
+	float					m_fAirTime;	// 점프 중 진행 시간
+	float					m_fValY;
+
+	CLine*					m_pOldLine;
 };
 

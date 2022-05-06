@@ -9,6 +9,7 @@
 #include "LineMgr.h"
 
 #include "Player.h"
+#include "Monster.h"
 
 CStage::CStage()
 {
@@ -24,6 +25,7 @@ void CStage::Initialize(void)
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Logo.bmp", L"Logo");
 	CLineMgr::Get_Instance()->Initialize();
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create(400.f, 300.f));
+	// CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CMonster>::Create());
 }
 
 void CStage::Update(void)

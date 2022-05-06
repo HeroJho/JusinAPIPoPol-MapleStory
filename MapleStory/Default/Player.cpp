@@ -24,21 +24,22 @@ void CPlayer::Initialize(void)
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Test.bmp", L"Test");
 	Set_FrameKey(L"Test");
 
-	//m_tInfo.fX = 100.f;
-	//m_tInfo.fY = 300.f;
-
 	m_tInfo.fCX = 36.f;
 	m_tInfo.fCY = 64.f;
 
+	m_eState = IDLE;
 	m_fSpeed = 3.f;
+	m_fJumpPower = 10.f;
 
-	m_fDiagonal = 100.f;
-
-	m_fValY = 0.f;
+	m_pOldLine = nullptr;
+	m_pDropLine = nullptr;
+	m_pHangLine = nullptr;
+	m_bDrop = false;
 	m_bJump = false;
 	m_bOnAir = false;
-	m_fJumpPower = 10.f;
+	m_fValY = 0.f;
 	m_fAirTime = 0.f;
+	m_fDropY = 0.f;
 }
 
 int CPlayer::Update(void)
@@ -47,9 +48,44 @@ int CPlayer::Update(void)
 		return OBJ_DEAD;
 
 	// 연산을 진행
-	Key_Input();
-	// Jumping();
-	// OffSet();
+	
+	switch (m_eState)
+	{
+	case CPlayer::IDLE:
+		Key_Input();
+		break;
+	case CPlayer::MOVE:
+		Key_Input();
+		break;
+	case CPlayer::SKILL:
+		Key_Input();
+		break;
+	case CPlayer::BEND:
+		Key_Input();
+		break;
+	case CPlayer::HANG:
+		if (CKeyMgr::Get_Instance()->Key_Pressing(VK_UP))
+		{
+			m_tInfo.fY -= m_fSpeed;
+		}
+		else if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
+		{
+			m_tInfo.fY += m_fSpeed;
+		}
+
+		if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
+		{
+			m_eState = IDLE;
+			m_bJump = true;
+			m_bOnAir = true;
+		}
+
+		break;
+	default:
+		break;
+	}
+
+
 
 	// 모든 연산이 끝난 뒤에 최종적인 좌표를 완성
 	Update_Rect();
@@ -59,72 +95,25 @@ int CPlayer::Update(void)
 
 void CPlayer::Late_Update(void)
 {
-	// 1. 라인을 얻어온다.
-	float		LinefY = 0.f;
-	bool		bLineCol = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &LinefY);
-
-	// 3. 공중 여부에 따라 중력 적용한다.
-	if (m_bOnAir)
+	switch (m_eState)
 	{
-		// m_fAirTime += 0.2f;
-
-		m_fValY += 0.4f;
-
-		// m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
-		m_tInfo.fY += m_fValY;
+	case CPlayer::IDLE:
+		Update_Gravity();
+		break;
+	case CPlayer::MOVE:
+		Update_Gravity();
+		break;
+	case CPlayer::SKILL:
+		Update_Gravity();
+		break;
+	case CPlayer::BEND:
+		Update_Gravity();
+		break;
+	case CPlayer::HANG:
+		Update_Hang();
+		break;
 	}
-
-
-	if (m_bJump)
-	{
-		m_tInfo.fY -= m_fJumpPower;
-	}
-
-	// 2. 공중인지 아닌지 판단한다.
-	if (LinefY <= m_tInfo.fY)
-	{	// 바닥일 때
-		m_tInfo.fY = LinefY;
-		m_bOnAir = false;
-		//m_fAirTime = 0.f;
-		m_fValY = 0.f;
-	}
-	else if (LinefY > m_tInfo.fY)
-	{	// 공중일 때
-		m_bOnAir = true;
-	}
-
-	if(!m_bOnAir)
-	{
-		m_tInfo.fY = LinefY;
-		m_bJump = false;
-	}
-
 }
-
-void CPlayer::Jumping(void)
-{
-	//float		fY = 0.f;
-
-	//bool		bLineCol = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, &fY);
-
-	//if (m_bOnAir)
-	//{
-	//	m_tInfo.fY -= m_fJumpPower * m_fJumpTime - 9.8f * m_fJumpTime * m_fJumpTime * 0.5f;
-	//	m_fJumpTime += 0.2f;
-
-	//	if (bLineCol && (fY < m_tInfo.fY))
-	//	{
-	//		m_bOnAir = false;
-	//		m_fJumpTime = 0.f;
-	//		m_tInfo.fY = fY;
-	//	}
-	//}
-	//else if (bLineCol)
-	//{
-	//	m_tInfo.fY = fY;
-	//}
-}
-
 
 void CPlayer::Render(HDC hDC)
 {
@@ -162,26 +151,132 @@ void CPlayer::Release(void)
 	
 }
 
+
+void CPlayer::Update_Gravity(void)
+{
+	// 1. 라인을 얻어온다.
+	float		LinefY = 0.f;
+
+	CLine* m_pCurLine = nullptr;
+
+	if (m_bDrop && !m_pDropLine)
+	{
+		m_pCurLine = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &LinefY, m_bDrop);
+		m_pDropLine = m_pCurLine;
+		m_fDropY = LinefY;
+	}
+	else if (!m_pDropLine)
+	{
+		m_pCurLine = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &LinefY, m_bDrop);
+		m_fDropY = LinefY;
+	}
+	if (!m_pCurLine)
+		m_pCurLine = m_pDropLine;
+
+	// 3. 공중 여부에 따라 중력 적용한다.
+	if (m_bOnAir)
+	{
+		// m_fAirTime += 0.2f;
+
+		m_fValY += 0.4f;
+
+		// m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
+		m_tInfo.fY += m_fValY;
+	}
+
+
+	if (m_bJump)
+	{
+		m_tInfo.fY -= m_fJumpPower;
+	}
+
+	// 2. 공중인지 아닌지 판단한다.
+	if (m_fDropY <= m_tInfo.fY)
+	{	// 바닥일 때
+		m_tInfo.fY = m_fDropY;
+		m_bOnAir = false;
+		m_bDrop = false;
+		m_pDropLine = nullptr;
+		m_fValY = 0.f;
+	}
+	else if (m_fDropY > m_tInfo.fY)
+	{	// 공중일 때
+		// 이전 라인이랑 같고,           대각선일때
+		if (!(m_pOldLine == m_pCurLine && m_pCurLine->Get_Diagonal()))
+			m_bOnAir = true;
+	}
+
+	if (!m_bOnAir)
+	{
+		m_tInfo.fY = m_fDropY;
+		m_pDropLine = nullptr;
+		m_bDrop = false;
+		m_bJump = false;
+		m_fValY = 0.f;
+	}
+
+	m_pOldLine = m_pCurLine;
+}
+
+void CPlayer::Update_Hang(void)
+{
+	float fLineY = 0.f;
+	m_pHangLine = CLineMgr::Get_Instance()->Collision_HangLine(m_tInfo.fX, m_tInfo.fY, &fLineY);
+
+	if (!m_pHangLine)
+	{
+		m_eState = IDLE;
+		return;
+	}
+
+	m_tInfo.fX = m_pHangLine->Get_Info().tLPoint.fX;
+	
+	m_pDropLine = nullptr;
+	m_bDrop = false;
+	m_bJump = false;
+	m_fValY = 0.f;
+}
+
 void CPlayer::Key_Input(void)
 {
 	float	fY = 0.f;
 
 	// GetKeyState
-	if (GetAsyncKeyState(VK_LEFT))
+	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LEFT))
 	{
 		m_tInfo.fX -= m_fSpeed;
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT))
+	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_RIGHT))
 	{
 		m_tInfo.fX += m_fSpeed;
 	}
 
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
-		m_bJump = true;
-		m_bOnAir = true;
+		if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
+		{
+			m_bDrop = true;
+			m_bOnAir = true;
+		}
+		else
+		{
+			m_bJump = true;
+			m_bOnAir = true;
+		}
 	}
+
+
+
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_UP))
+	{
+		m_eState = HANG;
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down(VK_DOWN))
+	{
+		m_eState = HANG;
+	}
+
 }
 
 

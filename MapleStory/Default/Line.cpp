@@ -11,14 +11,22 @@ CLine::CLine()
 
 CLine::CLine(LINEPOINT& tLeft, LINEPOINT& tRight)
 	: m_tInfo(tLeft, tRight)
+	, m_bIsDiagonal(false)
 {
 
 }
 
 CLine::CLine(LINE tLine)
 	: m_tInfo(tLine)
+	, m_bIsDiagonal(false)
 {
 
+}
+
+CLine::CLine(LINE tLine, bool _bIsDiagonal)
+	: m_tInfo(tLine)
+	, m_bIsDiagonal(_bIsDiagonal)
+{
 }
 
 CLine::~CLine()

@@ -22,15 +22,21 @@ void CLineMgr::Render(HDC hDC)
 {
 	for (auto& iter : m_LineList)
 		iter->Render(hDC);
+
+	for (auto& iter : m_HangLineList)
+		iter->Render(hDC);
 }
 
 void CLineMgr::Release(void)
 {
 	for_each(m_LineList.begin(), m_LineList.end(), CDeleteObj());
 	m_LineList.clear();
+
+	for_each(m_HangLineList.begin(), m_HangLineList.end(), CDeleteObj());
+	m_HangLineList.clear();
 }
 
-bool CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY)
+CLine* CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY, bool _bGetSecond)
 {
 	// 직선의 방정식
 	// Y - y1 = ((y2 - y1) / (x2 - x1)) * X - x1
@@ -40,6 +46,7 @@ bool CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY)
 		return false;
 
 	CLine*		pTarget = nullptr;
+	CLine*		pSecondTarget = nullptr;
 
 	float fMinY = 0.f;
 	for (auto& iter : m_LineList)
@@ -49,7 +56,6 @@ bool CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY)
 			_fX <= iter->Get_Info().tRPoint.fX)
 		{
 			// 2. L- P에서 음수 제외, 차가 제일 작은 라인을 선택한다.
-
 			float	x1 = iter->Get_Info().tLPoint.fX;
 			float	x2 = iter->Get_Info().tRPoint.fX;
 
@@ -60,13 +66,14 @@ bool CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY)
 			
 			// 음수면 제외 (선이 플레이어 위에 있다)
 			fTempY = fTempY - _fY;
-			if (0.f > fTempY)
+			if (-3.f > fTempY)
 				continue;
 
 			// 제일 작은지 비교
 			if (fTempY < fMinY)
 			{
 				fMinY = fTempY;
+				pSecondTarget = pTarget;
 				pTarget = iter;
 			}
 			else if (!pTarget)
@@ -77,19 +84,69 @@ bool CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY)
 		}
 		
 	}
-	if (!pTarget)
+
+	if (!pSecondTarget)
+		pSecondTarget = pTarget;
+
+	if (_bGetSecond)
+	{
+		float	x1 = pSecondTarget->Get_Info().tLPoint.fX;
+		float	x2 = pSecondTarget->Get_Info().tRPoint.fX;
+
+		float	y1 = pSecondTarget->Get_Info().tLPoint.fY;
+		float	y2 = pSecondTarget->Get_Info().tRPoint.fY;
+		*pY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
+	}
+	else
+	{
+		float	x1 = pTarget->Get_Info().tLPoint.fX;
+		float	x2 = pTarget->Get_Info().tRPoint.fX;
+
+		float	y1 = pTarget->Get_Info().tLPoint.fY;
+		float	y2 = pTarget->Get_Info().tRPoint.fY;
+		*pY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
+	}
+
+	return _bGetSecond ? pSecondTarget : pTarget;
+}
+
+CLine* CLineMgr::Collision_HangLine(float& _fX, float& _fY, float* pY)
+{
+	// 직선의 방정식
+	// Y - y1 = ((y2 - y1) / (x2 - x1)) * X - x1
+	// Y  = (((y2 - y1) / (x2 - x1)) * (X - x1)) + y1
+
+	if (m_HangLineList.empty())
 		return false;
 
-	float	x1 = pTarget->Get_Info().tLPoint.fX;
-	float	x2 = pTarget->Get_Info().tRPoint.fX;
+	CLine* pTarget = nullptr;
 
-	float	y1 = pTarget->Get_Info().tLPoint.fY;
-	float	y2 = pTarget->Get_Info().tRPoint.fY;
+	for (auto& iter : m_HangLineList)
+	{
+		// 1. 해당 라인의 x축, y축 범위 안에 있다. >> 줄을 탈 수 있다
+		if (_fX >= iter->Get_Info().tLPoint.fX - 10.f &&
+			_fX <= iter->Get_Info().tRPoint.fX + 10.f &&
+			_fY >= iter->Get_Info().tLPoint.fY - 5.f &&
+			_fY <= iter->Get_Info().tRPoint.fY)
+		{
+			pTarget = iter;
+		}
 
-	*pY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
+	}
 
-	return true;
+	if (pTarget)
+	{
+		float	x1 = pTarget->Get_Info().tLPoint.fX;
+		float	x2 = pTarget->Get_Info().tRPoint.fX;
+
+		float	y1 = pTarget->Get_Info().tLPoint.fY;
+		float	y2 = pTarget->Get_Info().tRPoint.fY;
+		*pY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
+	}
+
+	return pTarget;
 }
+
 
 void CLineMgr::Load_Line()
 {
@@ -135,8 +192,20 @@ void CLineMgr::Test_Line()
 {
 	LINE		tInfo{ 0.f, 500.f, 800.f, 500.f };
 	m_LineList.push_back(new CLine(tInfo));
-	LINE		tInfo1{ 400.f, 400.f, 500.f, 400.f };
+	LINE		tInfo1{ 300.f, 400.f, 500.f, 400.f };
 	m_LineList.push_back(new CLine(tInfo1));
-	LINE		tInfo2{ 300.f, 350.f, 700.f, 350.f };
+	LINE		tInfo3{ 500.f, 400.f, 600.f, 300.f };
+	m_LineList.push_back(new CLine(tInfo3, true));
+	LINE		tInfo2{ 100.f, 350.f, 400.f, 350.f };
 	m_LineList.push_back(new CLine(tInfo2));
+	LINE		tInfo4{ 500.f, 200.f, 600.f, 200.f };
+	m_LineList.push_back(new CLine(tInfo4));
+
+	LINE		tInfo5{ 150.f, 350.f, 150.f, 450.f };
+	m_HangLineList.push_back(new CLine(tInfo5));
+
+	LINE		tInfo6{ 100.f, 50.f, 400.f, 50.f };
+	m_LineList.push_back(new CLine(tInfo6));
+	LINE		tInfo7{ 200.f, 50.f, 200.f, 300.f };
+	m_HangLineList.push_back(new CLine(tInfo7));
 }

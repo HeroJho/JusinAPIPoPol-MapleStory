@@ -13,7 +13,8 @@ public:
 	void		Render(HDC hDC);
 	void		Release(void);
 
-	bool		Collision_Line(float& _fX, float& _fY, float* pY);
+	CLine*		Collision_Line(float& _fX, float& _fY, float* pY, bool _bGetSecond = false);
+	CLine*		Collision_HangLine(float& _fX, float& _fY, float* pY);
 	void		Load_Line();
 	void		Test_Line();
 
@@ -40,6 +41,7 @@ public:
 private:
 	static CLineMgr*		m_pInstance;
 	list<CLine*>			m_LineList;
+	list<CLine*>			m_HangLineList;
 };
 
 // (자유 낙하 공식)을 이용하여 점프를 구현하라

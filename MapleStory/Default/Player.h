@@ -1,34 +1,34 @@
 #pragma once
 #include "Obj.h"
 #include "Bullet.h"
+#include "Line.h"
 
 class CPlayer : public CObj
 {
+	enum STATE { IDLE, MOVE, SKILL, BEND, HANG };
 public:
 	CPlayer();
 	virtual ~CPlayer();
 
 public:
-	virtual void Initialize(void) override;
-	virtual int		Update(void) override;
-	virtual		void	Late_Update(void);
-	virtual void Render(HDC hDC) override;
-	virtual void Release(void) override;
+	virtual void	Initialize(void)	override;
+	virtual int		Update(void)		override;
+	virtual	void	Late_Update(void)	override;
+	virtual void	Render(HDC hDC)		override;
+	virtual void	Release(void)		override;
+
+	void	Update_Gravity(void);
+	void	Update_Hang(void);
 
 private:
 	void		Key_Input(void);
-	void		Jumping(void);
 	void		OffSet(void);
 
 private:
-	POINT					m_tPosin;
-	float					m_fDiagonal;
+	STATE					m_eState;
+	bool					m_bDrop;
 
-	bool					m_bJump;
-	bool					m_bOnAir;		// 점프 상태 확인
-	float					m_fJumpPower;	// 점프 힘
-	float					m_fAirTime;	// 점프 중 진행 시간
-	float					m_fValY;
-
-
+	CLine*					m_pDropLine;
+	CLine*					m_pHangLine;
+	float					m_fDropY;
 };
