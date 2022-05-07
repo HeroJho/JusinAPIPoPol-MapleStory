@@ -11,6 +11,7 @@
 #include "BmpMgr.h"
 
 CPlayer::CPlayer()
+	: m_eCurState(IDLE), m_ePreState(END)
 {
 }
 
@@ -21,13 +22,19 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize(void)
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Test.bmp", L"Test");
-	Set_FrameKey(L"Test");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+	Set_FrameKey(L"PlayerL");
+	m_tFrame.iFrameStart = 0;
+	m_tFrame.iFrameEnd = 3;
+	m_tFrame.iMotion = 0;
+	m_tFrame.dwSpeed = 1000.f;
+	m_tFrame.dwTime = GetTickCount();
 
-	m_tInfo.fCX = 36.f;
-	m_tInfo.fCY = 64.f;
+	m_tInfo.fCX = 200.f;
+	m_tInfo.fCY = 200.f;
 
-	m_eState = IDLE;
+	m_eCurState = IDLE;
 	m_fSpeed = 3.f;
 	m_fJumpPower = 10.f;
 
@@ -49,44 +56,39 @@ int CPlayer::Update(void)
 
 	// 연산을 진행
 	
-	switch (m_eState)
+	switch (m_eCurState)
 	{
 	case CPlayer::IDLE:
 		Key_Input();
 		break;
-	case CPlayer::MOVE:
+	case CPlayer::WALK:
+		Key_Input();
+		break;
+	case CPlayer::AIR:
+		Key_Input();
+		break;
+	case CPlayer::ATTACK:
 		Key_Input();
 		break;
 	case CPlayer::SKILL:
 		Key_Input();
 		break;
-	case CPlayer::BEND:
+	case CPlayer::HIT:
 		Key_Input();
 		break;
-	case CPlayer::HANG:
-		if (CKeyMgr::Get_Instance()->Key_Pressing(VK_UP))
-		{
-			m_tInfo.fY -= m_fSpeed;
-		}
-		else if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
-		{
-			m_tInfo.fY += m_fSpeed;
-		}
-
-		if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
-		{
-			m_eState = IDLE;
-			m_bJump = true;
-			m_bOnAir = true;
-		}
-
+	case CPlayer::BENDIDLE:
+	case CPlayer::BENDWALK:
 		break;
-	default:
+	case CPlayer::HANGIDLE:
+	case CPlayer::HANGWALK:
+		Hang_Input();
+		break;
+	case CPlayer::DEAD:
+		Key_Input();
 		break;
 	}
 
-
-
+	OffSet();
 	// 모든 연산이 끝난 뒤에 최종적인 좌표를 완성
 	Update_Rect();
 
@@ -95,61 +97,78 @@ int CPlayer::Update(void)
 
 void CPlayer::Late_Update(void)
 {
-	switch (m_eState)
+	switch (m_eCurState)
 	{
 	case CPlayer::IDLE:
 		Update_Gravity();
 		break;
-	case CPlayer::MOVE:
+	case CPlayer::WALK:
+		Update_Gravity();
+		break;
+	case CPlayer::AIR:
+		Update_Gravity();
+		break;
+	case CPlayer::ATTACK:
 		Update_Gravity();
 		break;
 	case CPlayer::SKILL:
 		Update_Gravity();
 		break;
-	case CPlayer::BEND:
+	case CPlayer::HIT:
 		Update_Gravity();
 		break;
-	case CPlayer::HANG:
+	case CPlayer::BENDIDLE:
+	case CPlayer::BENDWALK:
+		break;
+	case CPlayer::HANGIDLE:
+	case CPlayer::HANGWALK:
 		Update_Hang();
 		break;
+	case CPlayer::DEAD:
+		Update_Gravity();
+		break;
 	}
+
+	Motion_Change();
+	Move_Frame();
 }
 
 void CPlayer::Render(HDC hDC)
 {
 	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-	
-	/*BitBlt(hDC,							// 복사 받을, 최종적으로 그림을 그릴 DC
-		int(m_tRect.left + iScrollX),	// 2,3 인자 :  복사받을 위치 X, Y
-		int(m_tRect.top), 
-		int(m_tInfo.fCX),				// 4,5 인자 : 복사받을 가로, 세로 길이
-		int(m_tInfo.fCY), 
-		hMemDC,							// 비트맵을 가지고 있는 DC
-		0,								// 7, 8인자 : 비트맵을 출력할 시작 좌표, X,Y
-		0, 
-		SRCCOPY);*/						// 출력효과, 그대로 복사 출력
 
-	
-
-	GdiTransparentBlt(hDC, 					// 복사 받을, 최종적으로 그림을 그릴 DC
-			int(m_tRect.left + iScrollX),	// 2,3 인자 :  복사받을 위치 X, Y
-			int(m_tRect.top - m_tInfo.fCY / 2.f),
-			int(m_tInfo.fCX),				// 4,5 인자 : 복사받을 가로, 세로 길이
+	GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
+			int(m_tRect.left + iScrollX),								// 2,3 인자 :  복사받을 위치 X, Y
+			int(m_tRect.top - 37 + iScrollY),
+			int(m_tInfo.fCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
 			int(m_tInfo.fCY),
-			hMemDC,							// 비트맵을 가지고 있는 DC
-			0,								// 비트맵 출력 시작 좌표, X,Y
-			0,
-			(int)m_tInfo.fCX,				// 복사할 비트맵의 가로, 세로 길이
+			hMemDC,											// 비트맵을 가지고 있는 DC
+			m_tFrame.iFrameStart * (int)m_tInfo.fCX,		// 비트맵 출력 시작 좌표, X,Y
+			m_tFrame.iMotion * (int)m_tInfo.fCY,
+			(int)m_tInfo.fCX,								// 복사할 비트맵의 가로, 세로 길이
 			(int)m_tInfo.fCY,
-			RGB(255, 0, 255));			// 제거하고자 하는 색상
-				
+			RGB(255, 0, 255));								// 제거하고자 하는 색상
+
 }
 void CPlayer::Release(void)
 {
 	
 }
+
+
+void CPlayer::SetCurState(STATE _eState, DIRECTION _eDir)
+{
+	if(_eDir == DIR_LEFT)
+		m_pFrameKey = L"PlayerL";
+	else
+		m_pFrameKey = L"PlayerR";
+
+	m_eCurState = _eState;
+}
+
 
 
 void CPlayer::Update_Gravity(void)
@@ -182,6 +201,8 @@ void CPlayer::Update_Gravity(void)
 
 		// m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
 		m_tInfo.fY += m_fValY;
+
+		SetCurState(AIR, m_eDir);
 	}
 
 
@@ -203,7 +224,9 @@ void CPlayer::Update_Gravity(void)
 	{	// 공중일 때
 		// 이전 라인이랑 같고,           대각선일때
 		if (!(m_pOldLine == m_pCurLine && m_pCurLine->Get_Diagonal()))
+		{
 			m_bOnAir = true;
+		}
 	}
 
 	if (!m_bOnAir)
@@ -225,7 +248,7 @@ void CPlayer::Update_Hang(void)
 
 	if (!m_pHangLine)
 	{
-		m_eState = IDLE;
+		SetCurState(IDLE, m_eDir);
 		return;
 	}
 
@@ -234,7 +257,9 @@ void CPlayer::Update_Hang(void)
 	m_pDropLine = nullptr;
 	m_bDrop = false;
 	m_bJump = false;
-	m_fValY = 0.f;
+	m_fValY = 2.f;
+	if(m_eCurState != HANGWALK)
+		SetCurState(HANGIDLE, m_eDir);
 }
 
 void CPlayer::Key_Input(void)
@@ -245,11 +270,19 @@ void CPlayer::Key_Input(void)
 	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LEFT))
 	{
 		m_tInfo.fX -= m_fSpeed;
+		m_eDir = DIR_LEFT;
+		SetCurState(WALK, m_eDir);
 	}
-
-	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_RIGHT))
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(VK_RIGHT))
 	{
 		m_tInfo.fX += m_fSpeed;
+		m_eDir = DIR_RIGHT;
+		SetCurState(WALK, m_eDir);
+	}
+	else
+	{
+		if (m_eCurState != HANGIDLE && m_eCurState != HANGWALK)
+			SetCurState(IDLE, m_eDir);
 	}
 
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
@@ -266,30 +299,155 @@ void CPlayer::Key_Input(void)
 		}
 	}
 
-
-
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_UP))
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_UP) || CKeyMgr::Get_Instance()->Key_Down(VK_DOWN))
 	{
-		m_eState = HANG;
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down(VK_DOWN))
-	{
-		m_eState = HANG;
+		SetCurState(HANGIDLE, m_eDir);
 	}
 
+}
+
+void CPlayer::Hang_Input(void)
+{
+	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_UP))
+	{
+		m_tInfo.fY -= m_fSpeed;
+		SetCurState(HANGWALK, m_eDir);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
+	{
+		m_tInfo.fY += m_fSpeed;
+		SetCurState(HANGWALK, m_eDir);
+	}
+	else
+		SetCurState(HANGIDLE, m_eDir);
+
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
+	{
+		SetCurState(IDLE, m_eDir);
+		m_bJump = true;
+		m_bOnAir = true;
+	}
 }
 
 
 void CPlayer::OffSet(void)
 {
 	int		iOffSetX = WINCX >> 1;
+	int		iOffSetY = WINCY >> 1;
 	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int		iItv = 300;
+	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+	int		iItvX = 30;
+	int		iItvY = 20;
 
-
-	if (iOffSetX - iItv > m_tInfo.fX + iScrollX)
+	if (iOffSetX - iItvX > m_tInfo.fX + iScrollX)
 		CScrollMgr::Get_Instance()->Set_ScrollX(m_fSpeed);
 
-	if (iOffSetX + iItv < m_tInfo.fX + iScrollX)
+	if (iOffSetX + iItvX < m_tInfo.fX + iScrollX)
 		CScrollMgr::Get_Instance()->Set_ScrollX(-m_fSpeed);
+
+	if (iOffSetY - iItvY > m_tInfo.fY + iScrollY)
+		CScrollMgr::Get_Instance()->Set_ScrollY(m_fSpeed);
+
+	if (iOffSetY + iItvY < m_tInfo.fY + iScrollY)
+		CScrollMgr::Get_Instance()->Set_ScrollY(-m_fSpeed);
+
+}
+
+void CPlayer::Motion_Change(void)
+{
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case IDLE:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 3;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 800.f;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case WALK:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 3;
+			m_tFrame.iMotion = 1;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case AIR:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 0;
+			m_tFrame.iMotion = 2;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case ATTACK:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 5;
+			m_tFrame.iMotion = 2;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case SKILL:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 0;
+			m_tFrame.iMotion = 3;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case HIT:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 1;
+			m_tFrame.iMotion = 3;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case BENDIDLE:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 0;
+			m_tFrame.iMotion = 3;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case HANGIDLE:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 0;
+			m_tFrame.iMotion = 7;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case BENDWALK:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 1;
+			m_tFrame.iMotion = 3;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case HANGWALK:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 1;
+			m_tFrame.iMotion = 7;
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case DEAD:
+			m_tFrame.iFrameStart = 0;
+			m_tFrame.iFrameEnd = 3;
+			m_tFrame.iMotion = 4;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+		}
+
+		m_ePreState = m_eCurState;
+	}
 }

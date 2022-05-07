@@ -98,10 +98,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 				dwOldTime = GetTickCount();
 			}			
-
-			/*pMainGame->Update();
-			pMainGame->Late_Update();
-			pMainGame->Render();*/
 		}
 
 	}

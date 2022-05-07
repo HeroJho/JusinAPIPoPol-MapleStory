@@ -30,7 +30,6 @@ void CMainGame::Initialize(void)
 	m_hDC = GetDC(g_hWnd);
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Ground.bmp", L"Ground");
 
 	CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE);
 }
@@ -48,14 +47,8 @@ void CMainGame::Late_Update(void)
 void CMainGame::Render(void)
 {
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Back");
-	//HDC		hGroundMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground");
-	
+
 	BitBlt(m_hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, SRCCOPY);
-
-	//BitBlt(hMemDC, 0, 0, WINCX, WINCY, hGroundMemDC, 0, 0, SRCCOPY);
-
-	//CLineMgr::Get_Instance()->Render(hMemDC);
-	//CObjMgr::Get_Instance()->Render(hMemDC);
 
 	CSceneMgr::Get_Instance()->Render(hMemDC);
 

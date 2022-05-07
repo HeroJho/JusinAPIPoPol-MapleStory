@@ -42,11 +42,13 @@ public:
 
 protected:
 	void		Update_Rect(void);
-	void	Update_Gravity(void);
+	void		Move_Frame(void);
+	void		Update_Gravity(void);
 
 protected:
 	INFO		m_tInfo;
 	RECT		m_tRect;
+	FRAME		m_tFrame;
 
 	float		m_fSpeed;
 	float		m_fAngle;

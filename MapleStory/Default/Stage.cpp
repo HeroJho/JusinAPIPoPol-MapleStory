@@ -7,6 +7,7 @@
 #include "KeyMgr.h"
 #include "ObjMgr.h"
 #include "LineMgr.h"
+#include "ScrollMgr.h"
 
 #include "Player.h"
 #include "Monster.h"
@@ -22,9 +23,10 @@ CStage::~CStage()
 
 void CStage::Initialize(void)
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Logo.bmp", L"Logo");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Henesys/Henesys_1.bmp", L"Henesys_1");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Henesys/Henesys_2.bmp", L"Henesys_2");
 	CLineMgr::Get_Instance()->Initialize();
-	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create(400.f, 300.f));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create(400.f, 600.f));
 	// CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CMonster>::Create());
 }
 
@@ -40,8 +42,36 @@ void CStage::Late_Update(void)
 
 void CStage::Render(HDC hDC)
 {
-	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Logo");
-	BitBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, SRCCOPY);
+	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	HDC		hBackMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Henesys_1");
+	GdiTransparentBlt(hDC,
+		(iScrollX/2),
+		(iScrollY/2),
+		5830,
+		1600,
+		hBackMemDC,
+		0,
+		0,
+		5830,
+		1600,
+		RGB(255, 0, 255));
+
+	HDC		hGroundMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Henesys_2");
+	GdiTransparentBlt(hDC, 					
+		iScrollX,							
+		iScrollY,
+		5830,								
+		1600,
+		hGroundMemDC,						
+		0,									
+		0,
+		5830,								
+		1600,
+		RGB(255, 0, 255));
+
+
 
 	CObjMgr::Get_Instance()->Render(hDC);
 	CLineMgr::Get_Instance()->Render(hDC);

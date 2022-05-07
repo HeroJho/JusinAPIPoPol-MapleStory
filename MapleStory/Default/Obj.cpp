@@ -71,3 +71,17 @@ void CObj::Update_Gravity(void)
 
 	m_pOldLine = m_pCurLine;
 }
+
+void CObj::Move_Frame(void)
+{
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	{
+		m_tFrame.iFrameStart++;
+
+		m_tFrame.dwTime = GetTickCount();
+
+		if (m_tFrame.iFrameStart > m_tFrame.iFrameEnd)
+			m_tFrame.iFrameStart = 0;
+	}
+
+}

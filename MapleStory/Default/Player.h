@@ -5,10 +5,15 @@
 
 class CPlayer : public CObj
 {
-	enum STATE { IDLE, MOVE, SKILL, BEND, HANG };
+public:
+	enum STATE { IDLE, WALK, AIR, ATTACK, SKILL, HIT, BENDIDLE, HANGIDLE, BENDWALK, HANGWALK, DEAD, TEST, END };
+
 public:
 	CPlayer();
 	virtual ~CPlayer();
+
+public:
+	void SetCurState(STATE _eState, DIRECTION _eDir);
 
 public:
 	virtual void	Initialize(void)	override;
@@ -22,13 +27,17 @@ public:
 
 private:
 	void		Key_Input(void);
+	void		Hang_Input(void);
 	void		OffSet(void);
+	void		Motion_Change(void);
 
 private:
-	STATE					m_eState;
 	bool					m_bDrop;
 
 	CLine*					m_pDropLine;
 	CLine*					m_pHangLine;
 	float					m_fDropY;
+
+	STATE					m_ePreState;
+	STATE					m_eCurState;
 };
