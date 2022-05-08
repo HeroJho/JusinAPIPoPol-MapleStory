@@ -22,17 +22,17 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize(void)
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
-	Set_FrameKey(L"PlayerL");
-	m_tFrame.iFrameStart = 0;
-	m_tFrame.iFrameEnd = 3;
-	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 1000.f;
-	m_tFrame.dwTime = GetTickCount();
+	//CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	//CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+	//Set_FrameKey(L"PlayerL");
+	//m_tFrame.iFrameStart = 0;
+	//m_tFrame.iFrameEnd = 3;
+	//m_tFrame.iMotion = 0;
+	//m_tFrame.dwSpeed = 1000.f;
+	//m_tFrame.dwTime = GetTickCount();
 
-	m_tInfo.fCX = 200.f;
-	m_tInfo.fCY = 200.f;
+	m_tInfo.fCX = 1000.f;
+	m_tInfo.fCY = 1000.f;
 
 	m_eCurState = IDLE;
 	m_fSpeed = 3.f;
@@ -47,6 +47,15 @@ void CPlayer::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 	m_fDropY = 0.f;
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Test.bmp", L"Test");
+	Set_FrameKey(L"Test");
+	m_tFrame.iFrameStart = 0;
+	m_tFrame.iFrameEnd = 0;
+	m_tFrame.iMotion = 0;
+	m_tFrame.dwSpeed = 1000.f;
+	m_tFrame.dwTime = GetTickCount();
+	m_eCurState = TEST;
 }
 
 int CPlayer::Update(void)
