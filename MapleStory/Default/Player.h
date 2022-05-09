@@ -25,10 +25,11 @@ public:
 	void	Update_Gravity(void);
 	void	Update_Hang(void);
 
+	virtual		void	OnCollision(CObj* _pOther)	override;
+
 private:
 	void		Key_Input(void);
 	void		Hang_Input(void);
-	void		OffSet(void);
 	void		Motion_Change(void);
 
 private:

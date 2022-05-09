@@ -14,8 +14,8 @@ CShield::~CShield()
 
 void CShield::Initialize(void)
 {
-	m_tInfo.fCX = 40.f;
-	m_tInfo.fCY = 40.f;
+	m_tInfo.fCCX = 40.f;
+	m_tInfo.fCCY = 40.f;
 
 	m_fSpeed = 5.f;		// 공전 속도
 	m_fDistance = 100.f;

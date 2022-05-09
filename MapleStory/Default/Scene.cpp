@@ -3,6 +3,7 @@
 
 
 CScene::CScene()
+	:m_tMapSize{0}
 {
 }
 

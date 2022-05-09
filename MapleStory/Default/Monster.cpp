@@ -1,24 +1,33 @@
 #include "stdafx.h"
 #include "Monster.h"
 
+#include "ScrollMgr.h"
 
 CMonster::CMonster()
 {
 }
-
 
 CMonster::~CMonster()
 {
 	Release();
 }
 
+void CMonster::Set_ID(MONSTERID _eID)
+{
+	m_eID = _eID;
+}
+
 void CMonster::Initialize(void)
 {
-	m_tInfo.fX = 550.f;
-	m_tInfo.fY = 160.f;
+	// 콜리젼 크기, 피봇 설정
+	m_tInfo.fCCX = 50.f;
+	m_tInfo.fCCY = 80.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -35.f;
+	// 텍스쳐 크기 설정
+	m_tInfo.fTCX = 200.f;
+	m_tInfo.fTCY = 200.f;
 
-	m_tInfo.fCX = 50.f;
-	m_tInfo.fCY = 50.f;
 
 	m_fSpeed = 1.f;
 
@@ -50,7 +59,10 @@ void CMonster::Late_Update(void)
 
 void CMonster::Render(HDC hDC)
 {
-	Rectangle(hDC, m_tRect.left, m_tRect.top, m_tRect.right, m_tRect.bottom);
+	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + iScrollY);
 }
 
 void CMonster::Release(void)

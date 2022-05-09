@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
 
+#include "ScrollMgr.h"
+#include "Stage1.h"
+#include "Stage2.h"
+
 CSceneMgr*	CSceneMgr::m_pInstance = nullptr;
 
 CSceneMgr::CSceneMgr()
@@ -33,8 +37,11 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 			break;
 		case SC_EDIT:
 			break;
-		case SC_STAGE:
-			m_pScene = new CStage;
+		case SC_STAGE_1:
+			m_pScene = new CStage1;
+			break;
+		case SC_STAGE_2:
+			m_pScene = new CStage2;
 			break;
 		}
 
@@ -57,6 +64,23 @@ void CSceneMgr::Late_Update(void)
 void CSceneMgr::Render(HDC hDC)
 {
 	m_pScene->Render(hDC);
+
+
+	// TEST: 마우스 좌표 표시
+	POINT	pt{};
+
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	int iScrollX = CScrollMgr::Get_Instance()->Get_ScrollX();
+	int iScrollY = CScrollMgr::Get_Instance()->Get_ScrollY();
+	pt.x = (float)pt.x - iScrollX;
+	pt.y = (float)pt.y - iScrollY;
+
+	TCHAR lpOut[1024];
+	wsprintf(lpOut, TEXT("lX: %d \nY: %d"), pt.x, pt.y);
+	TextOut(hDC, 35, 15, lpOut, lstrlen(lpOut));
+
 }
 
 void CSceneMgr::Release(void)

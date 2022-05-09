@@ -1,14 +1,13 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "AbstractFactory.h"
-#include "Shield.h"
-#include "ScrewBullet.h"
-#include "GuideBullet.h"
-#include "ObjMgr.h"
+
 #include "LineMgr.h"
 #include "KeyMgr.h"
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
+#include "EventMgr.h"
+
 
 CPlayer::CPlayer()
 	: m_eCurState(IDLE), m_ePreState(END)
@@ -22,17 +21,24 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize(void)
 {
-	//CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
-	//CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
-	//Set_FrameKey(L"PlayerL");
-	//m_tFrame.iFrameStart = 0;
-	//m_tFrame.iFrameEnd = 3;
-	//m_tFrame.iMotion = 0;
-	//m_tFrame.dwSpeed = 1000.f;
-	//m_tFrame.dwTime = GetTickCount();
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+	Set_FrameKey(L"PlayerL");
+	m_tFrame.iFrameStart = 0;
+	m_tFrame.iFrameEnd = 3;
+	m_tFrame.iMotion = 0;
+	m_tFrame.dwSpeed = 1000.f;
+	m_tFrame.dwTime = GetTickCount();
 
-	m_tInfo.fCX = 1000.f;
-	m_tInfo.fCY = 1000.f;
+
+	// 콜리젼 크기, 피봇 설정
+	m_tInfo.fCCX = 50.f;
+	m_tInfo.fCCY = 80.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -35.f;
+	// 텍스쳐 크기 설정
+	m_tInfo.fTCX = 200.f;
+	m_tInfo.fTCY = 200.f;
 
 	m_eCurState = IDLE;
 	m_fSpeed = 3.f;
@@ -47,15 +53,6 @@ void CPlayer::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 	m_fDropY = 0.f;
-
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Test.bmp", L"Test");
-	Set_FrameKey(L"Test");
-	m_tFrame.iFrameStart = 0;
-	m_tFrame.iFrameEnd = 0;
-	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 1000.f;
-	m_tFrame.dwTime = GetTickCount();
-	m_eCurState = TEST;
 }
 
 int CPlayer::Update(void)
@@ -97,8 +94,6 @@ int CPlayer::Update(void)
 		break;
 	}
 
-	OffSet();
-	// 모든 연산이 끝난 뒤에 최종적인 좌표를 완성
 	Update_Rect();
 
 	return OBJ_NOEVENT;
@@ -150,15 +145,15 @@ void CPlayer::Render(HDC hDC)
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
 	GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
-			int(m_tRect.left + iScrollX),								// 2,3 인자 :  복사받을 위치 X, Y
-			int(m_tRect.top - 37 + iScrollY),
-			int(m_tInfo.fCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
-			int(m_tInfo.fCY),
+			int(m_tTRect.left + iScrollX),					// 2,3 인자 :  복사받을 위치 X, Y
+			int(m_tTRect.top - 37 + iScrollY),
+			int(m_tInfo.fTCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
+			int(m_tInfo.fTCY),
 			hMemDC,											// 비트맵을 가지고 있는 DC
-			m_tFrame.iFrameStart * (int)m_tInfo.fCX,		// 비트맵 출력 시작 좌표, X,Y
-			m_tFrame.iMotion * (int)m_tInfo.fCY,
-			(int)m_tInfo.fCX,								// 복사할 비트맵의 가로, 세로 길이
-			(int)m_tInfo.fCY,
+			m_tFrame.iFrameStart * (int)m_tInfo.fTCX,		// 비트맵 출력 시작 좌표, X,Y
+			m_tFrame.iMotion * (int)m_tInfo.fTCY,
+			(int)m_tInfo.fTCX,								// 복사할 비트맵의 가로, 세로 길이
+			(int)m_tInfo.fTCY,
 			RGB(255, 0, 255));								// 제거하고자 하는 색상
 
 }
@@ -271,6 +266,7 @@ void CPlayer::Update_Hang(void)
 		SetCurState(HANGIDLE, m_eDir);
 }
 
+
 void CPlayer::Key_Input(void)
 {
 	float	fY = 0.f;
@@ -338,29 +334,6 @@ void CPlayer::Hang_Input(void)
 	}
 }
 
-
-void CPlayer::OffSet(void)
-{
-	int		iOffSetX = WINCX >> 1;
-	int		iOffSetY = WINCY >> 1;
-	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-	int		iItvX = 30;
-	int		iItvY = 20;
-
-	if (iOffSetX - iItvX > m_tInfo.fX + iScrollX)
-		CScrollMgr::Get_Instance()->Set_ScrollX(m_fSpeed);
-
-	if (iOffSetX + iItvX < m_tInfo.fX + iScrollX)
-		CScrollMgr::Get_Instance()->Set_ScrollX(-m_fSpeed);
-
-	if (iOffSetY - iItvY > m_tInfo.fY + iScrollY)
-		CScrollMgr::Get_Instance()->Set_ScrollY(m_fSpeed);
-
-	if (iOffSetY + iItvY < m_tInfo.fY + iScrollY)
-		CScrollMgr::Get_Instance()->Set_ScrollY(-m_fSpeed);
-
-}
 
 void CPlayer::Motion_Change(void)
 {
@@ -458,5 +431,23 @@ void CPlayer::Motion_Change(void)
 		}
 
 		m_ePreState = m_eCurState;
+	}
+}
+
+void CPlayer::OnCollision(CObj* _pOther)
+{
+	if (_pOther->Get_Tag() == "Portal_1To2")
+	{
+		if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_2);
+		}
+	}
+	else if (_pOther->Get_Tag() == "Portal_2To1")
+	{
+		if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
+		}
 	}
 }

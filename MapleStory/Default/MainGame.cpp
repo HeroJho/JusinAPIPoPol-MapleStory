@@ -10,6 +10,7 @@
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
 #include "SceneMgr.h"
+#include "EventMgr.h"
 
 
 CMainGame::CMainGame()
@@ -31,7 +32,7 @@ void CMainGame::Initialize(void)
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
 
-	CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE);
+	CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE_1);
 }
 
 void CMainGame::Update(void)
@@ -63,6 +64,9 @@ void CMainGame::Render(void)
 		m_dwTime = GetTickCount();
 	}
 
+
+	// 이벤트 처리(씬 전환)
+	CEventMgr::Get_Instance()->ExeEvent();
 }
 
 void CMainGame::Release(void)

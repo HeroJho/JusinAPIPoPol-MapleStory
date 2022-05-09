@@ -15,8 +15,8 @@ CGuideBullet::~CGuideBullet()
 
 void CGuideBullet::Initialize(void)
 {
-	m_tInfo.fCX = 30.f;
-	m_tInfo.fCY = 30.f;
+	m_tInfo.fCCX = 30.f;
+	m_tInfo.fCCY = 30.f;
 
 	m_fSpeed = 5.f;
 }

@@ -9,7 +9,8 @@ private:
 	~CObjMgr();
 
 public:
-	CObj*		Get_Player() { return m_ObjList[OBJ_PLAYER].front(); }
+	CObj*		Get_Player() { return m_pPlayer; }
+	void		Set_Player(CObj* _pPlayer) { m_pPlayer = _pPlayer; }
 	CObj*		Get_Target(OBJID eID, CObj* pObj);
 
 public:
@@ -21,10 +22,14 @@ public:
 
 	void		Delete_ID(OBJID eID);
 
+public:
+	void MakeMonster(MONSTERID _eID, float _fX, float _fY);
+
 private:
 	list<CObj*>	m_ObjList[OBJ_END];
+	CObj* m_pPlayer;
 
-
+#pragma region Ins
 public:
 	static		CObjMgr*		Get_Instance(void)
 	{
@@ -47,6 +52,8 @@ public:
 
 private:
 	static CObjMgr*			m_pInstance;
+#pragma endregion
+
 
 };
 

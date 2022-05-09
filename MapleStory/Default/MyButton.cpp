@@ -15,8 +15,8 @@ CMyButton::~CMyButton()
 
 void CMyButton::Initialize(void)
 {
-	m_tInfo.fCX = 150.f;
-	m_tInfo.fCY = 150.f;
+	m_tInfo.fCCX = 150.f;
+	m_tInfo.fCCY = 150.f;
 }
 
 int CMyButton::Update(void)
@@ -41,13 +41,13 @@ void CMyButton::Render(HDC hDC)
 	GdiTransparentBlt(hDC, 					// 복사 받을, 최종적으로 그림을 그릴 DC
 		int(m_tRect.left),	// 2,3 인자 :  복사받을 위치 X, Y
 		int(m_tRect.top),
-		int(m_tInfo.fCX),				// 4,5 인자 : 복사받을 가로, 세로 길이
-		int(m_tInfo.fCY),
+		int(m_tInfo.fCCX),				// 4,5 인자 : 복사받을 가로, 세로 길이
+		int(m_tInfo.fCCY),
 		hMemDC,							// 비트맵을 가지고 있는 DC
 		0,								// 비트맵 출력 시작 좌표, X,Y
 		0,
-		(int)m_tInfo.fCX,				// 복사할 비트맵의 가로, 세로 길이
-		(int)m_tInfo.fCY,
+		(int)m_tInfo.fCCX,				// 복사할 비트맵의 가로, 세로 길이
+		(int)m_tInfo.fCCY,
 		RGB(255, 255, 255));			// 제거하고자 하는 색상
 
 }

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Obj.h"
 
+#include "ScrollMgr.h"
+#include "SceneMgr.h"
+
 CObj::CObj()
 	: m_fSpeed(0.f)
 	, m_eDir(DIR_END)
@@ -8,8 +11,10 @@ CObj::CObj()
 	, m_fAngle(0.f)
 	, m_pFrameKey(nullptr)
 {
+	ZeroMemory(&m_tStat, sizeof(STAT));
 	ZeroMemory(&m_tInfo, sizeof(INFO));
 	ZeroMemory(&m_tRect, sizeof(RECT));
+	ZeroMemory(&m_tColPivot, sizeof(POINT));
 
 	m_fJumpPower = 10.f;
 }
@@ -18,12 +23,37 @@ CObj::~CObj()
 {
 }
 
+void CObj::Set_Stat(int _iMaxHp, int _iAt)
+{
+	m_tStat.iHp = _iMaxHp;
+	m_tStat.iMaxHp = _iMaxHp;
+	m_tStat.iExp = 0;
+}
+
 void CObj::Update_Rect(void)
 {
-	m_tRect.left   = LONG(m_tInfo.fX - (m_tInfo.fCX * 0.5f));
-	m_tRect.top    = LONG(m_tInfo.fY - (m_tInfo.fCY * 0.5f));
- 	m_tRect.right  = LONG(m_tInfo.fX + (m_tInfo.fCX * 0.5f));
-	m_tRect.bottom = LONG(m_tInfo.fY + (m_tInfo.fCY * 0.5f));
+	m_tRect.left   = LONG(m_tInfo.fCX - (m_tInfo.fCCX * 0.5f));
+	m_tRect.top    = LONG(m_tInfo.fCY - (m_tInfo.fCCY * 0.5f));
+ 	m_tRect.right  = LONG(m_tInfo.fCX + (m_tInfo.fCCX * 0.5f));
+	m_tRect.bottom = LONG(m_tInfo.fCY + (m_tInfo.fCCY * 0.5f));
+
+	m_tTRect.left	= LONG(m_tInfo.fX - (m_tInfo.fTCX * 0.5f));
+	m_tTRect.top	= LONG(m_tInfo.fY - (m_tInfo.fTCY * 0.5f));
+	m_tTRect.right	= LONG(m_tInfo.fX + (m_tInfo.fTCX * 0.5f));
+	m_tTRect.bottom = LONG(m_tInfo.fY + (m_tInfo.fTCY * 0.5f));
+
+	// ÄÝ¶óÀÌ´õ À§Ä¡
+	m_tInfo.fCX = float(m_tInfo.fX + m_tColPivot.x);
+	m_tInfo.fCY = float(m_tInfo.fY + m_tColPivot.y);
+
+	// ¸Ê ¹þ¾î³´´ÂÁö
+	CScene* pCurScene = CSceneMgr::Get_Instance()->Get_CurScene();
+	RECT fRect = pCurScene->Get_MapSize();
+	if (m_tRect.left < fRect.left)
+		m_tInfo.fX += m_fSpeed;
+	else if (m_tRect.right > fRect.right)
+		m_tInfo.fX -= m_fSpeed;
+
 }
 
 void CObj::Update_Gravity(void)
@@ -84,4 +114,16 @@ void CObj::Move_Frame(void)
 			m_tFrame.iFrameStart = 0;
 	}
 
+}
+
+void CObj::ColRender(HDC hDC)
+{
+	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	Rectangle(hDC, 									    
+		int(m_tRect.left + iScrollX),					
+		int(m_tRect.top + iScrollY),
+		int(m_tRect.right + iScrollX),
+		int(m_tRect.bottom + iScrollY));
 }

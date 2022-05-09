@@ -2,13 +2,29 @@
 
 typedef	struct tagInfo
 {
+	// ¹Ù´Ú ÁÂÇ¥
 	float	fX;
 	float	fY;
+	// Ãâ·Â Å©±â
+	float   fTCX;
+	float   fTCY;
+
+	// ÄÝ¸®Á¯ ÁÂÇ¥
 	float	fCX;
 	float	fCY;
+	// ÄÝ¸®Á¯ Å©±â
+	float	fCCX;
+	float	fCCY;
 
 }INFO;
 
+typedef struct tagStat
+{
+	int		iHp;
+	int		iMaxHp;
+	int		iAt;
+	int		iExp;
+}STAT;
 
 typedef	struct	tagLinePoint 
 {
@@ -28,7 +44,14 @@ typedef	struct	tagLineInfo
 	tagLineInfo()	{	ZeroMemory(this, sizeof(tagLineInfo));	}
 	tagLineInfo(LINEPOINT& tLeft, LINEPOINT& tRight) : tLPoint(tLeft), tRPoint(tRight)	{	}
 	tagLineInfo(float fXL, float fYL, float fXR, float fYR) : tLPoint(fXL, fYL), tRPoint(fXR, fYR) { }
-
+	
+	void Init(float fXL, float fYL, float fXR, float fYR)
+	{ 
+		tLPoint.fX = fXL;
+		tLPoint.fY = fYL;
+		tRPoint.fX = fXR;
+		tRPoint.fY = fYR;
+	}
 }LINE;
 
 typedef struct tagFrame

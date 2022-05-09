@@ -1,10 +1,15 @@
 #include "stdafx.h"
 #include "ObjMgr.h"
+#include "AbstractFactory.h"
+
 #include "CollisionMgr.h"
+
+#include "Monster.h"
 
 CObjMgr* CObjMgr::m_pInstance = nullptr;
 
 CObjMgr::CObjMgr()
+	: m_pPlayer(nullptr)
 {
 }
 
@@ -80,8 +85,8 @@ void CObjMgr::Late_Update(void)
 			iter->Late_Update();
 	}
 
-	//CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSTER]);
-	CCollisionMgr::Collision_Sphere(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_BULLET]);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSTER]);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);
 }
 
 void CObjMgr::Render(HDC hDC)
@@ -89,7 +94,10 @@ void CObjMgr::Render(HDC hDC)
 	for (int i = 0; i < OBJ_END; ++i)
 	{
 		for (auto& iter : m_ObjList[i])
+		{
+			iter->ColRender(hDC);
 			iter->Render(hDC);
+		}
 	}
 }
 
@@ -110,4 +118,34 @@ void CObjMgr::Delete_ID(OBJID eID)
 		Safe_Delete(iter);
 
 	m_ObjList[eID].clear();
+}
+
+
+void CObjMgr::MakeMonster(MONSTERID _eID, float _fX, float _fY)
+{
+	switch (_eID)
+	{
+	case MON_BLUESNAIL:
+	{
+		CObj* pMonster = CAbstractFactory<CMonster>::Create(_fX, _fY, "Monster");
+		pMonster->Set_Stat(50, 10);
+		pMonster->Set_Speed(2.f);
+		((CMonster*)pMonster)->Set_ID(MON_BLUESNAIL);
+		Add_Object(OBJ_MONSTER, pMonster);
+	}
+		break;
+	case MON_REDSNAIL:
+
+		break;
+	case MON_GREENMUSH:
+		break;
+	case MON_DELSNAIL:
+		break;
+	case MON_DELPIG:
+		break;
+	case MON_NIGHTE:
+		break;
+	case MON_NIGHTC:
+		break;
+	}
 }
