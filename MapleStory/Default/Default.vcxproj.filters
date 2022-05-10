@@ -100,6 +100,27 @@
     <Filter Include="98. Design\EventMgr">
       <UniqueIdentifier>{8ebd9837-6a3a-4b90-a4dc-4b5d5f9eb1a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Obj\04. BlockBox">
+      <UniqueIdentifier>{367c2ff0-4f69-47de-87dc-8657cf08ca42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill">
+      <UniqueIdentifier>{dc5bb353-0e25-4fd9-9fc4-96669527172a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\01. BlueSnail">
+      <UniqueIdentifier>{f41e6e33-0cd6-438b-a913-7b29bc2b46d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\02. RedSnail">
+      <UniqueIdentifier>{375d25dd-2638-4bbe-8db2-b42cbfd7de99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\03. Mushroom">
+      <UniqueIdentifier>{1f0cbf60-f7d7-4c4c-aecd-14c56d5d2bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\SpawnMgr">
+      <UniqueIdentifier>{70b73661-b83e-4fd5-b8cc-e63d0d50d4f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\BladeFury">
+      <UniqueIdentifier>{bbd72f32-e9b4-43b4-a43f-d528fd009653}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -213,6 +234,27 @@
     <ClInclude Include="EventMgr.h">
       <Filter>98. Design\EventMgr</Filter>
     </ClInclude>
+    <ClInclude Include="BlockBox.h">
+      <Filter>01. Obj\04. BlockBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>01. Obj\05. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="BlueSnail.h">
+      <Filter>01. Obj\01. Monster\01. BlueSnail</Filter>
+    </ClInclude>
+    <ClInclude Include="RedSnail.h">
+      <Filter>01. Obj\01. Monster\02. RedSnail</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>01. Obj\01. Monster\03. Mushroom</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnMgr.h">
+      <Filter>98. Design\SpawnMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="BladeFury.h">
+      <Filter>01. Obj\05. Skill\BladeFury</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -298,6 +340,27 @@
     </ClCompile>
     <ClCompile Include="EventMgr.cpp">
       <Filter>98. Design\EventMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockBox.cpp">
+      <Filter>01. Obj\04. BlockBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>01. Obj\05. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="BlueSnail.cpp">
+      <Filter>01. Obj\01. Monster\01. BlueSnail</Filter>
+    </ClCompile>
+    <ClCompile Include="RedSnail.cpp">
+      <Filter>01. Obj\01. Monster\02. RedSnail</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>01. Obj\01. Monster\03. Mushroom</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnMgr.cpp">
+      <Filter>98. Design\SpawnMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="BladeFury.cpp">
+      <Filter>01. Obj\05. Skill\BladeFury</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

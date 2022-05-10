@@ -3,18 +3,16 @@
 
 #include "ScrollMgr.h"
 
+
 CMonster::CMonster()
+	: m_eCurState(IDLE), m_ePreState(END)
 {
+
 }
 
 CMonster::~CMonster()
 {
 	Release();
-}
-
-void CMonster::Set_ID(MONSTERID _eID)
-{
-	m_eID = _eID;
 }
 
 void CMonster::Initialize(void)
@@ -44,8 +42,6 @@ int CMonster::Update(void)
 		return OBJ_DEAD;
 
 
-	m_tInfo.fX -= m_fSpeed;
-
 
 	Update_Rect();
 
@@ -68,4 +64,9 @@ void CMonster::Render(HDC hDC)
 void CMonster::Release(void)
 {
 	
+}
+
+void CMonster::Motion_Change(void)
+{
+
 }

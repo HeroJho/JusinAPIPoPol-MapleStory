@@ -8,6 +8,9 @@ CObj::CObj()
 	: m_fSpeed(0.f)
 	, m_eDir(DIR_END)
 	, m_bDead(false)
+	, m_bOnePlay(false)
+	, m_bStayPlay(false)
+	, m_bCanHit(true)
 	, m_fAngle(0.f)
 	, m_pFrameKey(nullptr)
 {
@@ -27,6 +30,7 @@ void CObj::Set_Stat(int _iMaxHp, int _iAt)
 {
 	m_tStat.iHp = _iMaxHp;
 	m_tStat.iMaxHp = _iMaxHp;
+	m_tStat.iAt = _iAt;
 	m_tStat.iExp = 0;
 }
 
@@ -111,7 +115,17 @@ void CObj::Move_Frame(void)
 		m_tFrame.dwTime = GetTickCount();
 
 		if (m_tFrame.iFrameStart > m_tFrame.iFrameEnd)
+		{
 			m_tFrame.iFrameStart = 0;
+
+			if (m_bOnePlay)
+			{
+				OnePlayEnd();
+				m_bOnePlay = false;
+				m_bStayPlay = true;
+			}
+		}
+			
 	}
 
 }

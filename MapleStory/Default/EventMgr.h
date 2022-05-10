@@ -39,6 +39,10 @@ public:
 public:
 	void AddSceneChangeEvent(SCENEID _eId);
 
+
+public:
+	int GetRandomNum_Int(int iLeft, int iRight);
+
 private:
 	SCENEID m_eID;
 };

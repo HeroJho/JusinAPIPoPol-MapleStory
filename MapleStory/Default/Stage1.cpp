@@ -28,12 +28,13 @@ CStage1::~CStage1()
 
 void CStage1::Initialize(void)
 {
+
 	// Bmp 肺爹
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene1/1_Middle.bmp", L"1_Middle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene1/1_Back.bmp", L"1_Back");
 	CLineMgr::Get_Instance()->Scene_1();
 
-	// Obj 积己
+	// Player 积己
 	if (!CObjMgr::Get_Instance()->Get_Player())
 	{
 		CObj* pPlayer = CAbstractFactory<CPlayer>::Create(1000.f, 500.f, "Player");

@@ -148,10 +148,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractFactory.h" />
+    <ClInclude Include="BladeFury.h" />
+    <ClInclude Include="BlockBox.h" />
+    <ClInclude Include="BlueSnail.h" />
     <ClInclude Include="BmpMgr.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CollisionMgr.h" />
     <ClInclude Include="EventMgr.h" />
+    <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="RedSnail.h" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="SpawnMgr.h" />
     <ClInclude Include="Stage1.h" />
     <ClInclude Include="Stage2.h" />
     <ClInclude Include="Default.h" />
@@ -185,10 +192,17 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BladeFury.cpp" />
+    <ClCompile Include="BlockBox.cpp" />
+    <ClCompile Include="BlueSnail.cpp" />
     <ClCompile Include="BmpMgr.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CollisionMgr.cpp" />
     <ClCompile Include="EventMgr.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="RedSnail.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SpawnMgr.cpp" />
     <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="Stage2.cpp" />
     <ClCompile Include="Default.cpp" />

@@ -1,13 +1,14 @@
 #pragma once
 #include "Obj.h"
+
 class CMonster : public CObj
 {
+protected:
+	enum STATE { IDLE, WALK, CHASE, HIT, DEAD, ATTACK, SKILL,  END };
+
 public:
 	CMonster();
 	virtual ~CMonster();
-
-public:
-	void Set_ID(MONSTERID _eID);
 
 public:
 	virtual void Initialize(void) override;
@@ -16,7 +17,12 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release(void) override;
 
-private:
-	MONSTERID m_eID;
+protected:
+	virtual void Motion_Change(void);
+
+protected:
+	STATE					m_ePreState;
+	STATE					m_eCurState;
+
 };
 

@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <Functional>
 #include <string>
+#include <random>
 
 #ifdef _DEBUG
 

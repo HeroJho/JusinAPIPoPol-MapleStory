@@ -9,6 +9,11 @@
 #include "EventMgr.h"
 
 
+#include "ObjMgr.h"
+#include "Skill.h"
+#include "BladeFury.h"
+
+
 CPlayer::CPlayer()
 	: m_eCurState(IDLE), m_ePreState(END)
 {
@@ -39,6 +44,17 @@ void CPlayer::Initialize(void)
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 200.f;
 	m_tInfo.fTCY = 200.f;
+
+
+	m_fDropSpeed = 20.f;
+	m_bHit = false;
+	m_fOldHitTime = 0.f;
+	m_fHitTime = 3000.f;
+
+	m_fOldSkillTime = 0.f;
+	m_fSkillTime = 800.f;
+
+	Set_Stat(100, 10);
 
 	m_eCurState = IDLE;
 	m_fSpeed = 3.f;
@@ -74,13 +90,14 @@ int CPlayer::Update(void)
 		Key_Input();
 		break;
 	case CPlayer::ATTACK:
-		Key_Input();
+		Skill_Update();
 		break;
 	case CPlayer::SKILL:
-		Key_Input();
+		Skill_Update();
 		break;
 	case CPlayer::HIT:
 		Key_Input();
+		Hit_Update();
 		break;
 	case CPlayer::BENDIDLE:
 	case CPlayer::BENDWALK:
@@ -133,6 +150,12 @@ void CPlayer::Late_Update(void)
 		break;
 	}
 
+	// 무적
+	if (m_bHit && (m_fOldHitTime + m_fHitTime < GetTickCount64()))
+	{
+		m_bHit = false;
+	}
+
 	Motion_Change();
 	Move_Frame();
 }
@@ -144,7 +167,24 @@ void CPlayer::Render(HDC hDC)
 
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-	GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
+	if (m_bHit)
+	{
+		// TODO : 피격 스프라이트  처리
+		GdiTransparentBlt(hDC, 						
+			int(m_tTRect.left + iScrollX),			
+			int(m_tTRect.top - 37 + iScrollY),
+			int(m_tInfo.fTCX),						
+			int(m_tInfo.fTCY),
+			hMemDC,									
+			m_tFrame.iFrameStart * (int)m_tInfo.fTCX,
+			m_tFrame.iMotion * (int)m_tInfo.fTCY,
+			(int)m_tInfo.fTCX,						
+			(int)m_tInfo.fTCY,
+			RGB(255, 0, 255));						
+	}
+	else
+	{
+		GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
 			int(m_tTRect.left + iScrollX),					// 2,3 인자 :  복사받을 위치 X, Y
 			int(m_tTRect.top - 37 + iScrollY),
 			int(m_tInfo.fTCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
@@ -155,6 +195,7 @@ void CPlayer::Render(HDC hDC)
 			(int)m_tInfo.fTCX,								// 복사할 비트맵의 가로, 세로 길이
 			(int)m_tInfo.fTCY,
 			RGB(255, 0, 255));								// 제거하고자 하는 색상
+	}
 
 }
 void CPlayer::Release(void)
@@ -172,7 +213,6 @@ void CPlayer::SetCurState(STATE _eState, DIRECTION _eDir)
 
 	m_eCurState = _eState;
 }
-
 
 
 void CPlayer::Update_Gravity(void)
@@ -206,7 +246,8 @@ void CPlayer::Update_Gravity(void)
 		// m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
 		m_tInfo.fY += m_fValY;
 
-		SetCurState(AIR, m_eDir);
+		if(m_eCurState != ATTACK && m_eCurState != SKILL)
+			SetCurState(AIR, m_eDir);
 	}
 
 
@@ -266,6 +307,35 @@ void CPlayer::Update_Hang(void)
 		SetCurState(HANGIDLE, m_eDir);
 }
 
+void CPlayer::Hit_Update(void)
+{
+	if (m_eDir == DIR_LEFT)
+		m_tInfo.fX += m_fDropSpeed;
+	else
+		m_tInfo.fX -= m_fDropSpeed;
+
+}
+
+void CPlayer::Skill_Update(void)
+{
+	//if (m_fOldSkillTime + m_fSkillTime < GetTickCount64())
+	//{
+	//	SetCurState(IDLE, m_eDir);
+	//}
+
+	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LEFT))
+	{
+		m_tInfo.fX -= m_fSpeed;
+		m_eDir = DIR_LEFT;
+		////SetCurState(WALK, m_eDir);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Pressing(VK_RIGHT))
+	{
+		m_tInfo.fX += m_fSpeed;
+		//m_eDir = DIR_RIGHT;
+		//SetCurState(WALK, m_eDir);
+	}
+}
 
 void CPlayer::Key_Input(void)
 {
@@ -299,6 +369,7 @@ void CPlayer::Key_Input(void)
 		}
 		else
 		{
+			m_fJumpPower = 9.2f;
 			m_bJump = true;
 			m_bOnAir = true;
 		}
@@ -307,6 +378,27 @@ void CPlayer::Key_Input(void)
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_UP) || CKeyMgr::Get_Instance()->Key_Down(VK_DOWN))
 	{
 		SetCurState(HANGIDLE, m_eDir);
+	}
+
+	if (CKeyMgr::Get_Instance()->Key_Down('Q'))
+	{
+		SetCurState(ATTACK, m_eDir);
+
+		CObj* pSkill = CAbstractFactory<CSkill>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+		pSkill->Set_Target(this);
+
+		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		//m_fOldSkillTime = GetTickCount64();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('W'))
+	{
+		SetCurState(SKILL, m_eDir);
+
+		CObj* pSkill = CAbstractFactory<CBladeFury>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+		pSkill->Set_Target(this);
+
+		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		//m_fOldSkillTime = GetTickCount64();
 	}
 
 }
@@ -339,6 +431,13 @@ void CPlayer::Motion_Change(void)
 {
 	if (m_ePreState != m_eCurState)
 	{
+		m_ePreState = m_eCurState;
+
+		// 스킬 상태이면 애니메이션 안 바뀜
+		if (m_bOnePlay)
+			return;
+
+
 		switch (m_eCurState)
 		{
 		case IDLE:
@@ -366,18 +465,20 @@ void CPlayer::Motion_Change(void)
 			break;
 
 		case ATTACK:
+			m_bOnePlay = true;
 			m_tFrame.iFrameStart = 0;
-			m_tFrame.iFrameEnd = 5;
-			m_tFrame.iMotion = 2;
-			m_tFrame.dwSpeed = 200;
+			m_tFrame.iFrameEnd = 2;
+			m_tFrame.iMotion = 3;
+			m_tFrame.dwSpeed = 120;
 			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case SKILL:
+			m_bOnePlay = true;
 			m_tFrame.iFrameStart = 0;
-			m_tFrame.iFrameEnd = 0;
-			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = 100;
+			m_tFrame.iFrameEnd = 3;
+			m_tFrame.iMotion = 4;
+			m_tFrame.dwSpeed = 120;
 			m_tFrame.dwTime = GetTickCount();
 			break;
 
@@ -429,13 +530,44 @@ void CPlayer::Motion_Change(void)
 			m_tFrame.dwTime = GetTickCount();
 			break;
 		}
-
-		m_ePreState = m_eCurState;
 	}
+}
+
+
+void CPlayer::OnHit(CObj* _pOther)
+{
+	if (m_bHit)
+		return;
+
+	m_tStat.iHp -= _pOther->Get_Stat().iAt;
+	if (m_tStat.iHp <= 0.f)
+	{
+		
+	}
+
+	SetCurState(HIT, m_eDir);
+
+	m_bHit = true;
+	m_fOldHitTime = GetTickCount64();
+
+	m_fJumpPower = 5.f;
+	m_bJump = true;
+	m_bOnAir = true;
+}
+
+void CPlayer::OnePlayEnd(void)
+{
+	SetCurState(IDLE, m_eDir);
 }
 
 void CPlayer::OnCollision(CObj* _pOther)
 {
+	if (_pOther->Get_Tag() == "Monster")
+	{
+		// OnHit(_pOther);
+	}
+
+
 	if (_pOther->Get_Tag() == "Portal_1To2")
 	{
 		if (CKeyMgr::Get_Instance()->Key_Down('Z'))

@@ -4,7 +4,9 @@
 
 #include "CollisionMgr.h"
 
-#include "Monster.h"
+#include "BlueSnail.h"
+#include "RedSnail.h"
+#include "Mushroom.h"
 
 CObjMgr* CObjMgr::m_pInstance = nullptr;
 
@@ -85,8 +87,11 @@ void CObjMgr::Late_Update(void)
 			iter->Late_Update();
 	}
 
-	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSTER]);
-	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);
+
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSTER], false);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BLOCK], m_ObjList[OBJ_MONSTER]);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);   // 플레이어 포탈
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_SKILL], false);   // 몬스터 스킬
 }
 
 void CObjMgr::Render(HDC hDC)
@@ -95,7 +100,7 @@ void CObjMgr::Render(HDC hDC)
 	{
 		for (auto& iter : m_ObjList[i])
 		{
-			iter->ColRender(hDC);
+			// iter->ColRender(hDC);
 			iter->Render(hDC);
 		}
 	}
@@ -126,18 +131,13 @@ void CObjMgr::MakeMonster(MONSTERID _eID, float _fX, float _fY)
 	switch (_eID)
 	{
 	case MON_BLUESNAIL:
-	{
-		CObj* pMonster = CAbstractFactory<CMonster>::Create(_fX, _fY, "Monster");
-		pMonster->Set_Stat(50, 10);
-		pMonster->Set_Speed(2.f);
-		((CMonster*)pMonster)->Set_ID(MON_BLUESNAIL);
-		Add_Object(OBJ_MONSTER, pMonster);
-	}
+		Add_Object(OBJ_MONSTER, CAbstractFactory<CBlueSnail>::Create(_fX, _fY, "Monster"));
 		break;
 	case MON_REDSNAIL:
-
+		Add_Object(OBJ_MONSTER, CAbstractFactory<CRedSnail>::Create(_fX, _fY, "Monster"));
 		break;
 	case MON_GREENMUSH:
+		Add_Object(OBJ_MONSTER, CAbstractFactory<CMushroom>::Create(_fX, _fY, "Monster"));
 		break;
 	case MON_DELSNAIL:
 		break;

@@ -8,10 +8,12 @@
 #include "ObjMgr.h"
 #include "LineMgr.h"
 #include "ScrollMgr.h"
+#include "SpawnMgr.h"
 
 #include "Player.h"
 #include "Monster.h"
 #include "Portal.h"
+#include "BlockBox.h"
 
 CStage2::CStage2()
 {
@@ -28,17 +30,26 @@ CStage2::~CStage2()
 
 void CStage2::Initialize(void)
 {
+	CSpawnMgr::Get_Instance()->Initialize();
+
 	// Bmp ·Îµù
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene2/2_Middle.bmp", L"2_Middle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene2/2_Back.bmp", L"2_Back");
-	CLineMgr::Get_Instance()->Scene_2();
+	CLineMgr::Get_Instance()->Scene_2();	// 1. ¸Ê ¶óÀÎ
+	CSpawnMgr::Get_Instance()->Scene_2();   // 2. ¸Ê ½ºÆù
+	MakeMap();								// 3. ¸Ê ºí¶ô, Æ÷Å»
 
-	// Obj »ý¼º
-	CObjMgr::Get_Instance()->Get_Player()->Set_Pos(2122.f, 1568.f);
-	// Æ÷Å»
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(2122.f, 1568.f, "Portal_2To1"));
 
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CMonster>::Create(1200.f, 1000.f, "Monster"));
+	// Player »ý¼º
+	if (!CObjMgr::Get_Instance()->Get_Player())
+	{
+		CObj* pPlayer = CAbstractFactory<CPlayer>::Create(2122.f, 1568.f, "Player");
+		CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, pPlayer);
+		CObjMgr::Get_Instance()->Set_Player(pPlayer);
+	}
+	else
+		CObjMgr::Get_Instance()->Get_Player()->Set_Pos(2122.f, 1568.f);
+
 
 	// Ä«¸Þ¶ó ¼³Á¤
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
@@ -48,6 +59,7 @@ void CStage2::Update(void)
 {
 	CObjMgr::Get_Instance()->Update();
 	CScrollMgr::Get_Instance()->Update();
+	CSpawnMgr::Get_Instance()->Update();
 }
 
 void CStage2::Late_Update(void)
@@ -61,7 +73,7 @@ void CStage2::Render(HDC hDC)
 	RenderBackGround(hDC);
 
 	CObjMgr::Get_Instance()->Render(hDC);
-	// CLineMgr::Get_Instance()->Render(hDC);
+	//CLineMgr::Get_Instance()->Render(hDC);
 }
 
 void CStage2::Release(void)
@@ -101,4 +113,19 @@ void CStage2::RenderBackGround(HDC hDC)
 		2238,
 		2035,
 		RGB(255, 0, 255));
+}
+
+void CStage2::MakeMap()
+{
+	// Æ÷Å»
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(2122.f, 1568.f, "Portal_2To1"));
+	// ºí¶ô
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(1857.f, 1241.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(2222.f, 1547.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(1685.f, 761.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(553.f, 765.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(460.f, 1004.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(367.f, 1248.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(11.f, 1545.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(1771.f, 1007.f, "Block"));
 }

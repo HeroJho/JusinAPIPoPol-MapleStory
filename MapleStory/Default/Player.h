@@ -31,6 +31,12 @@ private:
 	void		Key_Input(void);
 	void		Hang_Input(void);
 	void		Motion_Change(void);
+	void		Hit_Update(void);
+	void		Skill_Update(void);
+
+public:
+	virtual void	OnHit(CObj* _pOther) override;
+	virtual void    OnePlayEnd(void) override;
 
 private:
 	bool					m_bDrop;
@@ -39,6 +45,14 @@ private:
 	CLine*					m_pHangLine;
 	float					m_fDropY;
 
+	float					m_fDropSpeed;
+	bool					m_bHit;
+	float					m_fOldHitTime;
+	float					m_fHitTime;
+
 	STATE					m_ePreState;
 	STATE					m_eCurState;
+
+	float					m_fOldSkillTime;
+	float					m_fSkillTime;
 };

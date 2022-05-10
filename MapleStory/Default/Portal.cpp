@@ -38,9 +38,6 @@ int CPortal::Update(void)
 		return OBJ_DEAD;
 
 
-	m_tInfo.fX -= m_fSpeed;
-
-
 	Update_Rect();
 
 	return OBJ_NOEVENT;
