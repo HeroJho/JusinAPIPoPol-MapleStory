@@ -124,8 +124,8 @@ CLine* CLineMgr::Collision_HangLine(float& _fX, float& _fY, float* pY)
 	for (auto& iter : m_HangLineList)
 	{
 		// 1. 해당 라인의 x축, y축 범위 안에 있다. >> 줄을 탈 수 있다
-		if (_fX >= iter->Get_Info().tLPoint.fX - 20.f &&
-			_fX <= iter->Get_Info().tRPoint.fX + 20.f &&
+		if (_fX >= iter->Get_Info().tLPoint.fX - 40.f &&
+			_fX <= iter->Get_Info().tRPoint.fX + 40.f &&
 			_fY >= iter->Get_Info().tLPoint.fY - 5.f &&
 			_fY <= iter->Get_Info().tRPoint.fY)
 		{
@@ -266,4 +266,12 @@ void CLineMgr::Scene_2()
 	tf.Init(1199.f, 783.f, 1199.f, 960.f);
 	m_HangLineList.push_back(new CLine(tf));
 
+}
+
+void CLineMgr::Scene_Boss()
+{
+	Release();
+
+	LINE		tf{ 0.f, 700.f, 2100.f, 700.f };
+	m_LineList.push_back(new CLine(tf));
 }

@@ -40,6 +40,8 @@ public:
 
 private:
 	bool					m_bDrop;
+	bool					m_bDoubleJump;
+	DIRECTION				m_eDoubleDir;
 
 	CLine*					m_pDropLine;
 	CLine*					m_pHangLine;

@@ -18,7 +18,7 @@ CStage1::CStage1()
 	m_tMapSize.left = 0.f;
 	m_tMapSize.top = 0.f;
 	m_tMapSize.right = 2238.f;
-	m_tMapSize.bottom = 2035.f - 300.f;
+	m_tMapSize.bottom = 1597.f - 300.f;
 }
 
 CStage1::~CStage1()
@@ -50,6 +50,7 @@ void CStage1::Initialize(void)
 
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
+	CScrollMgr::Get_Instance()->Initialize();
 }
 
 void CStage1::Update(void)

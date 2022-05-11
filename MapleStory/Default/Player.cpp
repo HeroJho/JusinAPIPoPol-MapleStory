@@ -12,6 +12,10 @@
 #include "ObjMgr.h"
 #include "Skill.h"
 #include "BladeFury.h"
+#include "KarmaFury.h"
+#include "PhantomBlow.h"
+#include "BladeStorm.h"
+#include "DoubleJump.h"
 
 
 CPlayer::CPlayer()
@@ -69,6 +73,9 @@ void CPlayer::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 	m_fDropY = 0.f;
+
+	m_bDoubleJump = false;
+	m_eDoubleDir = DIR_END;
 }
 
 int CPlayer::Update(void)
@@ -253,7 +260,25 @@ void CPlayer::Update_Gravity(void)
 
 	if (m_bJump)
 	{
-		m_tInfo.fY -= m_fJumpPower;
+		if (m_bDoubleJump)
+		{
+			if (m_eDoubleDir == DIR_END)
+			{
+				m_fValY = 0.f;
+				m_eDoubleDir = m_eDir;
+			}
+
+			if(m_eDoubleDir == DIR_LEFT)
+				m_tInfo.fX -= 6.f;
+			else
+				m_tInfo.fX += 6.f;
+
+			m_tInfo.fY -= m_fJumpPower - 1.f;
+		}
+		else
+		{
+			m_tInfo.fY -= m_fJumpPower;
+		}
 	}
 
 	// 2. 공중인지 아닌지 판단한다.
@@ -280,6 +305,8 @@ void CPlayer::Update_Gravity(void)
 		m_pDropLine = nullptr;
 		m_bDrop = false;
 		m_bJump = false;
+		m_bDoubleJump = false;
+		m_eDoubleDir = DIR_END;
 		m_fValY = 0.f;
 	}
 
@@ -302,6 +329,8 @@ void CPlayer::Update_Hang(void)
 	m_pDropLine = nullptr;
 	m_bDrop = false;
 	m_bJump = false;
+	m_bDoubleJump = false;
+	m_eDoubleDir = DIR_END;
 	m_fValY = 2.f;
 	if(m_eCurState != HANGWALK)
 		SetCurState(HANGIDLE, m_eDir);
@@ -362,6 +391,18 @@ void CPlayer::Key_Input(void)
 
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
+		if (m_bJump && !m_bDoubleJump)
+		{
+			CObj* pSkill = CAbstractFactory<CDoubleJump>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+			pSkill->Set_Target(this);
+
+			CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+
+
+			m_bDoubleJump = true;
+			m_bOnAir = true;
+		}
+
 		if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
 		{
 			m_bDrop = true;
@@ -380,6 +421,8 @@ void CPlayer::Key_Input(void)
 		SetCurState(HANGIDLE, m_eDir);
 	}
 
+
+	// TODO: 스킬 매니저
 	if (CKeyMgr::Get_Instance()->Key_Down('Q'))
 	{
 		SetCurState(ATTACK, m_eDir);
@@ -398,7 +441,34 @@ void CPlayer::Key_Input(void)
 		pSkill->Set_Target(this);
 
 		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
-		//m_fOldSkillTime = GetTickCount64();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('R'))
+	{
+		SetCurState(SKILL, m_eDir);
+
+		CObj* pSkill = CAbstractFactory<CKarmaFury>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+		pSkill->Set_Target(this);
+
+		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('E'))
+	{
+		SetCurState(SKILL, m_eDir);
+
+		CObj* pSkill = CAbstractFactory<CPhantomBlow>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+		pSkill->Set_Target(this);
+
+		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('A'))
+	{
+		SetCurState(SKILL, m_eDir);
+
+		CObj* pSkill = CAbstractFactory<CBladeStorm>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+		pSkill->Set_Target(this);
+		((CBladeStorm*)pSkill)->SetHoldKey('A');
+
+		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
 	}
 
 }

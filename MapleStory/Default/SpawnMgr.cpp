@@ -66,32 +66,66 @@ void CSpawnMgr::Scene_2()
 {
 	Release();
 
-	m_iMaxMonsterCount = 40;
+	m_iMaxMonsterCount = 60;
 	m_iLineCount = 9;
 
 	SpawnInfo s;
 	// 1
-	s.Init(MON_BLUESNAIL, 20 + 30, 2218 - 30, 1570);
+	s.Init(MON_BLUESNAIL, 20 + 50, 2218 - 50, 1570);
 	m_lRects.push_back(s);
-	s.Init(MON_REDSNAIL, 20 + 30, 2218 - 30, 1570);
+	// s.Init(MON_REDSNAIL, 20 + 30, 2218 - 30, 1570);
+	// m_lRects.push_back(s);
+	// s.Init(MON_BLUESNAIL, 20 + 30, 2218 - 30, 1570);
+	// m_lRects.push_back(s);
+	s.Init(MON_REDSNAIL, 20 + 50, 2218 - 50, 1570);
 	m_lRects.push_back(s);
-	s.Init(MON_BLUESNAIL, 20 + 30, 2218 - 30, 1570);
-	m_lRects.push_back(s);
-	s.Init(MON_REDSNAIL, 20 + 30, 2218 - 30, 1570);
-	m_lRects.push_back(s);
+	
 	// 2
-	s.Init(MON_BLUESNAIL, 393 + 30, 1839 - 30, 1270);
+	//s.Init(MON_BLUESNAIL, 393 + 30, 1839 - 30, 1270);
+	//m_lRects.push_back(s);
+	s.Init(MON_BLUESNAIL, 393 + 50, 1839 - 50, 1270);
 	m_lRects.push_back(s);
-	s.Init(MON_BLUESNAIL, 393 + 30, 1839 - 30, 1270);
-	m_lRects.push_back(s);
+
 	// 3
-	s.Init(MON_REDSNAIL, 485 + 30, 1750 - 30, 1030);
+	//s.Init(MON_REDSNAIL, 485 + 30, 1750 - 30, 1030);
+	//m_lRects.push_back(s);
+	s.Init(MON_GREENMUSH, 485 + 50, 1750 - 50, 1030);
 	m_lRects.push_back(s);
-	s.Init(MON_GREENMUSH, 485 + 30, 1750 - 30, 1030);
-	m_lRects.push_back(s);
+
 	// 4
-	s.Init(MON_GREENMUSH, 572 + 30, 1658 - 30, 787);
+	s.Init(MON_GREENMUSH, 572 + 50, 1658 - 50, 787);
 	m_lRects.push_back(s);
+
+
+	// TEST
+	
+	// 1
+	s.Init(MON_DELSNAIL, 20 + 50, 2218 - 50, 1570);
+	m_lRects.push_back(s);
+	// s.Init(MON_REDSNAIL, 20 + 30, 2218 - 30, 1570);
+	// m_lRects.push_back(s);
+	// s.Init(MON_BLUESNAIL, 20 + 30, 2218 - 30, 1570);
+	// m_lRects.push_back(s);
+	s.Init(MON_DELPIG, 20 + 50, 2218 - 50, 1570);
+	m_lRects.push_back(s);
+
+	// 2
+	//s.Init(MON_BLUESNAIL, 393 + 30, 1839 - 30, 1270);
+	//m_lRects.push_back(s);
+	s.Init(MON_NIGHTC, 393 + 50, 1839 - 50, 1270);
+	m_lRects.push_back(s);
+
+	// 3
+	//s.Init(MON_REDSNAIL, 485 + 30, 1750 - 30, 1030);
+	//m_lRects.push_back(s);
+	s.Init(MON_NIGHTE, 485 + 50, 1750 - 50, 1030);
+	m_lRects.push_back(s);
+
+	// 4
+	s.Init(MON_NIGHTE, 572 + 50, 1658 - 50, 787);
+	m_lRects.push_back(s);
+
+
 
 }
 

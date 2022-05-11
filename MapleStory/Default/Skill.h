@@ -8,6 +8,9 @@ public:
     virtual ~CSkill();
 
 public:
+	void		Set_ColSet(float _fCX, float _fCY, float _fPvX, float _fPvY, float _fDeleteTime, float _fSkillTime);
+
+public:
 	virtual void Initialize(void) override;
 	virtual int  Update(void) override;
 	virtual void Late_Update(void) override;
@@ -24,5 +27,8 @@ protected:
 
 	int						m_CanHitCount;
 	int						m_CanHitMaxCount;
+
+	float					m_fFixPivotX;
+	float					m_fFixPivotY;
 };
 

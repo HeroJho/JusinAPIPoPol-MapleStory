@@ -17,7 +17,8 @@ public:
 
 
 public:
-	void		Update();
+	void		Initialize(void);
+	void		Update(void);
 
 
 #pragma region Ins
@@ -50,5 +51,8 @@ private:
 	CObj*					m_pTarget;
 	float					m_fScrollX;
 	float					m_fScrollY;
+
+	bool					m_bMoveX;
+	bool					m_bMoveY;
 };
 

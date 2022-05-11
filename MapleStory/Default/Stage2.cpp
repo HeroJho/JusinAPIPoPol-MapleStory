@@ -53,6 +53,7 @@ void CStage2::Initialize(void)
 
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
+	CScrollMgr::Get_Instance()->Initialize();
 }
 
 void CStage2::Update(void)

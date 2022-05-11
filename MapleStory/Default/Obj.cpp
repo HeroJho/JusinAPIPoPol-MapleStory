@@ -26,6 +26,7 @@ CObj::~CObj()
 {
 }
 
+
 void CObj::Set_Stat(int _iMaxHp, int _iAt)
 {
 	m_tStat.iHp = _iMaxHp;
@@ -116,7 +117,10 @@ void CObj::Move_Frame(void)
 
 		if (m_tFrame.iFrameStart > m_tFrame.iFrameEnd)
 		{
-			m_tFrame.iFrameStart = 0;
+			if(m_bOnePlay)
+				m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+			else
+				m_tFrame.iFrameStart = 0;
 
 			if (m_bOnePlay)
 			{

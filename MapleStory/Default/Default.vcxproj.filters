@@ -118,8 +118,47 @@
     <Filter Include="98. Design\SpawnMgr">
       <UniqueIdentifier>{70b73661-b83e-4fd5-b8cc-e63d0d50d4f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Obj\05. Skill\BladeFury">
+    <Filter Include="01. Obj\01. Monster\04. DeleteDarPeng">
+      <UniqueIdentifier>{d023d09e-1223-48ca-bc95-e941536dd50f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\05. DeletePig">
+      <UniqueIdentifier>{71bd2705-bace-4b2d-a2a8-fbd041ccf162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\06. NightE">
+      <UniqueIdentifier>{2615f327-3d55-4224-825d-ee194a5106fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\07. NightC">
+      <UniqueIdentifier>{fe6988db-3da0-4aef-9eb8-4c1db939e082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\99. DarkedMage">
+      <UniqueIdentifier>{c46aa802-f424-404c-8199-6c65c47fc409}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\DarkedMage">
+      <UniqueIdentifier>{ab95e4ff-f7b1-48b4-8c1b-6063548efb8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player">
+      <UniqueIdentifier>{05c64627-9dd5-4a04-9fc7-bfd58de59d1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\BladeFury">
       <UniqueIdentifier>{bbd72f32-e9b4-43b4-a43f-d528fd009653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\BladeStorm">
+      <UniqueIdentifier>{33304216-fe63-4da9-a796-cc2b1e61d8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\DoubleJump">
+      <UniqueIdentifier>{4556cd58-999f-49ca-9a19-7f5e32c0b70e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\KarmaFury">
+      <UniqueIdentifier>{8fe1b310-eb45-4535-80dc-18313a0b2bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\PhantomBlow">
+      <UniqueIdentifier>{2d354abb-65af-4d73-82df-8c32d0347b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\DarkedMage\DarkChain">
+      <UniqueIdentifier>{aee67fb1-70e8-4752-8688-7e9161c8411b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\DarkedMage\Skill_2">
+      <UniqueIdentifier>{336de22b-111e-40d0-95b3-1ff2803887b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -253,7 +292,46 @@
       <Filter>98. Design\SpawnMgr</Filter>
     </ClInclude>
     <ClInclude Include="BladeFury.h">
-      <Filter>01. Obj\05. Skill\BladeFury</Filter>
+      <Filter>01. Obj\05. Skill\Player\BladeFury</Filter>
+    </ClInclude>
+    <ClInclude Include="KarmaFury.h">
+      <Filter>01. Obj\05. Skill\Player\KarmaFury</Filter>
+    </ClInclude>
+    <ClInclude Include="PhantomBlow.h">
+      <Filter>01. Obj\05. Skill\Player\PhantomBlow</Filter>
+    </ClInclude>
+    <ClInclude Include="BladeStorm.h">
+      <Filter>01. Obj\05. Skill\Player\BladeStorm</Filter>
+    </ClInclude>
+    <ClInclude Include="BladeStormF.h">
+      <Filter>01. Obj\05. Skill\Player\BladeStorm</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleJump.h">
+      <Filter>01. Obj\05. Skill\Player\DoubleJump</Filter>
+    </ClInclude>
+    <ClInclude Include="DeleteDarPeng.h">
+      <Filter>01. Obj\01. Monster\04. DeleteDarPeng</Filter>
+    </ClInclude>
+    <ClInclude Include="DeletePig.h">
+      <Filter>01. Obj\01. Monster\05. DeletePig</Filter>
+    </ClInclude>
+    <ClInclude Include="NightE.h">
+      <Filter>01. Obj\01. Monster\06. NightE</Filter>
+    </ClInclude>
+    <ClInclude Include="NightC.h">
+      <Filter>01. Obj\01. Monster\07. NightC</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage_Boss.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="DarkedMage.h">
+      <Filter>01. Obj\01. Monster\99. DarkedMage</Filter>
+    </ClInclude>
+    <ClInclude Include="DarkChain.h">
+      <Filter>01. Obj\05. Skill\DarkedMage\DarkChain</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill_2.h">
+      <Filter>01. Obj\05. Skill\DarkedMage\Skill_2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,7 +438,46 @@
       <Filter>98. Design\SpawnMgr</Filter>
     </ClCompile>
     <ClCompile Include="BladeFury.cpp">
-      <Filter>01. Obj\05. Skill\BladeFury</Filter>
+      <Filter>01. Obj\05. Skill\Player\BladeFury</Filter>
+    </ClCompile>
+    <ClCompile Include="KarmaFury.cpp">
+      <Filter>01. Obj\05. Skill\Player\KarmaFury</Filter>
+    </ClCompile>
+    <ClCompile Include="PhantomBlow.cpp">
+      <Filter>01. Obj\05. Skill\Player\PhantomBlow</Filter>
+    </ClCompile>
+    <ClCompile Include="BladeStorm.cpp">
+      <Filter>01. Obj\05. Skill\Player\BladeStorm</Filter>
+    </ClCompile>
+    <ClCompile Include="BladeStormF.cpp">
+      <Filter>01. Obj\05. Skill\Player\BladeStorm</Filter>
+    </ClCompile>
+    <ClCompile Include="DoubleJump.cpp">
+      <Filter>01. Obj\05. Skill\Player\DoubleJump</Filter>
+    </ClCompile>
+    <ClCompile Include="DeleteDarPeng.cpp">
+      <Filter>01. Obj\01. Monster\04. DeleteDarPeng</Filter>
+    </ClCompile>
+    <ClCompile Include="DeletePig.cpp">
+      <Filter>01. Obj\01. Monster\05. DeletePig</Filter>
+    </ClCompile>
+    <ClCompile Include="NightE.cpp">
+      <Filter>01. Obj\01. Monster\06. NightE</Filter>
+    </ClCompile>
+    <ClCompile Include="NightC.cpp">
+      <Filter>01. Obj\01. Monster\07. NightC</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage_Boss.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="DarkedMage.cpp">
+      <Filter>01. Obj\01. Monster\99. DarkedMage</Filter>
+    </ClCompile>
+    <ClCompile Include="DarkChain.cpp">
+      <Filter>01. Obj\05. Skill\DarkedMage\DarkChain</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill_2.cpp">
+      <Filter>01. Obj\05. Skill\DarkedMage\Skill_2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

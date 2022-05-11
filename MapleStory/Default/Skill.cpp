@@ -10,6 +10,21 @@ CSkill::~CSkill()
     Release();
 }
 
+void CSkill::Set_ColSet(float _fCX, float _fCY, float _fPvX, float _fPvY, float _fDeleteTime, float _fSkillTime)
+{
+	// 콜리젼 크기, 피봇 설정
+	m_tInfo.fCCX = _fCX;
+	m_tInfo.fCCY = _fCY;
+	m_tColPivot.x = _fPvX;
+	m_tColPivot.y = _fPvY;
+
+	m_fFixPivotX = _fPvX;
+	m_fFixPivotY = _fPvY;
+
+	m_fDeleteTime = _fDeleteTime;
+	m_fSkillTime = _fSkillTime;
+}
+
 void CSkill::Initialize(void)
 {
 	// 콜리젼 크기, 피봇 설정
@@ -37,6 +52,9 @@ void CSkill::Initialize(void)
 	m_fOldSkillTime = GetTickCount64();
 	m_fSkillTime = 100.f;
 	m_fDeleteTime = 140.f;
+
+	m_fFixPivotX = 25.f;
+	m_fFixPivotY = -25.f;
 }
 
 int CSkill::Update(void)
@@ -49,13 +67,13 @@ int CSkill::Update(void)
 
 	if (m_pTarget->Get_Dir() == DIR_LEFT)
 	{
-		m_tColPivot.x = -25.f;
-		m_tColPivot.y = -25.f;
+		m_tColPivot.x = -m_fFixPivotX;
+		m_tColPivot.y = m_fFixPivotY;
 	}
 	else
 	{
-		m_tColPivot.x = 25.f;
-		m_tColPivot.y = -25.f;
+		m_tColPivot.x = m_fFixPivotX;
+		m_tColPivot.y = m_fFixPivotY;
 	}
 
 
@@ -97,6 +115,11 @@ void CSkill::OnCollision(CObj* _pOther)
 		return;
 
 	if (_pOther->Get_Tag() == "Monster")
+	{
+		_pOther->OnHit(this);
+	}
+
+	if (_pOther->Get_Tag() == "Player")
 	{
 		_pOther->OnHit(this);
 	}
