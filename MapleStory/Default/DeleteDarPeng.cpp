@@ -9,6 +9,7 @@
 
 #include "Skill.h"
 #include "ObjMgr.h"
+#include "MoneyBig.h"
 
 CDeleteDarPeng::CDeleteDarPeng()
 	: m_fOldTime(GetTickCount64())
@@ -259,6 +260,7 @@ void CDeleteDarPeng::OnHit(CObj* _pOther)
 		m_fOldDeadTime = GetTickCount64();
 		m_bCanHit = false;
 		CSpawnMgr::Get_Instance()->DecreaseCount();
+		DropItem();
 		return;
 	}
 
@@ -278,6 +280,10 @@ void CDeleteDarPeng::OnHit(CObj* _pOther)
 	}
 }
 
+void CDeleteDarPeng::DropItem()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(m_tInfo.fX, m_tInfo.fY - 10.f, "Item"));
+}
 
 void CDeleteDarPeng::OnCollision(CObj* _pOther)
 {

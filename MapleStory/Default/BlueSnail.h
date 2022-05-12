@@ -36,6 +36,7 @@ protected:
 
 private:
 	void ChooseRandStat();
+	void DropItem();
 
 private:
 	float m_fOldTime;

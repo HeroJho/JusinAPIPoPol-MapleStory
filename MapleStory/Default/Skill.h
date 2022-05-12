@@ -30,5 +30,7 @@ protected:
 
 	float					m_fFixPivotX;
 	float					m_fFixPivotY;
+
+	CObj* m_pFirst;
 };
 

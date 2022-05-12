@@ -12,6 +12,7 @@
 #include "SceneMgr.h"
 #include "EventMgr.h"
 #include "SpawnMgr.h"
+#include "UIMgr.h"
 
 
 CMainGame::CMainGame()
@@ -33,7 +34,7 @@ void CMainGame::Initialize(void)
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
 
-	CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE_BOSS);
+	CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE_1);
 }
 
 void CMainGame::Update(void)
@@ -72,6 +73,7 @@ void CMainGame::Render(void)
 
 void CMainGame::Release(void)
 {
+	CUIMgr::Get_Instance()->Destroy_Instance();
 	CSpawnMgr::Get_Instance()->Destroy_Instance();
 	CEventMgr::Get_Instance()->Destroy_Instance();
 	CSceneMgr::Get_Instance()->Destroy_Instance();

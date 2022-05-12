@@ -2,6 +2,7 @@
 #include "Skill.h"
 
 CSkill::CSkill()
+	:m_pFirst(nullptr)
 {
 }
 

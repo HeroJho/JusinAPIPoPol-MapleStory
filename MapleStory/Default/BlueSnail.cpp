@@ -6,6 +6,10 @@
 #include "BmpMgr.h"
 #include "SpawnMgr.h"
 
+#include "Money.h"
+#include "AbstractFactory.h"
+#include "ObjMgr.h"
+
 CBlueSnail::CBlueSnail()
 	: m_fOldTime(GetTickCount64())
 	, m_fRandTime(0.f)
@@ -152,6 +156,7 @@ void CBlueSnail::ChooseRandStat()
 	}
 }
 
+
 void CBlueSnail::Update_Idle()
 {
 }
@@ -223,6 +228,7 @@ void CBlueSnail::OnHit(CObj* _pOther)
 		m_fOldDeadTime = GetTickCount64();
 		m_bCanHit = false;
 		CSpawnMgr::Get_Instance()->DecreaseCount();
+		DropItem();
 		return;
 	}
 
@@ -240,6 +246,11 @@ void CBlueSnail::OnHit(CObj* _pOther)
 		SetCurState(HIT, DIR_LEFT);
 		m_tInfo.fX += 12.f;
 	}
+}
+
+void CBlueSnail::DropItem()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoney>::Create(m_tInfo.fX, m_tInfo.fY - 10.f, "Item"));
 }
 
 

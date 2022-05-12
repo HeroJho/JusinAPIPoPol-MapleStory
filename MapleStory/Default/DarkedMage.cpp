@@ -11,6 +11,7 @@
 #include "ObjMgr.h"
 #include "DarkChain.h"
 #include "Skill_2.h"
+#include "Skill_4.h"
 
 CDarkedMage::CDarkedMage()
 	: m_fOldTime(GetTickCount64())
@@ -29,15 +30,15 @@ void CDarkedMage::Initialize(void)
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/DarkedMage.bmp", L"DarkedMage");
 	Set_FrameKey(L"DarkedMage");
 	m_tFrame.iFrameStart = 0;
-	m_tFrame.iFrameEnd = 36;
-	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 100.f;
+	m_tFrame.iFrameEnd = 11;
+	m_tFrame.iMotion = 4;
+	m_tFrame.dwSpeed = 80.f;
 	m_tFrame.dwTime = GetTickCount();
 
 
 	// 콜리젼 크기, 피봇 설정
-	m_tInfo.fCCX = 50.f;
-	m_tInfo.fCCY = 50.f;
+	m_tInfo.fCCX = 100.f;
+	m_tInfo.fCCY = 100.f;
 	m_tColPivot.x = 0.f;
 	m_tColPivot.y = -35.f;
 	// 텍스쳐 크기 설정
@@ -55,9 +56,6 @@ void CDarkedMage::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_eCurState = IDLE;
-
-
 	m_fDelayTime = 1200.f;
 	m_fOldDelayTime = GetTickCount64();
 
@@ -67,7 +65,11 @@ void CDarkedMage::Initialize(void)
 	m_iSkill2_Count = 0;
 	m_fSkill2_DelayTime = 2000.f;
 	m_fSkill2_OldDelayTime = GetTickCount64();
+	m_iSkill4_Count = 0;
+	m_fSkill4_DelayTime = 2000.f;
+	m_fSkill4_OldDelayTime = GetTickCount64();
 
+	m_eCurState = BOSS_STATE::IDLE;
 }
 
 int CDarkedMage::Update(void)
@@ -107,6 +109,7 @@ void CDarkedMage::Late_Update(void)
 {
 	Skill_1_Temp();
 	Skill_2_Temp();
+	Skill_4_Temp();
 
 	Motion_Change();
 	if (!m_bStayPlay)
@@ -154,7 +157,7 @@ void CDarkedMage::ChooseRandStat()
 	if (m_fOldTime + m_fRandTime < GetTickCount64())
 	{
 		m_fRandTime = CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 5500);
-		BOSS_STATE eRandStat = BOSS_STATE(CEventMgr::Get_Instance()->GetRandomNum_Int(0, 2));
+		BOSS_STATE eRandStat = BOSS_STATE(CEventMgr::Get_Instance()->GetRandomNum_Int(1, 4));
 
 		switch (eRandStat)
 		{
@@ -172,6 +175,8 @@ void CDarkedMage::ChooseRandStat()
 		case CDarkedMage::SKILL_3:
 			break;
 		case CDarkedMage::SKILL_4:
+			if (m_iSkill4_Count == 0)
+				SetCurState(eRandStat, DIR_LEFT);
 			break;
 		default:
 			break;
@@ -224,6 +229,13 @@ void CDarkedMage::Skill_3_Update()
 
 void CDarkedMage::Skill_4_Update()
 {
+	// 시전 시간
+	if (m_fOldDelayTime + m_fDelayTime < GetTickCount64())
+	{
+		m_iSkill4_Count = 1;
+	}
+	else
+		m_fSkill4_OldDelayTime = GetTickCount64();
 }
 
 void CDarkedMage::Skill_1_Temp()
@@ -266,6 +278,28 @@ void CDarkedMage::Skill_2_Temp()
 		m_fSkill2_OldDelayTime = GetTickCount64();
 
 		--m_iSkill2_Count;
+	}
+}
+
+void CDarkedMage::Skill_4_Temp()
+{
+	if (m_iSkill4_Count <= 0)
+	{
+		m_iSkill4_Count = 0;
+		return;
+	}
+
+
+	if (m_fSkill4_OldDelayTime + m_fSkill4_DelayTime < GetTickCount64())
+	{
+		CObj* pSkill = CAbstractFactory<CSkill_4>::Create(m_pTarget->Get_Info().fX, 600.f, "Skill");
+		pSkill->Set_Target(this);
+
+		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSKILL, pSkill);
+
+		m_fSkill4_OldDelayTime = GetTickCount64();
+
+		--m_iSkill4_Count;
 	}
 }
 

@@ -68,23 +68,6 @@ void CSceneMgr::Late_Update(void)
 void CSceneMgr::Render(HDC hDC)
 {
 	m_pScene->Render(hDC);
-
-
-	// TEST: 마우스 좌표 표시
-	POINT	pt{};
-
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-
-	int iScrollX = CScrollMgr::Get_Instance()->Get_ScrollX();
-	int iScrollY = CScrollMgr::Get_Instance()->Get_ScrollY();
-	pt.x = (float)pt.x - iScrollX;
-	pt.y = (float)pt.y - iScrollY;
-
-	TCHAR lpOut[1024];
-	wsprintf(lpOut, TEXT("lX: %d \nY: %d"), pt.x, pt.y);
-	TextOut(hDC, 35, 15, lpOut, lstrlen(lpOut));
-
 }
 
 void CSceneMgr::Release(void)

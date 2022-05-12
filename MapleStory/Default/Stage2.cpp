@@ -9,6 +9,7 @@
 #include "LineMgr.h"
 #include "ScrollMgr.h"
 #include "SpawnMgr.h"
+#include "UIMgr.h"
 
 #include "Player.h"
 #include "Monster.h"
@@ -50,6 +51,8 @@ void CStage2::Initialize(void)
 	else
 		CObjMgr::Get_Instance()->Get_Player()->Set_Pos(2122.f, 1568.f);
 
+	// UI
+	CUIMgr::Get_Instance()->Initialize();
 
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
@@ -61,6 +64,7 @@ void CStage2::Update(void)
 	CObjMgr::Get_Instance()->Update();
 	CScrollMgr::Get_Instance()->Update();
 	CSpawnMgr::Get_Instance()->Update();
+	CUIMgr::Get_Instance()->Update();
 }
 
 void CStage2::Late_Update(void)
@@ -74,6 +78,7 @@ void CStage2::Render(HDC hDC)
 	RenderBackGround(hDC);
 
 	CObjMgr::Get_Instance()->Render(hDC);
+	CUIMgr::Get_Instance()->Render(hDC);
 	//CLineMgr::Get_Instance()->Render(hDC);
 }
 
@@ -82,6 +87,10 @@ void CStage2::Release(void)
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_NPC);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MAP);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCK);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_SKILL);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSKILL);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
 }
 
 void CStage2::RenderBackGround(HDC hDC)

@@ -29,6 +29,7 @@ private:
 	list<CObj*>	m_ObjList[OBJ_END];
 	CObj* m_pPlayer;
 
+	bool m_bColRender;
 #pragma region Ins
 public:
 	static		CObjMgr*		Get_Instance(void)

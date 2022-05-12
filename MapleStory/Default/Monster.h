@@ -20,6 +20,7 @@ public:
 protected:
 	virtual void Motion_Change(void);
 
+
 protected:
 	STATE					m_ePreState;
 	STATE					m_eCurState;

@@ -13,6 +13,7 @@ CObj::CObj()
 	, m_bCanHit(true)
 	, m_fAngle(0.f)
 	, m_pFrameKey(nullptr)
+	, m_fLinefY(0.f)
 {
 	ZeroMemory(&m_tStat, sizeof(STAT));
 	ZeroMemory(&m_tInfo, sizeof(INFO));
@@ -61,12 +62,14 @@ void CObj::Update_Rect(void)
 
 }
 
-void CObj::Update_Gravity(void)
+void CObj::Update_Gravity(bool _bItem)
 {
-	// 1. 라인을 얻어온다.
-	float		LinefY = 0.f;
 
-	CLine* m_pCurLine = m_pCurLine = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &LinefY);
+	if (!_bItem)
+	{
+		m_pCurLine = CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, &m_fLinefY);
+	}
+
 
 	// 3. 공중 여부에 따라 중력 적용한다.
 	if (m_bOnAir)
@@ -85,13 +88,13 @@ void CObj::Update_Gravity(void)
 	}
 
 	// 2. 공중인지 아닌지 판단한다.
-	if (LinefY <= m_tInfo.fY)
+	if (m_fLinefY <= m_tInfo.fY)
 	{	// 바닥일 때
-		m_tInfo.fY = LinefY;
+		m_tInfo.fY = m_fLinefY;
 		m_bOnAir = false;
 		m_fValY = 0.f;
 	}
-	else if (LinefY > m_tInfo.fY)
+	else if (m_fLinefY > m_tInfo.fY)
 	{	// 공중일 때
 		// 이전 라인이랑 같고,           대각선일때
 		if (!(m_pOldLine == m_pCurLine && m_pCurLine->Get_Diagonal()))
@@ -100,7 +103,7 @@ void CObj::Update_Gravity(void)
 
 	if (!m_bOnAir)
 	{
-		m_tInfo.fY = LinefY;
+		m_tInfo.fY = m_fLinefY;
 		m_bJump = false;
 	}
 

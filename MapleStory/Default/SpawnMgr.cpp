@@ -66,7 +66,7 @@ void CSpawnMgr::Scene_2()
 {
 	Release();
 
-	m_iMaxMonsterCount = 60;
+	m_iMaxMonsterCount = 35;
 	m_iLineCount = 9;
 
 	SpawnInfo s;
@@ -83,8 +83,8 @@ void CSpawnMgr::Scene_2()
 	// 2
 	//s.Init(MON_BLUESNAIL, 393 + 30, 1839 - 30, 1270);
 	//m_lRects.push_back(s);
-	s.Init(MON_BLUESNAIL, 393 + 50, 1839 - 50, 1270);
-	m_lRects.push_back(s);
+	//s.Init(MON_BLUESNAIL, 393 + 50, 1839 - 50, 1270);
+	//m_lRects.push_back(s);
 
 	// 3
 	//s.Init(MON_REDSNAIL, 485 + 30, 1750 - 30, 1030);
@@ -124,8 +124,6 @@ void CSpawnMgr::Scene_2()
 	// 4
 	s.Init(MON_NIGHTE, 572 + 50, 1658 - 50, 787);
 	m_lRects.push_back(s);
-
-
 
 }
 

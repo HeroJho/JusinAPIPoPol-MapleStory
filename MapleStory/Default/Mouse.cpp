@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Mouse.h"
 
+#include "ScrollMgr.h"
+
 CMouse::CMouse()
 {
 }
@@ -12,8 +14,8 @@ CMouse::~CMouse()
 
 void CMouse::Initialize(void)
 {
-	m_tInfo.fCCX = 50.f;
-	m_tInfo.fCCY = 50.f;
+	m_tInfo.fCCX = 20.f;
+	m_tInfo.fCCY = 20.f;
 }
 
 int CMouse::Update(void)
@@ -42,6 +44,16 @@ void CMouse::Late_Update(void)
 void CMouse::Render(HDC hDC)
 {
 	Ellipse(hDC, m_tRect.left, m_tRect.top, m_tRect.right, m_tRect.bottom);
+
+	// TEST: 마우스 좌표 표시
+	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	int iRealPosX = m_tInfo.fX - iScrollX;
+	int iRealPosY = m_tInfo.fY - iScrollY;
+	TCHAR lpOut[1024];
+	wsprintf(lpOut, TEXT("lX: %d \nY: %d"), iRealPosX, iRealPosY);
+	TextOut(hDC, 35, 15, lpOut, lstrlen(lpOut));
 }
 
 void CMouse::Release(void)

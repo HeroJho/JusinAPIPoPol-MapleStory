@@ -63,7 +63,7 @@ void CBladeStorm::Initialize(void)
 	m_fSkillTime = 100.f;
 	m_fDeleteTime = 5000.f;
 
-	m_fHitTime = 100.f;
+	m_fHitTime = 500.f;
 	m_fOldHitTime = GetTickCount64();
 
 }
@@ -82,6 +82,7 @@ int CBladeStorm::Update(void)
 	if (m_fOldHitTime + m_fHitTime < GetTickCount64())
 	{
 		m_CanHitCount = 0;
+		m_bCanHit = false;
 		m_fOldHitTime = GetTickCount64();
 	}
 
@@ -104,12 +105,12 @@ int CBladeStorm::Update(void)
 	}
 
 
-	// 히트 시간
-	if (m_fOldSkillTime + m_fSkillTime < GetTickCount64() && !m_bJump)
-	{
-		// m_bCanHit = true;
-		m_bJump = true;
-	}
+	//// 히트 시간
+	//if (m_fOldSkillTime + m_fSkillTime < GetTickCount64() && !m_bJump)
+	//{
+	//	// m_bCanHit = true;
+	//	m_bJump = true;
+	//}
 	// 소멸 시간
 	if (m_fOldSkillTime + m_fDeleteTime < GetTickCount64())
 	{
@@ -163,10 +164,21 @@ void CBladeStorm::Release(void)
 
 void CBladeStorm::OnCollision(CObj* _pOther)
 {
+	if (m_bCanHit)
+		return;
 	if (m_CanHitCount > m_CanHitMaxCount)
 		return;
 	if (!_pOther->Get_CanHit())
 		return;
+
+	if (!m_pFirst)
+		m_pFirst = _pOther;
+	else if (m_pFirst == _pOther)
+	{
+		m_pFirst = nullptr;
+		m_bCanHit = true;
+		return;
+	}
 
 	++m_CanHitCount;
 

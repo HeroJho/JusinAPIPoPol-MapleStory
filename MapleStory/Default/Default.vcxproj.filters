@@ -91,9 +91,6 @@
     <Filter Include="01. Obj\02. Mouse">
       <UniqueIdentifier>{8a388e49-470b-4695-bcb9-a7ce03e5c47d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Obj\0. MyButton">
-      <UniqueIdentifier>{5d174640-d014-46b2-ba40-d8af134d665a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Obj\03. Portal">
       <UniqueIdentifier>{42e64021-5d46-4116-9378-1dc2b0d872c6}</UniqueIdentifier>
     </Filter>
@@ -159,6 +156,27 @@
     </Filter>
     <Filter Include="01. Obj\05. Skill\DarkedMage\Skill_2">
       <UniqueIdentifier>{336de22b-111e-40d0-95b3-1ff2803887b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\DarkedMage\Skill_4">
+      <UniqueIdentifier>{0581ecd8-d437-4466-a6bb-55b2bd9f8867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI">
+      <UniqueIdentifier>{5d174640-d014-46b2-ba40-d8af134d665a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\HpHp_UI">
+      <UniqueIdentifier>{0a2dd70f-8bbe-4c25-aca9-c3a8e63da39b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\UIMgr">
+      <UniqueIdentifier>{03ef394f-3748-47ea-b826-b5ddf5eea323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. Item">
+      <UniqueIdentifier>{ce9447df-9420-4f7a-a429-488900c58f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. Item\Money">
+      <UniqueIdentifier>{7363aa08-5385-43f9-845a-c91ec7503baf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. Item\MoneyBig">
+      <UniqueIdentifier>{2916ce08-0ed7-415f-bef1-22234cc67276}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -259,7 +277,7 @@
       <Filter>02. Scene\01. MyMenu</Filter>
     </ClInclude>
     <ClInclude Include="MyButton.h">
-      <Filter>01. Obj\0. MyButton</Filter>
+      <Filter>01. Obj\06. UI</Filter>
     </ClInclude>
     <ClInclude Include="Portal.h">
       <Filter>01. Obj\03. Portal</Filter>
@@ -333,6 +351,24 @@
     <ClInclude Include="Skill_2.h">
       <Filter>01. Obj\05. Skill\DarkedMage\Skill_2</Filter>
     </ClInclude>
+    <ClInclude Include="Skill_4.h">
+      <Filter>01. Obj\05. Skill\DarkedMage\Skill_4</Filter>
+    </ClInclude>
+    <ClInclude Include="HpHp_UI.h">
+      <Filter>01. Obj\06. UI\HpHp_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMgr.h">
+      <Filter>98. Design\UIMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>01. Obj\06. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Money.h">
+      <Filter>01. Obj\06. Item\Money</Filter>
+    </ClInclude>
+    <ClInclude Include="MoneyBig.h">
+      <Filter>01. Obj\06. Item\MoneyBig</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -405,7 +441,7 @@
       <Filter>02. Scene\01. MyMenu</Filter>
     </ClCompile>
     <ClCompile Include="MyButton.cpp">
-      <Filter>01. Obj\0. MyButton</Filter>
+      <Filter>01. Obj\06. UI</Filter>
     </ClCompile>
     <ClCompile Include="Portal.cpp">
       <Filter>01. Obj\03. Portal</Filter>
@@ -478,6 +514,24 @@
     </ClCompile>
     <ClCompile Include="Skill_2.cpp">
       <Filter>01. Obj\05. Skill\DarkedMage\Skill_2</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill_4.cpp">
+      <Filter>01. Obj\05. Skill\DarkedMage\Skill_4</Filter>
+    </ClCompile>
+    <ClCompile Include="HpHp_UI.cpp">
+      <Filter>01. Obj\06. UI\HpHp_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMgr.cpp">
+      <Filter>98. Design\UIMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>01. Obj\06. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Money.cpp">
+      <Filter>01. Obj\06. Item\Money</Filter>
+    </ClCompile>
+    <ClCompile Include="MoneyBig.cpp">
+      <Filter>01. Obj\06. Item\MoneyBig</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

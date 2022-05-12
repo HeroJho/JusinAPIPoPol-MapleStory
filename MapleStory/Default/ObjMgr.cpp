@@ -3,6 +3,7 @@
 #include "AbstractFactory.h"
 
 #include "CollisionMgr.h"
+#include "KeyMgr.h"
 
 #include "BlueSnail.h"
 #include "RedSnail.h"
@@ -16,6 +17,7 @@ CObjMgr* CObjMgr::m_pInstance = nullptr;
 
 CObjMgr::CObjMgr()
 	: m_pPlayer(nullptr)
+	, m_bColRender(false)
 {
 }
 
@@ -80,6 +82,16 @@ int CObjMgr::Update(void)
 		}
 	}
 
+	if (CKeyMgr::Get_Instance()->Key_Down('P'))
+	{
+		if(m_bColRender)
+			m_bColRender = false;
+		else
+			m_bColRender = true;
+	}
+		
+
+
 	return 0;
 }
 
@@ -97,6 +109,7 @@ void CObjMgr::Late_Update(void)
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);   // 플레이어 포탈
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_SKILL], false);   // 몬스터	플레이어스킬
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSKILL], false);   // 플레이어 몬스터 스킬
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_ITEM], false);   // 플레이어 아이템
 }
 
 void CObjMgr::Render(HDC hDC)
@@ -105,7 +118,7 @@ void CObjMgr::Render(HDC hDC)
 	{
 		for (auto& iter : m_ObjList[i])
 		{
-			//iter->ColRender(hDC);
+			if(m_bColRender) iter->ColRender(hDC);
 			iter->Render(hDC);
 		}
 	}

@@ -14,6 +14,8 @@
 #include "Portal.h"
 #include "DarkedMage.h"
 
+#include "SpawnMgr.h"
+
 CStage_Boss::CStage_Boss()
 {
 	m_tMapSize.left = 0.f;
@@ -32,6 +34,7 @@ void CStage_Boss::Initialize(void)
 	// Bmp 로딩
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/SceneBoss/Boss_Back.bmp", L"Boss_Back");
 	CLineMgr::Get_Instance()->Scene_Boss();
+	CSpawnMgr::Get_Instance()->Initialize();
 
 
 	// Player 생성
@@ -42,11 +45,16 @@ void CStage_Boss::Initialize(void)
 		CObjMgr::Get_Instance()->Set_Player(pPlayer);
 	}
 	else
-		CObjMgr::Get_Instance()->Get_Player()->Set_Pos(390.f, 930.f);
+		CObjMgr::Get_Instance()->Get_Player()->Set_Pos(1000.f, 500.f);
+
 
 	CObj* pBoss = CAbstractFactory<CDarkedMage>::Create(996, 383, "Monster");
 	pBoss->Set_Target(CObjMgr::Get_Instance()->Get_Player());
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, pBoss);
+
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(177.f, 685.f, "Portal_BossTo1"));
+
 
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
@@ -78,6 +86,10 @@ void CStage_Boss::Release(void)
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_NPC);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MAP);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCK);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_SKILL);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSKILL);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
 }
 
 void CStage_Boss::RenderBackGround(HDC hDC)

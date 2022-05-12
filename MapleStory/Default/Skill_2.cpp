@@ -49,7 +49,7 @@ void CSkill_2::Initialize(void)
 
 	m_fOldSkillTime = GetTickCount64();
 	m_fSkillTime = 2500.f;
-	m_fDeleteTime = 5000.f;
+	m_fDeleteTime = 4300.f;
 
 }
 

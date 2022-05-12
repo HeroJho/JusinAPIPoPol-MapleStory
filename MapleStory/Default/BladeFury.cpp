@@ -39,7 +39,7 @@ void CBladeFury::Initialize(void)
 
 	m_bCanHit = false;
 	m_CanHitCount = 0;
-	m_CanHitMaxCount = 3;
+	m_CanHitMaxCount = 12;
 
 	m_pOldLine = nullptr;
 	m_bJump = false;
@@ -91,7 +91,6 @@ void CBladeFury::Render(HDC hDC)
 
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-
 	GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
 		int(m_tTRect.left + iScrollX),					// 2,3 인자 :  복사받을 위치 X, Y
 		int(m_tTRect.top - 37 + iScrollY),
@@ -112,10 +111,21 @@ void CBladeFury::Release(void)
 
 void CBladeFury::OnCollision(CObj* _pOther)
 {
+	if (m_bCanHit)
+		return;
 	if (m_CanHitCount > m_CanHitMaxCount)
 		return;
 	if (!_pOther->Get_CanHit())
 		return;
+
+	if (!m_pFirst)
+		m_pFirst = _pOther;
+	else if(m_pFirst == _pOther)
+	{
+		m_pFirst = nullptr;
+		m_bCanHit = true;
+		return;
+	}
 
 	++m_CanHitCount;
 

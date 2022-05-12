@@ -113,10 +113,21 @@ void CKarmaFury::Release(void)
 
 void CKarmaFury::OnCollision(CObj* _pOther)
 {
+	if (m_bCanHit)
+		return;
 	if (m_CanHitCount > m_CanHitMaxCount)
 		return;
 	if (!_pOther->Get_CanHit())
 		return;
+
+	if (!m_pFirst)
+		m_pFirst = _pOther;
+	else if (m_pFirst == _pOther)
+	{
+		m_pFirst = nullptr;
+		m_bCanHit = true;
+		return;
+	}
 
 	++m_CanHitCount;
 

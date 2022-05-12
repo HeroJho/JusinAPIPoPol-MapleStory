@@ -7,6 +7,7 @@
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
 #include "EventMgr.h"
+#include "UIMgr.h"
 
 
 #include "ObjMgr.h"
@@ -355,8 +356,8 @@ void CPlayer::Skill_Update(void)
 	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LEFT))
 	{
 		m_tInfo.fX -= m_fSpeed;
-		m_eDir = DIR_LEFT;
-		////SetCurState(WALK, m_eDir);
+		//m_eDir = DIR_LEFT;
+		//SetCurState(WALK, m_eDir);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Pressing(VK_RIGHT))
 	{
@@ -364,6 +365,8 @@ void CPlayer::Skill_Update(void)
 		//m_eDir = DIR_RIGHT;
 		//SetCurState(WALK, m_eDir);
 	}
+
+	m_bOnePlay = true;
 }
 
 void CPlayer::Key_Input(void)
@@ -423,6 +426,10 @@ void CPlayer::Key_Input(void)
 
 
 	// TODO: 스킬 매니저
+	
+	if (m_eCurState == SKILL || m_eCurState == ATTACK)
+		return;
+
 	if (CKeyMgr::Get_Instance()->Key_Down('Q'))
 	{
 		SetCurState(ATTACK, m_eDir);
@@ -507,6 +514,8 @@ void CPlayer::Motion_Change(void)
 		if (m_bOnePlay)
 			return;
 
+		//m_bOnePlay = false;
+		//m_bStayPlay = false;
 
 		switch (m_eCurState)
 		{
@@ -610,6 +619,7 @@ void CPlayer::OnHit(CObj* _pOther)
 		return;
 
 	m_tStat.iHp -= _pOther->Get_Stat().iAt;
+	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, m_tStat.iMaxHp);
 	if (m_tStat.iHp <= 0.f)
 	{
 		
@@ -627,6 +637,8 @@ void CPlayer::OnHit(CObj* _pOther)
 
 void CPlayer::OnePlayEnd(void)
 {
+	m_bOnePlay = false;
+	m_bStayPlay = false;
 	SetCurState(IDLE, m_eDir);
 }
 
@@ -636,18 +648,39 @@ void CPlayer::OnCollision(CObj* _pOther)
 	{
 		// OnHit(_pOther);
 	}
+	else if (_pOther->Get_Tag() == "Item")
+	{
+		if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		{
+			_pOther->OnHit(this);
+		}
+	}
 
 
 	if (_pOther->Get_Tag() == "Portal_1To2")
 	{
-		if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		if (CKeyMgr::Get_Instance()->Key_Down('X'))
 		{
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_2);
 		}
 	}
 	else if (_pOther->Get_Tag() == "Portal_2To1")
 	{
-		if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		if (CKeyMgr::Get_Instance()->Key_Down('X'))
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
+		}
+	}
+	else if (_pOther->Get_Tag() == "Portal_1ToBoss")
+	{
+		if (CKeyMgr::Get_Instance()->Key_Down('X'))
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_BOSS);
+		}
+	}
+	else if (_pOther->Get_Tag() == "Portal_BossTo1")
+	{
+		if (CKeyMgr::Get_Instance()->Key_Down('X'))
 		{
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
 		}

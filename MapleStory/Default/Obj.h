@@ -53,7 +53,7 @@ public:
 	virtual		void	Render(HDC hDC)		PURE;
 	virtual		void	Release(void)		PURE;
 
-	void	ColRender(HDC hDC);
+	virtual     void	ColRender(HDC hDC);
 
 	virtual		void	OnCollision(CObj* _pOther) {};
 
@@ -63,7 +63,7 @@ public:
 protected:
 	void		Update_Rect(void);
 	void		Move_Frame(void);
-	void		Update_Gravity(void);
+	void		Update_Gravity(bool _bItem = false);
 	virtual void	OnePlayEnd(void) {};
 
 protected:
@@ -97,6 +97,8 @@ protected:
 	float					m_fAirTime;	// 점프 중 진행 시간
 	float					m_fValY;
 
+	CLine*					m_pCurLine;
 	CLine*					m_pOldLine;
+	float					m_fLinefY;
 };
 
