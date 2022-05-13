@@ -24,7 +24,6 @@ CScrollMgr::~CScrollMgr()
 void CScrollMgr::Initialize(void)
 {
 	// x, yรเ มฆวั
-
 	if (!m_pTarget)
 		return;
 

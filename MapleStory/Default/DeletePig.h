@@ -19,6 +19,7 @@ public:
 
 public:
 	virtual void	OnHit(CObj* _pOther) override;
+	void DropItem();
 
 private:
 	void Update_Idle();

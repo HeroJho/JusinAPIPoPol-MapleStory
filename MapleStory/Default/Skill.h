@@ -9,6 +9,7 @@ public:
 
 public:
 	void		Set_ColSet(float _fCX, float _fCY, float _fPvX, float _fPvY, float _fDeleteTime, float _fSkillTime);
+	void		Set_SkillInfo(int _iAt, int _iMonsCount);
 
 public:
 	virtual void Initialize(void) override;

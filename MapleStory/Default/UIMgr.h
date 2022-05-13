@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HpHp_UI.h"
+#include "Inven_UI.h"
 
 class CUIMgr
 {
@@ -33,6 +34,9 @@ private:
 	static CUIMgr* m_pInstance;
 #pragma endregion
 
+public:
+	CObj* Get_InvenUI() { return m_pInven; }
+
 
 public:
 	void		Initialize(void);
@@ -42,11 +46,13 @@ public:
 
 public:
 	void ChangePlayerHp(int _iHp, int _iMaxHp);
+	void ChangePlayerMp(int _iMp, int _iMaxMp);
+	void ChangePlayerExp(int _iExp, int _iMaxExp);
 
 
 private:
 	CHpHp_UI* m_pHpHpUI;
-
+	CInven_UI* m_pInven;
 
 };
 

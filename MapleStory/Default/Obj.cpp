@@ -28,12 +28,17 @@ CObj::~CObj()
 }
 
 
-void CObj::Set_Stat(int _iMaxHp, int _iAt)
+void CObj::Set_Stat(int _iMaxHp, int _iMaxMp, int _iAt)
 {
 	m_tStat.iHp = _iMaxHp;
 	m_tStat.iMaxHp = _iMaxHp;
+	m_tStat.iMp = _iMaxMp;
+	m_tStat.iMaxMp = _iMaxMp;
 	m_tStat.iAt = _iAt;
+	
+	m_tStat.iLevel = 1;
 	m_tStat.iExp = 0;
+	m_tStat.iMaxExp = m_tStat.iLevel * 100;
 }
 
 void CObj::Update_Rect(void)
@@ -112,11 +117,11 @@ void CObj::Update_Gravity(bool _bItem)
 
 void CObj::Move_Frame(void)
 {
-	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount64())
 	{
 		m_tFrame.iFrameStart++;
 
-		m_tFrame.dwTime = GetTickCount();
+		m_tFrame.dwTime = (DWORD)GetTickCount64();
 
 		if (m_tFrame.iFrameStart > m_tFrame.iFrameEnd)
 		{

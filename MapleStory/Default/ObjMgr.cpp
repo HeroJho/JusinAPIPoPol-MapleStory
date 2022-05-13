@@ -106,6 +106,7 @@ void CObjMgr::Late_Update(void)
 
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSTER], false);
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BLOCK], m_ObjList[OBJ_MONSTER]);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BLOCKME], m_ObjList[OBJ_PLAYER]);
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);   // 플레이어 포탈
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_SKILL], false);   // 몬스터	플레이어스킬
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSKILL], false);   // 플레이어 몬스터 스킬

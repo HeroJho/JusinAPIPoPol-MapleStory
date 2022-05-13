@@ -20,7 +20,7 @@ void CEventMgr::ExeEvent()
 		return;
 
 	CSceneMgr::Get_Instance()->Scene_Change(m_eID);
-	m_eID == SC_END;
+	m_eID = SC_END;
 }
 
 void CEventMgr::AddSceneChangeEvent(SCENEID _eId)

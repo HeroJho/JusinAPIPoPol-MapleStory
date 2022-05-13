@@ -87,6 +87,7 @@ void CStage_Boss::Release(void)
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_NPC);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MAP);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCK);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCKME);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_SKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);

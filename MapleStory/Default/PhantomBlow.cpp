@@ -23,20 +23,20 @@ void CPhantomBlow::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 9;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 50.f;
-	m_tFrame.dwTime = GetTickCount64();
+	m_tFrame.dwSpeed = (DWORD)50.f;
+	m_tFrame.dwTime = (DWORD)GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 300.f;
 	m_tInfo.fCCY = 100.f;
-	m_tColPivot.x = 0.f;
-	m_tColPivot.y = -30.f;
+	m_tColPivot.x = (LONG)0.f;
+	m_tColPivot.y = (LONG)- 30.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 600.f;
 	m_tInfo.fTCY = 300.f;
 
-	Set_Stat(0, 30);
+	Set_Stat(0, 10, 30);
 	m_fSpeed = 0.f;
 
 	m_bCanHit = false;
@@ -49,7 +49,7 @@ void CPhantomBlow::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = GetTickCount64();
+	m_fOldSkillTime = (float)GetTickCount64();
 	m_fSkillTime = 100.f;
 	m_fDeleteTime = 600.f;
 
@@ -66,14 +66,14 @@ int CPhantomBlow::Update(void)
 
 	if (m_pTarget->Get_Dir() == DIR_LEFT)
 	{
-		m_tColPivot.x = -70.f;
-		m_tColPivot.y = -25.f;
+		m_tColPivot.x = (LONG) - 70.f;
+		m_tColPivot.y = (LONG)-25.f;
 		SetFrameDir(DIR_LEFT);
 	}
 	else
 	{
-		m_tColPivot.x = 70.f;
-		m_tColPivot.y = -25.f;
+		m_tColPivot.x = (LONG)70.f;
+		m_tColPivot.y = (LONG)-25.f;
 		SetFrameDir(DIR_RIGHT);
 	}
 

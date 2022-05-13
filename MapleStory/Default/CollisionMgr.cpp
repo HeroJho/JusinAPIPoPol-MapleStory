@@ -76,6 +76,92 @@ void CCollisionMgr::Collision_RectEx(list<CObj*> _Dest, list<CObj*> _Sour, bool 
 	}
 }
 
+void CCollisionMgr::Collision_RectEx(CObj* _Dest, CObj* _Sour, bool _bPush)
+{
+
+	float	fX = 0.f, fY = 0.f;
+
+	if (Check_Rect(_Dest, _Sour, &fX, &fY))
+	{
+		_Dest->OnCollision(_Sour);
+		_Sour->OnCollision(_Dest);
+
+		// 상하 충돌
+		if (fX > fY)
+		{
+			// 상 충돌
+			if (_Dest->Get_Info().fCY > _Sour->Get_Info().fCY)
+			{
+				if (_bPush)_Sour->Set_PosY(-fY);
+			}
+			// 하 충돌
+			else
+			{
+				if (_bPush)_Sour->Set_PosY(fY);
+			}
+		}
+		// 좌우 충돌
+		else
+		{
+			// 좌 충돌
+			if (_Dest->Get_Info().fCX > _Sour->Get_Info().fCX)
+			{
+				if (_bPush)_Sour->Set_PosX(-fX);
+			}
+			// 우 충돌
+			else
+			{
+				if (_bPush)_Sour->Set_PosX(fX);
+			}
+		}
+	}
+}
+
+void CCollisionMgr::Collision_RectEx(CObj* _Dest, list<CItem_UI*> _Sour, bool _bPush)
+{
+	for (auto& Sour : _Sour)
+	{
+		float	fX = 0.f, fY = 0.f;
+
+		if (Check_Rect(_Dest, Sour, &fX, &fY))
+		{
+			_Dest->OnCollision(Sour);
+			Sour->OnCollision(_Dest);
+
+			// 상하 충돌
+			if (fX > fY)
+			{
+				// 상 충돌
+				if (_Dest->Get_Info().fCY > Sour->Get_Info().fCY)
+				{
+					if (_bPush)Sour->Set_PosY(-fY);
+				}
+				// 하 충돌
+				else
+				{
+					if (_bPush)Sour->Set_PosY(fY);
+				}
+			}
+			// 좌우 충돌
+			else
+			{
+				// 좌 충돌
+				if (_Dest->Get_Info().fCX > Sour->Get_Info().fCX)
+				{
+					if (_bPush)Sour->Set_PosX(-fX);
+				}
+				// 우 충돌
+				else
+				{
+					if (_bPush)Sour->Set_PosX(fX);
+				}
+			}
+
+		}
+	}
+	
+}
+
 bool CCollisionMgr::Check_Rect(CObj* pDest, CObj* pSour, float *pX, float* pY)
 {
 	float		fWidth = abs(pDest->Get_Info().fCX - pSour->Get_Info().fCX);

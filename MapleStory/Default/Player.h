@@ -3,7 +3,8 @@
 #include "Bullet.h"
 #include "Line.h"
 
-class CPlayer : public CObj
+class CPlayer 
+	: public CObj
 {
 public:
 	enum STATE { IDLE, WALK, AIR, ATTACK, SKILL, HIT, BENDIDLE, HANGIDLE, BENDWALK, HANGWALK, DEAD, TEST, END };
@@ -14,6 +15,12 @@ public:
 
 public:
 	void SetCurState(STATE _eState, DIRECTION _eDir);
+	bool DecreaseMp(int _iValue);
+	void AddExp(int _iValue);
+	void LevelUp();
+
+	void IncreaseHp(int _iValue);
+	void IncreaseMp(int _iValue);
 
 public:
 	virtual void	Initialize(void)	override;

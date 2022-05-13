@@ -2,6 +2,7 @@
 #include "Mouse.h"
 
 #include "ScrollMgr.h"
+#include "KeyMgr.h"
 
 CMouse::CMouse()
 {
@@ -14,8 +15,10 @@ CMouse::~CMouse()
 
 void CMouse::Initialize(void)
 {
-	m_tInfo.fCCX = 20.f;
-	m_tInfo.fCCY = 20.f;
+	m_sTag = "Mouse";
+
+	m_tInfo.fCCX = 10.f;
+	m_tInfo.fCCY = 10.f;
 }
 
 int CMouse::Update(void)
@@ -49,8 +52,8 @@ void CMouse::Render(HDC hDC)
 	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-	int iRealPosX = m_tInfo.fX - iScrollX;
-	int iRealPosY = m_tInfo.fY - iScrollY;
+	int iRealPosX = int(m_tInfo.fX - iScrollX);
+	int iRealPosY = int(m_tInfo.fY - iScrollY);
 	TCHAR lpOut[1024];
 	wsprintf(lpOut, TEXT("lX: %d \nY: %d"), iRealPosX, iRealPosY);
 	TextOut(hDC, 35, 15, lpOut, lstrlen(lpOut));
@@ -59,4 +62,15 @@ void CMouse::Render(HDC hDC)
 void CMouse::Release(void)
 {
 	
+}
+
+void CMouse::OnCollision(CObj* _pOther)
+{
+	if (_pOther->Get_Tag() == "InvenUI")
+	{
+		if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LBUTTON))
+		{
+			_pOther->Set_Pos(m_tInfo.fX, m_tInfo.fY + 155);
+		}
+	}
 }

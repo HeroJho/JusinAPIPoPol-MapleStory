@@ -10,6 +10,9 @@
 #include "BladeStormF.h"
 
 CBladeStorm::CBladeStorm()
+	: m_cHoldKey()
+	, m_fHitTime(0.f)
+	, m_fOldHitTime(0.f)
 {
 }
 
@@ -33,25 +36,25 @@ void CBladeStorm::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 10;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 50.f;
-	m_tFrame.dwTime = GetTickCount64();
+	m_tFrame.dwSpeed = (DWORD)50.f;
+	m_tFrame.dwTime = (DWORD)GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 500.f;
 	m_tInfo.fCCY = 250.f;
-	m_tColPivot.x = 0.f;
-	m_tColPivot.y = -30.f;
+	m_tColPivot.x = (LONG)0.f;
+	m_tColPivot.y = (LONG)-30.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 1000.f;
 	m_tInfo.fTCY = 500.f;
 
-	Set_Stat(0, 1);
+	Set_Stat(0, 10, 5);
 	m_fSpeed = 0.f;
 
 	m_bCanHit = false;
 	m_CanHitCount = 0;
-	m_CanHitMaxCount = 10.f;
+	m_CanHitMaxCount = 10;
 
 	m_pOldLine = nullptr;
 	m_bJump = false;
@@ -59,12 +62,12 @@ void CBladeStorm::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = GetTickCount64();
+	m_fOldSkillTime = (float)GetTickCount64();
 	m_fSkillTime = 100.f;
 	m_fDeleteTime = 5000.f;
 
 	m_fHitTime = 500.f;
-	m_fOldHitTime = GetTickCount64();
+	m_fOldHitTime = (float)GetTickCount64();
 
 }
 
@@ -83,7 +86,7 @@ int CBladeStorm::Update(void)
 	{
 		m_CanHitCount = 0;
 		m_bCanHit = false;
-		m_fOldHitTime = GetTickCount64();
+		m_fOldHitTime = (float)GetTickCount64();
 	}
 
 
@@ -93,14 +96,14 @@ int CBladeStorm::Update(void)
 
 	if (m_pTarget->Get_Dir() == DIR_LEFT)
 	{
-		m_tColPivot.x = -300.f;
-		m_tColPivot.y = -70.f;
+		m_tColPivot.x = (LONG) - 300.f;
+		m_tColPivot.y = (LONG)-70.f;
 		SetFrameDir(DIR_LEFT);
 	}
 	else
 	{
-		m_tColPivot.x = 300.f;
-		m_tColPivot.y = -70.f;
+		m_tColPivot.x = (LONG)300.f;
+		m_tColPivot.y = (LONG)-70.f;
 		SetFrameDir(DIR_RIGHT);
 	}
 

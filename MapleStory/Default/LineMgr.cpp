@@ -268,6 +268,64 @@ void CLineMgr::Scene_2()
 
 }
 
+void CLineMgr::Scene_4()
+{
+	Release();
+
+	LINE		tf{ 910.f, 1002.f, 2789.f, 1002.f };
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(810.f, 942.f, 935.f, 942.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(540.f, 880.f, 833.f, 880.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(0.f, 823.f, 560.f, 823.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(477.f, 791.f, 1410.f, 791.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1424.f, 851.f, 1504.f, 851.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1515.f, 909.f, 1593.f, 909.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1606.f, 971.f, 1682.f, 971.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1466.f, 735.f, 1598.f, 735.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1647.f, 672.f, 1775.f, 672.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1647.f, 552.f, 1773.f, 552.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1464.f, 492.f, 1594.f, 492.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1825.f, 613.f, 2405.f, 613.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(659.f, 434.f, 1411.f, 434.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2368.f, 374.f, 2767.f, 374.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1465.f, 375.f, 1594.f, 375.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1465.f, 314.f, 1594.f, 314.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1646.f, 252.f, 2314.f, 252.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(30.f, 372.f, 599.f, 372.f);
+	m_LineList.push_back(new CLine(tf));
+
+
+	tf.Init(822.f, 431.f, 822.f, 747.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(1344.f, 783.f, 1344.f, 960.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(2194.f, 605.f, 2194.f, 929.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(1918.f, 246.f, 1918.f, 571.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(2444.f, 368.f, 2444.f, 696.f);
+	m_HangLineList.push_back(new CLine(tf));
+
+
+}
+
 void CLineMgr::Scene_Boss()
 {
 	Release();

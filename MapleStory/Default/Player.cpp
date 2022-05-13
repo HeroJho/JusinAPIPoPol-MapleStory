@@ -17,10 +17,24 @@
 #include "PhantomBlow.h"
 #include "BladeStorm.h"
 #include "DoubleJump.h"
+#include "SkillMgr.h"
 
 
 CPlayer::CPlayer()
-	: m_eCurState(IDLE), m_ePreState(END)
+	: m_eCurState(IDLE)
+	, m_ePreState(END)
+	, m_bDoubleJump(false)
+	, m_bDrop(false)
+	, m_bHit(false)
+	, m_eDoubleDir(DIR_LEFT)
+	, m_fDropSpeed(0.f)
+	, m_fDropY(0.f)
+	, m_fHitTime(0.f)
+	, m_fOldHitTime(0.f)
+	, m_fOldSkillTime(0.f)
+	, m_fSkillTime(0.f)
+	, m_pDropLine(nullptr)
+	, m_pHangLine(nullptr)
 {
 }
 
@@ -31,21 +45,22 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize(void)
 {
+	CSkillMgr::Get_Instance()->Initialize();
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
 	Set_FrameKey(L"PlayerL");
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 3;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 1000.f;
-	m_tFrame.dwTime = GetTickCount();
+	m_tFrame.dwSpeed = (DWORD)1000.f;
+	m_tFrame.dwTime = (DWORD)GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 50.f;
 	m_tInfo.fCCY = 80.f;
-	m_tColPivot.x = 0.f;
-	m_tColPivot.y = -35.f;
+	m_tColPivot.x = (LONG)0.f;
+	m_tColPivot.y = (LONG)-35.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 200.f;
 	m_tInfo.fTCY = 200.f;
@@ -59,7 +74,7 @@ void CPlayer::Initialize(void)
 	m_fOldSkillTime = 0.f;
 	m_fSkillTime = 800.f;
 
-	Set_Stat(100, 10);
+	Set_Stat(100, 200, 10);
 
 	m_eCurState = IDLE;
 	m_fSpeed = 3.f;
@@ -120,6 +135,7 @@ int CPlayer::Update(void)
 	}
 
 	Update_Rect();
+	CSkillMgr::Get_Instance()->Update();
 
 	return OBJ_NOEVENT;
 }
@@ -204,6 +220,26 @@ void CPlayer::Render(HDC hDC)
 			(int)m_tInfo.fTCY,
 			RGB(255, 0, 255));								// 제거하고자 하는 색상
 	}
+
+
+	LOGFONT m_labelFontInfo{};
+	m_labelFontInfo.lfHeight = 13;
+	m_labelFontInfo.lfWidth = 7;
+	m_labelFontInfo.lfCharSet = HANGEUL_CHARSET;
+	HFONT textFont, oldFont;
+	textFont = CreateFontIndirect(&m_labelFontInfo);
+	oldFont = (HFONT)SelectObject(hDC, textFont);
+
+	SetBkMode(hDC, OPAQUE);
+	SetBkColor(hDC, RGB(0, 0, 0));
+	SetTextColor(hDC, RGB(255, 255, 255));
+	TCHAR lpOut[1024];
+	wsprintf(lpOut, TEXT("배꼽벌렁이"));
+	TextOut(hDC, m_tTRect.left + iScrollX + 65, m_tTRect.top - 37 + iScrollY + 145, lpOut, lstrlen(lpOut));
+
+	SelectObject(hDC, oldFont);
+	DeleteObject(textFont);
+
 
 }
 void CPlayer::Release(void)
@@ -426,9 +462,9 @@ void CPlayer::Key_Input(void)
 
 
 	// TODO: 스킬 매니저
-	
 	if (m_eCurState == SKILL || m_eCurState == ATTACK)
 		return;
+
 
 	if (CKeyMgr::Get_Instance()->Key_Down('Q'))
 	{
@@ -438,44 +474,26 @@ void CPlayer::Key_Input(void)
 		pSkill->Set_Target(this);
 
 		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
-		//m_fOldSkillTime = GetTickCount64();
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down('W'))
 	{
-		SetCurState(SKILL, m_eDir);
-
-		CObj* pSkill = CAbstractFactory<CBladeFury>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
-		pSkill->Set_Target(this);
-
-		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down('R'))
-	{
-		SetCurState(SKILL, m_eDir);
-
-		CObj* pSkill = CAbstractFactory<CKarmaFury>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
-		pSkill->Set_Target(this);
-
-		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		if(CSkillMgr::Get_Instance()->UseSkill(SK_SKILL1))
+			SetCurState(SKILL, m_eDir);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down('E'))
 	{
-		SetCurState(SKILL, m_eDir);
-
-		CObj* pSkill = CAbstractFactory<CPhantomBlow>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
-		pSkill->Set_Target(this);
-
-		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		if (CSkillMgr::Get_Instance()->UseSkill(SK_SKILL2))
+			SetCurState(SKILL, m_eDir);
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('R'))
+	{
+		if (CSkillMgr::Get_Instance()->UseSkill(SK_SKILL4))
+			SetCurState(SKILL, m_eDir);
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down('A'))
 	{
-		SetCurState(SKILL, m_eDir);
-
-		CObj* pSkill = CAbstractFactory<CBladeStorm>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
-		pSkill->Set_Target(this);
-		((CBladeStorm*)pSkill)->SetHoldKey('A');
-
-		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		if (CSkillMgr::Get_Instance()->UseSkill(SK_SKILL3))
+			SetCurState(SKILL, m_eDir);
 	}
 
 }
@@ -523,24 +541,24 @@ void CPlayer::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 0;
-			m_tFrame.dwSpeed = 800.f;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)800.f;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case WALK:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 1;
-			m_tFrame.dwSpeed = 100;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)100;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case AIR:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 0;
 			m_tFrame.iMotion = 2;
-			m_tFrame.dwSpeed = 100;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)100;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case ATTACK:
@@ -548,8 +566,8 @@ void CPlayer::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 2;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = 120;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)120;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case SKILL:
@@ -557,56 +575,56 @@ void CPlayer::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 4;
-			m_tFrame.dwSpeed = 120;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)120;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case HIT:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 1;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = 200;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)200;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case BENDIDLE:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 0;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = 100;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)100;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case HANGIDLE:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 0;
 			m_tFrame.iMotion = 7;
-			m_tFrame.dwSpeed = 100;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)100;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case BENDWALK:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 1;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = 100;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)100;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case HANGWALK:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 1;
 			m_tFrame.iMotion = 7;
-			m_tFrame.dwSpeed = 100;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)100;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 
 		case DEAD:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 4;
-			m_tFrame.dwSpeed = 200;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)200;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 		}
 	}
@@ -622,17 +640,68 @@ void CPlayer::OnHit(CObj* _pOther)
 	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, m_tStat.iMaxHp);
 	if (m_tStat.iHp <= 0.f)
 	{
-		
+		m_tStat.iHp = 0.f;
 	}
 
 	SetCurState(HIT, m_eDir);
 
 	m_bHit = true;
-	m_fOldHitTime = GetTickCount64();
+	m_fOldHitTime = (float)GetTickCount64();
 
 	m_fJumpPower = 5.f;
 	m_bJump = true;
 	m_bOnAir = true;
+}
+
+bool CPlayer::DecreaseMp(int _iValue)
+{
+	if (m_tStat.iMp < _iValue)
+		return false;
+
+	m_tStat.iMp -= _iValue;
+
+	CUIMgr::Get_Instance()->ChangePlayerMp(m_tStat.iMp, m_tStat.iMaxMp);
+
+	return true;
+}
+
+void CPlayer::AddExp(int _iValue)
+{
+	m_tStat.iExp += _iValue;
+	CUIMgr::Get_Instance()->ChangePlayerExp(m_tStat.iExp, m_tStat.iMaxExp);
+
+	if (m_tStat.iExp > m_tStat.iMaxExp)
+	{
+		int temp = m_tStat.iExp - m_tStat.iMaxExp;
+		LevelUp();
+		m_tStat.iExp = 0;
+		m_tStat.iExp += temp;
+		CUIMgr::Get_Instance()->ChangePlayerExp(m_tStat.iExp, m_tStat.iMaxExp);
+	}
+}
+
+void CPlayer::LevelUp()
+{
+	++m_tStat.iLevel;
+	m_tStat.iMaxExp = m_tStat.iLevel * 200;
+}
+
+void CPlayer::IncreaseHp(int _iValue)
+{
+	m_tStat.iHp += _iValue;
+	if (m_tStat.iMaxHp < m_tStat.iHp)
+		m_tStat.iHp = m_tStat.iMaxHp;
+
+	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, m_tStat.iMaxHp);
+}
+
+void CPlayer::IncreaseMp(int _iValue)
+{
+	m_tStat.iMp += _iValue;
+	if (m_tStat.iMaxMp < m_tStat.iMp)
+		m_tStat.iMp = m_tStat.iMaxMp;
+
+	CUIMgr::Get_Instance()->ChangePlayerMp(m_tStat.iMp, m_tStat.iMaxMp);
 }
 
 void CPlayer::OnePlayEnd(void)
@@ -657,32 +726,21 @@ void CPlayer::OnCollision(CObj* _pOther)
 	}
 
 
-	if (_pOther->Get_Tag() == "Portal_1To2")
+
+	if (CKeyMgr::Get_Instance()->Key_Down('X'))
 	{
-		if (CKeyMgr::Get_Instance()->Key_Down('X'))
-		{
+		if (_pOther->Get_Tag() == "Portal_1To2")
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_2);
-		}
-	}
-	else if (_pOther->Get_Tag() == "Portal_2To1")
-	{
-		if (CKeyMgr::Get_Instance()->Key_Down('X'))
-		{
+		else if (_pOther->Get_Tag() == "Portal_2To1")
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
-		}
-	}
-	else if (_pOther->Get_Tag() == "Portal_1ToBoss")
-	{
-		if (CKeyMgr::Get_Instance()->Key_Down('X'))
-		{
+		else if (_pOther->Get_Tag() == "Portal_1ToBoss")
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_BOSS);
-		}
-	}
-	else if (_pOther->Get_Tag() == "Portal_BossTo1")
-	{
-		if (CKeyMgr::Get_Instance()->Key_Down('X'))
-		{
+		else if (_pOther->Get_Tag() == "Portal_BossTo1")
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
-		}
+		else if (_pOther->Get_Tag() == "Portal_4To1")
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
+		else if (_pOther->Get_Tag() == "Portal_1To4")
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_4);
 	}
+
 }

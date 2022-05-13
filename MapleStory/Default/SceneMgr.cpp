@@ -4,6 +4,7 @@
 #include "ScrollMgr.h"
 #include "Stage1.h"
 #include "Stage2.h"
+#include "Stage4.h"
 #include "Stage_Boss.h"
 
 CSceneMgr*	CSceneMgr::m_pInstance = nullptr;
@@ -43,6 +44,9 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 			break;
 		case SC_STAGE_2:
 			m_pScene = new CStage2;
+			break;
+		case SC_STAGE_4:
+			m_pScene = new CStage4;
 			break;
 		case SC_STAGE_BOSS:
 			m_pScene = new CStage_Boss;

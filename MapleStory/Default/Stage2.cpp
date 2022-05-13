@@ -18,10 +18,10 @@
 
 CStage2::CStage2()
 {
-	m_tMapSize.left = 0.f;
-	m_tMapSize.top = 0.f;
-	m_tMapSize.right = 2238.f;
-	m_tMapSize.bottom = 2035.f - 300.f;
+	m_tMapSize.left = (LONG)0.f;
+	m_tMapSize.top = (LONG)0.f;
+	m_tMapSize.right = (LONG)2238.f;
+	m_tMapSize.bottom = (LONG)2035.f - 300.f;
 }
 
 CStage2::~CStage2()
@@ -88,6 +88,7 @@ void CStage2::Release(void)
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_NPC);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MAP);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCK);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCKME);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_SKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
@@ -101,7 +102,7 @@ void CStage2::RenderBackGround(HDC hDC)
 	HDC		hBackMemDC = CBmpMgr::Get_Instance()->Find_Image(L"2_Back");
 	GdiTransparentBlt(hDC,
 		(iScrollX / 2),
-		(iScrollY / 2) - 300.f,
+		(iScrollY / 2) - 300,
 		2238,
 		2035,
 		hBackMemDC,

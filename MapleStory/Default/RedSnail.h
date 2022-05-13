@@ -33,6 +33,7 @@ private:
 
 protected:
 	virtual void Motion_Change(void) override;
+	void DropItem();
 
 private:
 	void ChooseRandStat();

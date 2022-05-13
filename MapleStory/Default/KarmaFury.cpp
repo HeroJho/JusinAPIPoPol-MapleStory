@@ -22,20 +22,20 @@ void CKarmaFury::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 26;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 50.f;
-	m_tFrame.dwTime = GetTickCount64();
+	m_tFrame.dwSpeed = (DWORD)50.f;
+	m_tFrame.dwTime = (DWORD)GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 800.f;
 	m_tInfo.fCCY = 400.f;
-	m_tColPivot.x = 0.f;
-	m_tColPivot.y = -200.f;
+	m_tColPivot.x = (LONG)0.f;
+	m_tColPivot.y = (LONG)-200.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 1900.f;
 	m_tInfo.fTCY = 900.f;
 
-	Set_Stat(0, 50);
+	Set_Stat(0, 10,50);
 	m_fSpeed = 0.f;
 
 	m_bCanHit = false;
@@ -48,7 +48,7 @@ void CKarmaFury::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = GetTickCount64();
+	m_fOldSkillTime = (float)GetTickCount64();
 	m_fSkillTime = 100.f;
 	m_fDeleteTime = 1500.f;
 

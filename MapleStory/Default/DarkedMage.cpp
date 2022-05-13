@@ -14,8 +14,21 @@
 #include "Skill_4.h"
 
 CDarkedMage::CDarkedMage()
-	: m_fOldTime(GetTickCount64())
+	: m_fOldTime((float)GetTickCount64())
 	, m_fRandTime(0.f)
+	, m_eCurState(BOSS_STATE::IDLE)
+	, m_ePreState(BOSS_STATE::IDLE)
+	, m_fDelayTime(0.f)
+	, m_fOldDelayTime(0.f)
+	, m_fSkill1_DelayTime(0.f)
+	, m_fSkill1_OldDelayTime(0.f)
+	, m_fSkill2_DelayTime(0.f)
+	, m_fSkill2_OldDelayTime(0.f)
+	, m_fSkill4_DelayTime(0.f)
+	, m_fSkill4_OldDelayTime(0.f)
+	, m_iSkill1_Count(0)
+	, m_iSkill2_Count(0)
+	, m_iSkill4_Count(0)
 {
 
 }
@@ -32,20 +45,20 @@ void CDarkedMage::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 11;
 	m_tFrame.iMotion = 4;
-	m_tFrame.dwSpeed = 80.f;
-	m_tFrame.dwTime = GetTickCount();
+	m_tFrame.dwSpeed = (DWORD)80.f;
+	m_tFrame.dwTime = (DWORD)GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 100.f;
 	m_tInfo.fCCY = 100.f;
-	m_tColPivot.x = 0.f;
-	m_tColPivot.y = -35.f;
+	m_tColPivot.x = (LONG)0.f;
+	m_tColPivot.y = (LONG)-35.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 800.f;
 	m_tInfo.fTCY = 700.f;
 
-	Set_Stat(150, 5);
+	Set_Stat(150, 0, 5);
 
 	m_fSpeed = 1.f;
 
@@ -57,17 +70,17 @@ void CDarkedMage::Initialize(void)
 	m_fAirTime = 0.f;
 
 	m_fDelayTime = 1200.f;
-	m_fOldDelayTime = GetTickCount64();
+	m_fOldDelayTime = (float)GetTickCount64();
 
 	m_iSkill1_Count = 0;
 	m_fSkill1_DelayTime = 1500.f;
-	m_fSkill1_OldDelayTime = GetTickCount64();
+	m_fSkill1_OldDelayTime = (float)GetTickCount64();
 	m_iSkill2_Count = 0;
 	m_fSkill2_DelayTime = 2000.f;
-	m_fSkill2_OldDelayTime = GetTickCount64();
+	m_fSkill2_OldDelayTime = (float)GetTickCount64();
 	m_iSkill4_Count = 0;
 	m_fSkill4_DelayTime = 2000.f;
-	m_fSkill4_OldDelayTime = GetTickCount64();
+	m_fSkill4_OldDelayTime = (float)GetTickCount64();
 
 	m_eCurState = BOSS_STATE::IDLE;
 }
@@ -156,7 +169,7 @@ void CDarkedMage::ChooseRandStat()
 {
 	if (m_fOldTime + m_fRandTime < GetTickCount64())
 	{
-		m_fRandTime = CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 5500);
+		m_fRandTime = (float)CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 5500);
 		BOSS_STATE eRandStat = BOSS_STATE(CEventMgr::Get_Instance()->GetRandomNum_Int(1, 4));
 
 		switch (eRandStat)
@@ -182,7 +195,7 @@ void CDarkedMage::ChooseRandStat()
 			break;
 		}
 
-		m_fOldTime = GetTickCount64();
+		m_fOldTime = (float)GetTickCount64();
 	}
 }
 
@@ -198,7 +211,7 @@ void CDarkedMage::OnHit(CObj* _pOther)
 
 void CDarkedMage::Idle_Update()
 {
-	m_fOldDelayTime = GetTickCount64();
+	m_fOldDelayTime = (float)GetTickCount64();
 }
 
 void CDarkedMage::Skill_1_Update()
@@ -209,7 +222,7 @@ void CDarkedMage::Skill_1_Update()
 		m_iSkill1_Count = 2;
 	}
 	else
-		m_fSkill1_OldDelayTime = GetTickCount64();
+		m_fSkill1_OldDelayTime = (float)GetTickCount64();
 }
 
 void CDarkedMage::Skill_2_Update()
@@ -220,7 +233,7 @@ void CDarkedMage::Skill_2_Update()
 		m_iSkill2_Count = 2;
 	}
 	else
-		m_fSkill2_OldDelayTime = GetTickCount64();
+		m_fSkill2_OldDelayTime = (float)GetTickCount64();
 }
 
 void CDarkedMage::Skill_3_Update()
@@ -235,7 +248,7 @@ void CDarkedMage::Skill_4_Update()
 		m_iSkill4_Count = 1;
 	}
 	else
-		m_fSkill4_OldDelayTime = GetTickCount64();
+		m_fSkill4_OldDelayTime = (float)GetTickCount64();
 }
 
 void CDarkedMage::Skill_1_Temp()
@@ -254,7 +267,7 @@ void CDarkedMage::Skill_1_Temp()
 
 		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSKILL, pSkill);
 
-		m_fSkill1_OldDelayTime = GetTickCount64();
+		m_fSkill1_OldDelayTime = (float)GetTickCount64();
 
 		--m_iSkill1_Count;
 	}
@@ -275,7 +288,7 @@ void CDarkedMage::Skill_2_Temp()
 
 		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSKILL, pSkill);
 
-		m_fSkill2_OldDelayTime = GetTickCount64();
+		m_fSkill2_OldDelayTime = (float)GetTickCount64();
 
 		--m_iSkill2_Count;
 	}
@@ -297,7 +310,7 @@ void CDarkedMage::Skill_4_Temp()
 
 		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSKILL, pSkill);
 
-		m_fSkill4_OldDelayTime = GetTickCount64();
+		m_fSkill4_OldDelayTime = (float)GetTickCount64();
 
 		--m_iSkill4_Count;
 	}
@@ -328,40 +341,40 @@ void CDarkedMage::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 11;
 			m_tFrame.iMotion = 4;
-			m_tFrame.dwSpeed = 80.f;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)80.f;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 		case SKILL_1:
 			m_bOnePlay = true;
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 36;
 			m_tFrame.iMotion = 0;
-			m_tFrame.dwSpeed = 80;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)80;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 		case SKILL_2:
 			m_bOnePlay = true;
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 38;
 			m_tFrame.iMotion = 2;
-			m_tFrame.dwSpeed = 80.f;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)80.f;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 		case SKILL_3:
 			m_bOnePlay = true;
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 37;
 			m_tFrame.iMotion = 1;
-			m_tFrame.dwSpeed = 80.f;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)80.f;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 		case SKILL_4:
 			m_bOnePlay = true;
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 35;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = 80.f;
-			m_tFrame.dwTime = GetTickCount();
+			m_tFrame.dwSpeed = (DWORD)80.f;
+			m_tFrame.dwTime = (DWORD)GetTickCount64();
 			break;
 		}
 

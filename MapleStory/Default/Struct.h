@@ -22,8 +22,16 @@ typedef struct tagStat
 {
 	int		iHp;
 	int		iMaxHp;
+
+	int		iMp;
+	int		iMaxMp;
+
 	int		iAt;
+
+	int		iLevel;
 	int		iExp;
+	int		iMaxExp;
+
 }STAT;
 
 typedef	struct	tagLinePoint 
@@ -64,3 +72,39 @@ typedef struct tagFrame
 	DWORD	dwTime;				// 스프라이트 위치가 변경되는 시간 
 
 }FRAME;
+
+typedef struct itemInfo
+{
+	ITEMID eID;
+	int iCount;
+	string sTag;
+	int InvenID;
+
+}ITEM;
+
+typedef struct skillInfo
+{
+	SKILLID eID;
+	int iAt;
+	int iMonCount;
+	float m_fCoolDown;
+	float m_fOldCoolDown;
+	bool  m_bCanUse;
+
+	void Init(SKILLID _eID, int _iAt, int _iMonCount, float _fCoolDown)
+	{
+		eID = _eID;
+		iAt = _iAt;
+		iMonCount = _iMonCount;
+		m_fCoolDown = _fCoolDown;
+		m_bCanUse = true;
+	}
+	void Change(int _iAt, int _iMonCount, float _fCoolDown)
+	{
+		iAt = _iAt;
+		iMonCount = _iMonCount;
+		m_fCoolDown = _fCoolDown;
+		m_bCanUse = true;
+	}
+
+}SKILL;

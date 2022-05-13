@@ -29,7 +29,7 @@ public:
 
 	void		Set_FrameKey(TCHAR* pFrameKey) { m_pFrameKey = pFrameKey; }
 
-	void		Set_Stat(int _iMaxHp, int _iAt);
+	void		Set_Stat(int _iMaxHp, int _iMaxMp, int _iAt);
 
 	bool		Get_Dead() { return m_bDead; }
 	CObj* Get_Target() { return m_pTarget; }

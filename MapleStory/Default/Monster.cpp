@@ -20,8 +20,8 @@ void CMonster::Initialize(void)
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 50.f;
 	m_tInfo.fCCY = 80.f;
-	m_tColPivot.x = 0.f;
-	m_tColPivot.y = -35.f;
+	m_tColPivot.x = (LONG)0.f;
+	m_tColPivot.y = (LONG)-35.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 200.f;
 	m_tInfo.fTCY = 200.f;

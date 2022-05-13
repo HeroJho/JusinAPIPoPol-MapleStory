@@ -8,7 +8,9 @@ public:
 	virtual ~CHpHp_UI();
 
 public:
-	void SetP(float _fP) { m_fP = _fP; }
+	void SetPH(float _fP) { m_fPH = _fP; }
+	void SetPM(float _fP) { m_fPM = _fP; }
+	void SetPE(float _fP) { m_fPE = _fP; }
 
 public:
 	virtual void Initialize(void) override;
@@ -20,7 +22,11 @@ public:
 	virtual     void	ColRender(HDC hDC) override;
 
 private:
-	float m_fP;
-	float m_fPreP;
+	float m_fPH;
+	float m_fPrePH;
+	float m_fPM;
+	float m_fPrePM;
+	float m_fPE;
+	float m_fPrePE;
 };
 

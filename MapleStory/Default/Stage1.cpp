@@ -20,13 +20,15 @@
 
 #include "Money.h"
 #include "MoneyBig.h"
+#include "RedPosion.h"
+#include "BluePosion.h"
 
 CStage1::CStage1()
 {
-	m_tMapSize.left = 0.f;
-	m_tMapSize.top = 0.f;
-	m_tMapSize.right = 2238.f;
-	m_tMapSize.bottom = 1597.f - 300.f;
+	m_tMapSize.left = (LONG)0.f;
+	m_tMapSize.top = (LONG)0.f;
+	m_tMapSize.right = (LONG)2238.f;
+	m_tMapSize.bottom = (LONG)1597.f - 450.f;
 }
 
 CStage1::~CStage1()
@@ -44,10 +46,39 @@ void CStage1::Initialize(void)
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_4/Skill_4.bmp", L"Skill_4");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/MesoBig.bmp", L"MesoBig");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Meso.bmp", L"Meso");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/RedPotion.bmp", L"RedPotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/BluePotion.bmp", L"BluePotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/UI/Inventory_Consum.bmp", L"Inventory_Consum");
 
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoney>::Create(600, 400, "Item"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CRedPosion>::Create(700, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
 
 	// Bmp 로딩
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene1/1_Middle.bmp", L"1_Middle");
@@ -67,13 +98,11 @@ void CStage1::Initialize(void)
 
 	// UI
 	CUIMgr::Get_Instance()->Initialize();
-
-	// 마우스
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MOUSE, CAbstractFactory<CMouse>::Create(390.f, 930.f, "Mouse"));
-
+	
 	// 포탈
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(390.f, 930.f, "Portal_1To2"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(537.f, 928.f, "Portal_1ToBoss"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(1192.f, 718.f, "Portal_1To4"));
 
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
@@ -108,6 +137,7 @@ void CStage1::Release(void)
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_NPC);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MAP);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCK);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BLOCKME);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_SKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
@@ -121,7 +151,7 @@ void CStage1::RenderBackGround(HDC hDC)
 	HDC		hBackMemDC = CBmpMgr::Get_Instance()->Find_Image(L"1_Back");
 	GdiTransparentBlt(hDC,
 		(iScrollX / 2),
-		(iScrollY / 2) - 300.f,
+		(iScrollY / 2) - 300,
 		3730,
 		1597,
 		hBackMemDC,

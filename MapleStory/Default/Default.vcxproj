@@ -151,6 +151,7 @@
     <ClInclude Include="BladeFury.h" />
     <ClInclude Include="BladeStorm.h" />
     <ClInclude Include="BlockBox.h" />
+    <ClInclude Include="BluePosion.h" />
     <ClInclude Include="BlueSnail.h" />
     <ClInclude Include="BmpMgr.h" />
     <ClInclude Include="Bullet.h" />
@@ -163,16 +164,22 @@
     <ClInclude Include="DoubleJump.h" />
     <ClInclude Include="EventMgr.h" />
     <ClInclude Include="HpHp_UI.h" />
+    <ClInclude Include="InvenMgr.h" />
+    <ClInclude Include="Inven_UI.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Item_UI.h" />
     <ClInclude Include="KarmaFury.h" />
     <ClInclude Include="Money.h" />
     <ClInclude Include="MoneyBig.h" />
+    <ClInclude Include="MouseMgr.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="NightC.h" />
     <ClInclude Include="NightE.h" />
     <ClInclude Include="PhantomBlow.h" />
+    <ClInclude Include="RedPosion.h" />
     <ClInclude Include="RedSnail.h" />
     <ClInclude Include="Skill.h" />
+    <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Skill_2.h" />
     <ClInclude Include="Skill_4.h" />
     <ClInclude Include="SpawnMgr.h" />
@@ -204,6 +211,7 @@
     <ClInclude Include="ScrewBullet.h" />
     <ClInclude Include="ScrollMgr.h" />
     <ClInclude Include="Shield.h" />
+    <ClInclude Include="Stage4.h" />
     <ClInclude Include="Stage_Boss.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Struct.h" />
@@ -214,6 +222,7 @@
     <ClCompile Include="BladeFury.cpp" />
     <ClCompile Include="BladeStorm.cpp" />
     <ClCompile Include="BlockBox.cpp" />
+    <ClCompile Include="BluePosion.cpp" />
     <ClCompile Include="BlueSnail.cpp" />
     <ClCompile Include="BmpMgr.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -226,16 +235,22 @@
     <ClCompile Include="DoubleJump.cpp" />
     <ClCompile Include="EventMgr.cpp" />
     <ClCompile Include="HpHp_UI.cpp" />
+    <ClCompile Include="InvenMgr.cpp" />
+    <ClCompile Include="Inven_UI.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Item_UI.cpp" />
     <ClCompile Include="KarmaFury.cpp" />
     <ClCompile Include="Money.cpp" />
     <ClCompile Include="MoneyBig.cpp" />
+    <ClCompile Include="MouseMgr.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="NightC.cpp" />
     <ClCompile Include="NightE.cpp" />
     <ClCompile Include="PhantomBlow.cpp" />
+    <ClCompile Include="RedPosion.cpp" />
     <ClCompile Include="RedSnail.cpp" />
     <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Skill_2.cpp" />
     <ClCompile Include="Skill_4.cpp" />
     <ClCompile Include="SpawnMgr.cpp" />
@@ -262,6 +277,7 @@
     <ClCompile Include="ScrewBullet.cpp" />
     <ClCompile Include="ScrollMgr.cpp" />
     <ClCompile Include="Shield.cpp" />
+    <ClCompile Include="Stage4.cpp" />
     <ClCompile Include="Stage_Boss.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

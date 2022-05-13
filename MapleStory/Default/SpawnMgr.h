@@ -7,7 +7,7 @@ struct SpawnInfo
 	RECT rect;
 	MONSTERID Id;
 
-	void Init(MONSTERID _Id, float _Left, float _Right, float _Bottom)
+	void Init(MONSTERID _Id, LONG _Left, LONG _Right, LONG _Bottom)
 	{
 		Id = _Id;
 		rect.left = _Left;
@@ -57,6 +57,7 @@ public:
 
 public:
 	void Scene_2();
+	void Scene_4();
 
 private:
 	list<SpawnInfo> m_lRects;

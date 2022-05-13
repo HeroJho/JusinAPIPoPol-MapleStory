@@ -178,6 +178,27 @@
     <Filter Include="01. Obj\06. Item\MoneyBig">
       <UniqueIdentifier>{2916ce08-0ed7-415f-bef1-22234cc67276}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Obj\06. Item\RedPosion">
+      <UniqueIdentifier>{c97c676f-7d7e-4c73-bb88-0741df6efab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. Item\BluePosion">
+      <UniqueIdentifier>{05ae8ea0-5e1d-4141-868a-00732baabfa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\InvenMgr">
+      <UniqueIdentifier>{a64a5300-6727-464d-8072-851e2f83b8ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Inven_UI">
+      <UniqueIdentifier>{bd01dade-15cd-4929-8f79-a49fee921cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\SkillMgr">
+      <UniqueIdentifier>{f90faad4-4966-4f4e-98b0-ceafeeb9c5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\MouseMgr">
+      <UniqueIdentifier>{491466cd-9312-45a8-b87f-d4e67a891144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Item_UI">
+      <UniqueIdentifier>{8ce9e298-a432-41b9-bb21-4c5ffa05ef34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -369,6 +390,30 @@
     <ClInclude Include="MoneyBig.h">
       <Filter>01. Obj\06. Item\MoneyBig</Filter>
     </ClInclude>
+    <ClInclude Include="RedPosion.h">
+      <Filter>01. Obj\06. Item\RedPosion</Filter>
+    </ClInclude>
+    <ClInclude Include="BluePosion.h">
+      <Filter>01. Obj\06. Item\BluePosion</Filter>
+    </ClInclude>
+    <ClInclude Include="InvenMgr.h">
+      <Filter>98. Design\InvenMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Inven_UI.h">
+      <Filter>01. Obj\06. UI\Inven_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage4.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillMgr.h">
+      <Filter>98. Design\SkillMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseMgr.h">
+      <Filter>98. Design\MouseMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Item_UI.h">
+      <Filter>01. Obj\06. UI\Item_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -532,6 +577,30 @@
     </ClCompile>
     <ClCompile Include="MoneyBig.cpp">
       <Filter>01. Obj\06. Item\MoneyBig</Filter>
+    </ClCompile>
+    <ClCompile Include="RedPosion.cpp">
+      <Filter>01. Obj\06. Item\RedPosion</Filter>
+    </ClCompile>
+    <ClCompile Include="BluePosion.cpp">
+      <Filter>01. Obj\06. Item\BluePosion</Filter>
+    </ClCompile>
+    <ClCompile Include="InvenMgr.cpp">
+      <Filter>98. Design\InvenMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Inven_UI.cpp">
+      <Filter>01. Obj\06. UI\Inven_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage4.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillMgr.cpp">
+      <Filter>98. Design\SkillMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseMgr.cpp">
+      <Filter>98. Design\MouseMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Item_UI.cpp">
+      <Filter>01. Obj\06. UI\Item_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
