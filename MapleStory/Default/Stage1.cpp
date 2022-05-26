@@ -22,6 +22,14 @@
 #include "MoneyBig.h"
 #include "RedPosion.h"
 #include "BluePosion.h"
+#include "Npc.h"
+#include "Maya.h"
+#include "BlockBox.h"
+#include "CutMgr.h"
+#include "Chang.h"
+#include "SoundMgr.h"
+#include "Pet.h"
+#include "Vet.h"
 
 CStage1::CStage1()
 {
@@ -40,73 +48,41 @@ void CStage1::Initialize(void)
 {
 	// 2스테 갓다가 보방가면 요게 제대로 작동이 안되는것 같음.
 	// 이상한건 Stage2의 스폰매니저 업데이트 주석해도 잘 됨.
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/DarkedMage.bmp", L"DarkedMage");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_1/Skill_1.bmp", L"Skill_1");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_2/Skill_2.bmp", L"Skill_2");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_4/Skill_4.bmp", L"Skill_4");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/MesoBig.bmp", L"MesoBig");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Meso.bmp", L"Meso");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/RedPotion.bmp", L"RedPotion");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/BluePotion.bmp", L"BluePotion");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/UI/Inventory_Consum.bmp", L"Inventory_Consum");
-
-
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoney>::Create(600, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CRedPosion>::Create(700, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CBluePosion>::Create(750, 400, "Item"));
-
 	// Bmp 로딩
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainL.bmp", L"PlayerPainL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainR.bmp", L"PlayerPainR");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPL.bmp", L"PlayerPainPL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPR.bmp", L"PlayerPainPR");
+
+
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene1/1_Middle.bmp", L"1_Middle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene1/1_Back.bmp", L"1_Back");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/MesoBig.bmp", L"MesoBig");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Meso.bmp", L"Meso");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/RedPotion.bmp", L"RedPotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/BluePotion.bmp", L"BluePotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Equip.bmp", L"Equip");
+
+
 	CLineMgr::Get_Instance()->Scene_1();
-
-	// Player 생성
-	if (!CObjMgr::Get_Instance()->Get_Player())
-	{
-		CObj* pPlayer = CAbstractFactory<CPlayer>::Create(390.f, 930.f, "Player");
-		CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, pPlayer);
-		CObjMgr::Get_Instance()->Set_Player(pPlayer);
-	}
-	else
-		CObjMgr::Get_Instance()->Get_Player()->Set_Pos(390.f, 930.f);
-	
-
-	// UI
-	CUIMgr::Get_Instance()->Initialize();
-	
-	// 포탈
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(390.f, 930.f, "Portal_1To2"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(537.f, 928.f, "Portal_1ToBoss"));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(1192.f, 718.f, "Portal_1To4"));
+	MakeMap();
 
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
 	CScrollMgr::Get_Instance()->Initialize();
+
+	CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
+	CSoundMgr::Get_Instance()->PlaySound(L"Scene_1.wav", SOUND_BGM, 0.5);
+
+	CUIMgr::Get_Instance()->Initialize();
 }
 
 void CStage1::Update(void)
@@ -173,4 +149,49 @@ void CStage1::RenderBackGround(HDC hDC)
 		3663,
 		1597,
 		RGB(255, 0, 255));
+}
+
+void CStage1::MakeMap()
+{
+	// Player 생성
+	if (!CObjMgr::Get_Instance()->Get_Player())
+	{
+		CObj* pPlayer = CAbstractFactory<CPlayer>::Create(600.f, 930.f, "Player");
+		CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, pPlayer);
+		CObjMgr::Get_Instance()->Set_Player(pPlayer);
+	}
+	else
+		CObjMgr::Get_Instance()->Get_Player()->Set_Pos(390.f, 930.f);
+
+
+	// TEST
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CMoneyBig>::Create(650, 720, "Item"));
+
+
+	// 블락
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(725.f - 100.f, 698.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(1086.f + 100.f, 698.f, "Block"));
+
+
+	// NPC
+	CNpc* pNpc = (CNpc*)CAbstractFactory<CNpc>::Create(918.f, 720.f, "Jang");
+	CCutMgr::Get_Instance()->SetNpc(pNpc);
+	CObjMgr::Get_Instance()->Add_Object(OBJ_NPC, pNpc);
+	CObjMgr::Get_Instance()->Add_Object(OBJ_NPC, CAbstractFactory<CMaya>::Create(1496.f, 1050.f, "Maya"));
+
+	// UI
+	CUIMgr::Get_Instance()->Initialize();
+
+	// 포탈
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(390.f, 930.f, "Portal_1To2"));
+	// CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(537.f, 928.f, "Portal_1ToBoss"));
 }

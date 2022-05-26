@@ -9,16 +9,11 @@
 #include "ObjMgr.h"
 #include "Money.h"
 #include "Player.h"
+#include "QuestMgr.h"
 
 CMushroom::CMushroom()
-	: m_fOldTime((float)GetTickCount64())
+	: m_fOldTime(GetTickCount64())
 	, m_fRandTime(0.f)
-	, m_fChaseTime(0.f)
-	, m_fDeadTime(0.f)
-	, m_fHitTime(0.f)
-	, m_fOldChaseTime(0.f)
-	, m_fOldDeadTime(0.f)
-	, m_fOldHitTime(0.f)
 {
 
 }
@@ -36,8 +31,8 @@ void CMushroom::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 0;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = (DWORD)1000.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 1000.f;
+	m_tFrame.dwTime = GetTickCount();
 
 
 	m_fOldHitTime = 0.f;
@@ -51,13 +46,13 @@ void CMushroom::Initialize(void)
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 35.f;
 	m_tInfo.fCCY = 35.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-15.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -15.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 100.f;
 	m_tInfo.fTCY = 100.f;
 
-	Set_Stat(150, 0, 5);
+	Set_Stat(250, 0, 5);
 
 	m_fSpeed = 0.8f;
 
@@ -154,13 +149,13 @@ void CMushroom::ChooseRandStat()
 {
 	if (m_fOldTime + m_fRandTime < GetTickCount64())
 	{
-		m_fRandTime = (float)CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 10000);
+		m_fRandTime = CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 10000);
 		STATE eRandStat = STATE(CEventMgr::Get_Instance()->GetRandomNum_Int(0, 1));
 		DIRECTION eRandDir = DIRECTION(CEventMgr::Get_Instance()->GetRandomNum_Int(0, 1));
 
 		SetCurState(eRandStat, eRandDir);
 
-		m_fOldTime = (float)GetTickCount64();
+		m_fOldTime = GetTickCount64();
 	}
 }
 
@@ -214,7 +209,7 @@ void CMushroom::Update_Hit()
 	if (m_fOldHitTime + m_fHitTime < GetTickCount64())
 	{
 		SetCurState(CHASE, m_eDir);
-		m_fOldChaseTime = (float)GetTickCount64();
+		m_fOldChaseTime = GetTickCount64();
 	}
 }
 
@@ -232,15 +227,16 @@ void CMushroom::OnHit(CObj* _pOther)
 	if (m_tStat.iHp <= 0.f)
 	{
 		SetCurState(DEAD, m_eDir);
-		m_fOldDeadTime = (float)GetTickCount64();
+		m_fOldDeadTime = GetTickCount64();
 		m_bCanHit = false;
 		CSpawnMgr::Get_Instance()->DecreaseCount();
 		DropItem();
-		((CPlayer*)CObjMgr::Get_Instance()->Get_Player())->AddExp(5);
+		((CPlayer*)CObjMgr::Get_Instance()->Get_Player())->AddExp(20);
+		CQuestMgr::Get_Instance()->HuntingMonster(MON_GREENMUSH);
 		return;
 	}
 
-	m_fOldHitTime = (float)GetTickCount64();
+	m_fOldHitTime = GetTickCount64();
 
 	DIRECTION eDir = _pOther->Get_Target()->Get_Dir();
 	m_pTarget = _pOther->Get_Target();
@@ -284,8 +280,8 @@ void CMushroom::OnePlayEnd(void)
 	m_tFrame.iFrameStart = 3;
 	m_tFrame.iFrameEnd = 3;
 	m_tFrame.iMotion = 2;
-	m_tFrame.dwSpeed = (DWORD)200;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 200;
+	m_tFrame.dwTime = GetTickCount();
 }
 
 void CMushroom::Motion_Change(void)
@@ -298,32 +294,32 @@ void CMushroom::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 2;
 			m_tFrame.iMotion = 0;
-			m_tFrame.dwSpeed = (DWORD)500.f;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 500.f;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case WALK:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 1;
-			m_tFrame.dwSpeed = (DWORD)150.f;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 150.f;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case CHASE:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 1;
-			m_tFrame.dwSpeed = (DWORD)100.f;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 100.f;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case HIT:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 0;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = (DWORD)200;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case DEAD:
@@ -331,8 +327,8 @@ void CMushroom::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 3;
 			m_tFrame.iMotion = 2;
-			m_tFrame.dwSpeed = (DWORD)200;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 		}
 

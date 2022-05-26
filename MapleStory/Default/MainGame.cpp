@@ -16,6 +16,11 @@
 #include "InvenMgr.h"
 #include "SkillMgr.h"
 #include "MouseMgr.h"
+#include "SlotMgr.h"
+#include "QuestMgr.h"
+#include "CutMgr.h"
+#include "SoundMgr.h"
+#include "StatMgr.h"
 
 
 CMainGame::CMainGame()
@@ -34,22 +39,34 @@ CMainGame::~CMainGame()
 void CMainGame::Initialize(void)
 {
 	m_hDC = GetDC(g_hWnd);
-
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
 
-	CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE_1);
+	CSoundMgr::Get_Instance()->Initialize();
+	CQuestMgr::Get_Instance()->Initialize();
+	CMouseMgr::Get_Instance()->Initialize();
+	CSlotMgr::Get_Instance()->Initialize();
+	CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
 }
 
 void CMainGame::Update(void)
 {
 	CSceneMgr::Get_Instance()->Update();
-	CMouseMgr::Get_Instance()->Update();
+
+	if (CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_LOGO && CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_STAGE_COO)
+	{
+		CMouseMgr::Get_Instance()->Update();
+		CSlotMgr::Get_Instance()->Update();
+		CQuestMgr::Get_Instance()->Update();
+		CCutMgr::Get_Instance()->Update();
+	}
 }
 
 void CMainGame::Late_Update(void)
 {
 	CSceneMgr::Get_Instance()->Late_Update();
-	CMouseMgr::Get_Instance()->Late_Update();
+
+	if (CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_LOGO && CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_STAGE_COO)
+		CMouseMgr::Get_Instance()->Late_Update();
 }
 
 void CMainGame::Render(void)
@@ -58,9 +75,11 @@ void CMainGame::Render(void)
 
 	BitBlt(m_hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, SRCCOPY);
 
-	CSceneMgr::Get_Instance()->Render(hMemDC);
-	CMouseMgr::Get_Instance()->Render(hMemDC);
 
+	CSceneMgr::Get_Instance()->Render(hMemDC);
+	if (CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_LOGO && CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_STAGE_COO)
+		CMouseMgr::Get_Instance()->Render(hMemDC);
+	
 	++m_iFPS;
 
 	if (m_dwTime + 1000 < GetTickCount64())
@@ -79,6 +98,11 @@ void CMainGame::Render(void)
 
 void CMainGame::Release(void)
 {
+	CStatMgr::Get_Instance()->Destroy_Instance();
+	CSoundMgr::Get_Instance()->Destroy_Instance();
+	CCutMgr::Get_Instance()->Destroy_Instance();
+	CQuestMgr::Get_Instance()->Destroy_Instance();
+	CSlotMgr::Get_Instance()->Destroy_Instance();
 	CMouseMgr::Get_Instance()->Destroy_Instance();
 	CSkillMgr::Get_Instance()->Destroy_Instance();
 	CInvenMgr::Get_Instance()->Destroy_Instance();
@@ -92,7 +116,5 @@ void CMainGame::Release(void)
 	CLineMgr::Get_Instance()->Destroy_Instance();
 	CObjMgr::Get_Instance()->Destroy_Instance();
 
-	ReleaseDC(g_hWnd, m_hDC);	
+	ReleaseDC(g_hWnd, m_hDC);
 }
-
-

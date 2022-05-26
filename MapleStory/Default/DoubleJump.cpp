@@ -4,10 +4,10 @@
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
 #include "KeyMgr.h"
+#include "SoundMgr.h"
 
 
 CDoubleJump::CDoubleJump()
-	: m_bOnePos(false)
 {
 }
 
@@ -18,27 +18,31 @@ CDoubleJump::~CDoubleJump()
 
 void CDoubleJump::Initialize(void)
 {
+	CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT2);
+	CSoundMgr::Get_Instance()->PlaySound(L"DoubleJump.wav", SOUND_PEFFECT2, 1);
+
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Skill/DoubleJump/DoubleJumpL.bmp", L"DoubleJumpL");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Skill/DoubleJump/DoubleJumpR.bmp", L"DoubleJumpR");
 	Set_FrameKey(L"DoubleJumpL");
 	m_bOnePlay = true;
 	m_tFrame.iFrameStart = 0;
-	m_tFrame.iFrameEnd = 9;
+	m_tFrame.iFrameEnd = 8;
 	m_tFrame.iMotion = 0;
 	m_tFrame.dwSpeed = 50.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwTime = GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 10.f;
 	m_tInfo.fCCY = 10.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-30.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -30.f;
 	// 텍스쳐 크기 설정
-	m_tInfo.fTCX = 200.f;
-	m_tInfo.fTCY = 100.f;
+	m_tInfo.fTCX = 250.f;
+	m_tInfo.fTCY = 150.f;
 
-	Set_Stat(0, 10,  0);
+	Set_Stat(0, 0, 0);
 	m_fSpeed = 0.f;
 
 	m_bCanHit = false;
@@ -51,9 +55,9 @@ void CDoubleJump::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = (float)GetTickCount64();
+	m_fOldSkillTime = GetTickCount64();
 	m_fSkillTime = 100.f;
-	m_fDeleteTime = 600.f;
+	m_fDeleteTime = 450.f;
 
 	m_bOnePos = false;
 }
@@ -74,13 +78,13 @@ int CDoubleJump::Update(void)
 
 	if (m_pTarget->Get_Dir() == DIR_LEFT)
 	{
-		m_tColPivot.x = (LONG)-40.f;
-		m_tColPivot.y = (LONG)-25.f;
+		m_tColPivot.x = -40.f;
+		m_tColPivot.y = -25.f;
 	}
 	else
 	{
-		m_tColPivot.x = (LONG)40.f;
-		m_tColPivot.y = (LONG)-25.f;
+		m_tColPivot.x = 40.f;
+		m_tColPivot.y = -25.f;
 	}
 
 
@@ -143,7 +147,7 @@ void CDoubleJump::Release(void)
 
 void CDoubleJump::OnCollision(CObj* _pOther)
 {
-	if (m_CanHitCount > m_CanHitMaxCount)
+	/*if (m_CanHitCount > m_CanHitMaxCount)
 		return;
 	if (!_pOther->Get_CanHit())
 		return;
@@ -153,7 +157,7 @@ void CDoubleJump::OnCollision(CObj* _pOther)
 	if (_pOther->Get_Tag() == "Monster")
 	{
 		_pOther->OnHit(this);
-	}
+	}*/
 }
 
 

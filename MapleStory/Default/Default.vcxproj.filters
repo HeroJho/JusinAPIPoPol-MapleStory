@@ -191,13 +191,88 @@
       <UniqueIdentifier>{bd01dade-15cd-4929-8f79-a49fee921cab}</UniqueIdentifier>
     </Filter>
     <Filter Include="98. Design\SkillMgr">
-      <UniqueIdentifier>{f90faad4-4966-4f4e-98b0-ceafeeb9c5cd}</UniqueIdentifier>
+      <UniqueIdentifier>{c678cb86-c89c-424c-9ecf-9647b1fc7d44}</UniqueIdentifier>
     </Filter>
     <Filter Include="98. Design\MouseMgr">
-      <UniqueIdentifier>{491466cd-9312-45a8-b87f-d4e67a891144}</UniqueIdentifier>
+      <UniqueIdentifier>{b8d6725d-2b76-45d9-93db-bc29336c9e5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Obj\06. UI\Item_UI">
-      <UniqueIdentifier>{8ce9e298-a432-41b9-bb21-4c5ffa05ef34}</UniqueIdentifier>
+    <Filter Include="01. Obj\06. UI\Skill_UI">
+      <UniqueIdentifier>{99a1171d-ea84-419e-8343-9ce6524b43a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\QSlot_UI">
+      <UniqueIdentifier>{e80918de-77b9-4e0f-b70e-bfb54eb2e67a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\SlotMgr">
+      <UniqueIdentifier>{1dffc3ce-9bb0-429d-81a0-67fc93dea1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\07. SlotTemp">
+      <UniqueIdentifier>{da8f6c21-b0fd-4855-b41c-595feca56cbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\08. Damge">
+      <UniqueIdentifier>{abce1217-f447-467e-87ee-e8b44c293eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Shop_UI">
+      <UniqueIdentifier>{f6a623a0-dd8f-4179-8f70-4f38b86f75fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\LevelUp">
+      <UniqueIdentifier>{5ba6256b-a0cb-429f-81bb-a59c60d81e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Community_UI">
+      <UniqueIdentifier>{76cd6a92-0a3e-4de4-b61b-e4a415fdb136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\QuestMgr">
+      <UniqueIdentifier>{e3ade340-63a3-4a64-ad39-5f587a55f4ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Quest_UI">
+      <UniqueIdentifier>{5555233d-1526-47d3-b4fa-99a54171ac4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Screen_UI">
+      <UniqueIdentifier>{7f6432ed-c85a-4008-8917-e6e378c190e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\CutMgr">
+      <UniqueIdentifier>{5d603ace-39c0-41b8-8e17-854e65edc62b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\10. Quest">
+      <UniqueIdentifier>{8bb5eb44-56e0-4a6c-ad1f-0e8dacb7cd01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\01. Monster\08. Chang">
+      <UniqueIdentifier>{38a707bc-43b4-4a09-9765-58df965cf699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Boss_UI">
+      <UniqueIdentifier>{b06f9663-04e7-4871-a1df-2b3d48147a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\SoundMgr">
+      <UniqueIdentifier>{5d0ac2a0-ef7a-4b95-9fab-ac3982bc8dc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\11. Pet">
+      <UniqueIdentifier>{698f151c-97cc-4e95-8a03-39c5fdfc51e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Stat_UI">
+      <UniqueIdentifier>{e88dda45-48fa-41cf-9219-d351164ff942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Design\StatMgr">
+      <UniqueIdentifier>{e9df1a7d-0d1f-4b2b-80fe-ed2538ed8d93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Equip_UI">
+      <UniqueIdentifier>{e26e0155-e593-4651-81ce-e2fddf610d16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\Dead">
+      <UniqueIdentifier>{ee75a558-dfbd-4c12-a5f7-41ccb3a82da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Dead_UI">
+      <UniqueIdentifier>{8dedb2e0-1088-4a65-a9e8-27d4345ef2c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\05. Skill\Player\Vet">
+      <UniqueIdentifier>{675539b9-57f1-4a82-b265-080e1d9646eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\MiniMap">
+      <UniqueIdentifier>{2f17ef0d-a076-4990-bbea-9403eb1e0b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\06. UI\Option_UI">
+      <UniqueIdentifier>{e851e6de-0425-4f7f-847e-9533e5357fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Obj\07. SlotTemp\09. NPC">
+      <UniqueIdentifier>{4c326b71-2da4-4ce8-b713-3dcd299ef4b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -405,14 +480,191 @@
     <ClInclude Include="Stage4.h">
       <Filter>02. Scene\03. Stage</Filter>
     </ClInclude>
-    <ClInclude Include="SkillMgr.h">
-      <Filter>98. Design\SkillMgr</Filter>
+    <ClInclude Include="Item_Info.h">
+      <Filter>01. Obj\06. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Item_UI.h">
+      <Filter>01. Obj\06. UI\Inven_UI</Filter>
     </ClInclude>
     <ClInclude Include="MouseMgr.h">
       <Filter>98. Design\MouseMgr</Filter>
     </ClInclude>
-    <ClInclude Include="Item_UI.h">
-      <Filter>01. Obj\06. UI\Item_UI</Filter>
+    <ClInclude Include="SkillMgr.h">
+      <Filter>98. Design\SkillMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill_UI.h">
+      <Filter>01. Obj\06. UI\Skill_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillS_UI.h">
+      <Filter>01. Obj\06. UI\Skill_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="QSlot_UI.h">
+      <Filter>01. Obj\06. UI\QSlot_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotMgr.h">
+      <Filter>98. Design\SlotMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotTemp.h">
+      <Filter>01. Obj\07. SlotTemp</Filter>
+    </ClInclude>
+    <ClInclude Include="QSlotTemp_UI.h">
+      <Filter>01. Obj\06. UI\QSlot_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Damge.h">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageGen.h">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>01. Obj\05. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="Shop_UI.h">
+      <Filter>01. Obj\06. UI\Shop_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ShopS_UI.h">
+      <Filter>01. Obj\06. UI\Shop_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelUp.h">
+      <Filter>01. Obj\05. Skill\Player\LevelUp</Filter>
+    </ClInclude>
+    <ClInclude Include="Npc.h">
+      <Filter>01. Obj\07. SlotTemp\09. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="Maya.h">
+      <Filter>01. Obj\07. SlotTemp\09. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="Community_UI.h">
+      <Filter>01. Obj\06. UI\Community_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CommunityS_UI.h">
+      <Filter>01. Obj\06. UI\Community_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestMgr.h">
+      <Filter>98. Design\QuestMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest_UI.h">
+      <Filter>01. Obj\06. UI\Quest_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen_UI.h">
+      <Filter>01. Obj\06. UI\Screen_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CutMgr.h">
+      <Filter>98. Design\CutMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen1_UI.h">
+      <Filter>01. Obj\06. UI\Screen_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage3.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>01. Obj\10. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="Chang.h">
+      <Filter>01. Obj\01. Monster\08. Chang</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage5.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage6.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage7.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss_UI.h">
+      <Filter>01. Obj\06. UI\Boss_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundMgr.h">
+      <Filter>98. Design\SoundMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="PomDamage.h">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClInclude>
+    <ClInclude Include="Pet.h">
+      <Filter>01. Obj\11. Pet</Filter>
+    </ClInclude>
+    <ClInclude Include="StatUI.h">
+      <Filter>01. Obj\06. UI\Stat_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="StatMgr.h">
+      <Filter>98. Design\StatMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="StatS_UI.h">
+      <Filter>01. Obj\06. UI\Stat_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillSButton_UI.h">
+      <Filter>01. Obj\06. UI\Skill_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InvenButton_UI.h">
+      <Filter>01. Obj\06. UI\Inven_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Equip_UI.h">
+      <Filter>01. Obj\06. UI\Equip_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EquipS_UI.h">
+      <Filter>01. Obj\06. UI\Equip_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Fall.h">
+      <Filter>01. Obj\05. Skill\Player\Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="Dead_UI.h">
+      <Filter>01. Obj\06. UI\Dead_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Vet.h">
+      <Filter>01. Obj\05. Skill\Player\Vet</Filter>
+    </ClInclude>
+    <ClInclude Include="BossPotal.h">
+      <Filter>01. Obj\03. Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage_Catoon.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_1.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_2.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_3.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_4.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_5.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_6.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_7.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap_Boss.h">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleDamage.h">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClInclude>
+    <ClInclude Include="Option_UI.h">
+      <Filter>01. Obj\06. UI\Option_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundButton.h">
+      <Filter>01. Obj\06. UI\Option_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage_End.h">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Dance.h">
+      <Filter>01. Obj\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Dance2.h">
+      <Filter>01. Obj\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Clear.h">
+      <Filter>01. Obj\00. Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -593,14 +845,191 @@
     <ClCompile Include="Stage4.cpp">
       <Filter>02. Scene\03. Stage</Filter>
     </ClCompile>
-    <ClCompile Include="SkillMgr.cpp">
-      <Filter>98. Design\SkillMgr</Filter>
+    <ClCompile Include="Item_Info.cpp">
+      <Filter>01. Obj\06. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Item_UI.cpp">
+      <Filter>01. Obj\06. UI\Inven_UI</Filter>
     </ClCompile>
     <ClCompile Include="MouseMgr.cpp">
       <Filter>98. Design\MouseMgr</Filter>
     </ClCompile>
-    <ClCompile Include="Item_UI.cpp">
-      <Filter>01. Obj\06. UI\Item_UI</Filter>
+    <ClCompile Include="SkillMgr.cpp">
+      <Filter>98. Design\SkillMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill_UI.cpp">
+      <Filter>01. Obj\06. UI\Skill_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillS_UI.cpp">
+      <Filter>01. Obj\06. UI\Skill_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="QSlot_UI.cpp">
+      <Filter>01. Obj\06. UI\QSlot_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotMgr.cpp">
+      <Filter>98. Design\SlotMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotTemp.cpp">
+      <Filter>01. Obj\07. SlotTemp</Filter>
+    </ClCompile>
+    <ClCompile Include="QSlotTemp_UI.cpp">
+      <Filter>01. Obj\06. UI\QSlot_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Damge.cpp">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageGen.cpp">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>01. Obj\05. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Shop_UI.cpp">
+      <Filter>01. Obj\06. UI\Shop_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ShopS_UI.cpp">
+      <Filter>01. Obj\06. UI\Shop_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelUp.cpp">
+      <Filter>01. Obj\05. Skill\Player\LevelUp</Filter>
+    </ClCompile>
+    <ClCompile Include="Npc.cpp">
+      <Filter>01. Obj\07. SlotTemp\09. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="Maya.cpp">
+      <Filter>01. Obj\07. SlotTemp\09. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="Community_UI.cpp">
+      <Filter>01. Obj\06. UI\Community_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CommunityS_UI.cpp">
+      <Filter>01. Obj\06. UI\Community_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestMgr.cpp">
+      <Filter>98. Design\QuestMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Quest_UI.cpp">
+      <Filter>01. Obj\06. UI\Quest_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen_UI.cpp">
+      <Filter>01. Obj\06. UI\Screen_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CutMgr.cpp">
+      <Filter>98. Design\CutMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen1_UI.cpp">
+      <Filter>01. Obj\06. UI\Screen_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage3.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Quest.cpp">
+      <Filter>01. Obj\10. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="Chang.cpp">
+      <Filter>01. Obj\01. Monster\08. Chang</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage5.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage6.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage7.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss_UI.cpp">
+      <Filter>01. Obj\06. UI\Boss_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundMgr.cpp">
+      <Filter>98. Design\SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="PomDamage.cpp">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClCompile>
+    <ClCompile Include="Pet.cpp">
+      <Filter>01. Obj\11. Pet</Filter>
+    </ClCompile>
+    <ClCompile Include="StatUI.cpp">
+      <Filter>01. Obj\06. UI\Stat_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="StatMgr.cpp">
+      <Filter>98. Design\StatMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="StatS_UI.cpp">
+      <Filter>01. Obj\06. UI\Stat_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillSButton_UI.cpp">
+      <Filter>01. Obj\06. UI\Skill_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InvenButton_UI.cpp">
+      <Filter>01. Obj\06. UI\Inven_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Equip_UI.cpp">
+      <Filter>01. Obj\06. UI\Equip_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EquipS_UI.cpp">
+      <Filter>01. Obj\06. UI\Equip_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Fall.cpp">
+      <Filter>01. Obj\05. Skill\Player\Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="Dead_UI.cpp">
+      <Filter>01. Obj\06. UI\Dead_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Vet.cpp">
+      <Filter>01. Obj\05. Skill\Player\Vet</Filter>
+    </ClCompile>
+    <ClCompile Include="BossPotal.cpp">
+      <Filter>01. Obj\03. Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage_Catoon.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_1.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_2.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_3.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_4.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_5.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_6.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_7.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_Boss.cpp">
+      <Filter>01. Obj\06. UI\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleDamage.cpp">
+      <Filter>01. Obj\08. Damge</Filter>
+    </ClCompile>
+    <ClCompile Include="Option_UI.cpp">
+      <Filter>01. Obj\06. UI\Option_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundButton.cpp">
+      <Filter>01. Obj\06. UI\Option_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage_End.cpp">
+      <Filter>02. Scene\03. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Dance.cpp">
+      <Filter>01. Obj\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Dance2.cpp">
+      <Filter>01. Obj\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Clear.cpp">
+      <Filter>01. Obj\00. Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -42,6 +42,7 @@ public:
 
 public:
 	int GetRandomNum_Int(int iLeft, int iRight);
+	float GetRandomNum_float(float iLeft, float iRight);
 
 private:
 	SCENEID m_eID;

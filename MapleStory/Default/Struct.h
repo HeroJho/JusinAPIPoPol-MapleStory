@@ -34,27 +34,36 @@ typedef struct tagStat
 
 }STAT;
 
-typedef	struct	tagLinePoint 
+typedef struct playerStat
+{
+	int iSTR;
+	int iDEX;
+	int iINT;
+	int iLUK;
+
+}PLAYERSTATE;
+
+typedef	struct	tagLinePoint
 {
 	float		fX;
 	float		fY;
 
-	tagLinePoint(){	ZeroMemory(this, sizeof(tagLinePoint));	}
-	tagLinePoint(float _fX, float _fY) : fX(_fX) , fY(_fY){	}
+	tagLinePoint() { ZeroMemory(this, sizeof(tagLinePoint)); }
+	tagLinePoint(float _fX, float _fY) : fX(_fX), fY(_fY) {	}
 
 }LINEPOINT;
 
-typedef	struct	tagLineInfo 
+typedef	struct	tagLineInfo
 {
 	LINEPOINT		tLPoint;
 	LINEPOINT		tRPoint;
 
-	tagLineInfo()	{	ZeroMemory(this, sizeof(tagLineInfo));	}
-	tagLineInfo(LINEPOINT& tLeft, LINEPOINT& tRight) : tLPoint(tLeft), tRPoint(tRight)	{	}
+	tagLineInfo() { ZeroMemory(this, sizeof(tagLineInfo)); }
+	tagLineInfo(LINEPOINT& tLeft, LINEPOINT& tRight) : tLPoint(tLeft), tRPoint(tRight) {	}
 	tagLineInfo(float fXL, float fYL, float fXR, float fYR) : tLPoint(fXL, fYL), tRPoint(fXR, fYR) { }
-	
+
 	void Init(float fXL, float fYL, float fXR, float fYR)
-	{ 
+	{
 		tLPoint.fX = fXL;
 		tLPoint.fY = fYL;
 		tRPoint.fX = fXR;
@@ -79,7 +88,16 @@ typedef struct itemInfo
 	int iCount;
 	string sTag;
 	int InvenID;
+	int SlotIdex = 99;
 
+	int iAt;
+	int iHp;
+	int iMp;
+	int iSpeed;
+	int iSTR;
+	int iDEX;
+	int iINT;
+	int iLUK;
 }ITEM;
 
 typedef struct skillInfo

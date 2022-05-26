@@ -4,9 +4,9 @@
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
 #include "ObjMgr.h"
+#include "SoundMgr.h"
 
 CSkill_4::CSkill_4()
-	: m_fDir(0.f)
 {
 }
 
@@ -17,21 +17,24 @@ CSkill_4::~CSkill_4()
 
 void CSkill_4::Initialize(void)
 {
+	CSoundMgr::Get_Instance()->StopSound(SOUND_MONE1);
+	CSoundMgr::Get_Instance()->PlaySound(L"BlackSkill3_Idle.wav", SOUND_MONE1, 1);
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_4/Skill_4.bmp", L"Skill_4");
 	Set_FrameKey(L"Skill_4");
 	m_bOnePlay = true;
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 60;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = (DWORD)70.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 70.f;
+	m_tFrame.dwTime = GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 100.f;
 	m_tInfo.fCCY = 600.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-150.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -150.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 500.f;
 	m_tInfo.fTCY = 900.f;
@@ -49,8 +52,8 @@ void CSkill_4::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = (float)GetTickCount64();
-	m_fSkillTime = 2500.f;
+	m_fOldSkillTime = GetTickCount64();
+	m_fSkillTime = 1900.f;
 	m_fDeleteTime = 4500.f;
 	m_fDir = 0.f;
 
@@ -75,8 +78,11 @@ int CSkill_4::Update(void)
 	// 히트 시간
 	if (m_fOldSkillTime + m_fSkillTime < GetTickCount64() && !m_bJump)
 	{
+		CSoundMgr::Get_Instance()->StopSound(SOUND_MONE2);
+		CSoundMgr::Get_Instance()->PlaySound(L"BlackSkill3_Move.wav", SOUND_MONE2, 1);
 		m_bCanHit = true;
 		m_bJump = true;
+		CScrollMgr::Get_Instance()->StartShake(6.f, 8.f, 200.f);
 	}
 	// 소멸 시간
 	if (m_fOldSkillTime + m_fDeleteTime < GetTickCount64())

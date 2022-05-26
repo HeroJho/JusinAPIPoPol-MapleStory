@@ -41,9 +41,9 @@ public:
 
 	const string Get_Tag() { return m_sTag; }
 
-	STAT&		Get_Stat(void) { return m_tStat; }
-	const INFO&		Get_Info(void) const { return m_tInfo; }
-	const RECT&		Get_Rect(void) const { return m_tRect; }
+	STAT& Get_Stat(void) { return m_tStat; }
+	const INFO& Get_Info(void) const { return m_tInfo; }
+	const RECT& Get_Rect(void) const { return m_tRect; }
 
 
 public:
@@ -84,8 +84,8 @@ protected:
 
 	bool		m_bCanHit;
 
-	CObj*		m_pTarget;
-	TCHAR*		m_pFrameKey;
+	CObj* m_pTarget;
+	TCHAR* m_pFrameKey;
 
 	POINT       m_tColPivot;
 	string		m_sTag;
@@ -97,8 +97,8 @@ protected:
 	float					m_fAirTime;	// 점프 중 진행 시간
 	float					m_fValY;
 
-	CLine*					m_pCurLine;
-	CLine*					m_pOldLine;
+	CLine* m_pCurLine;
+	CLine* m_pOldLine;
 	float					m_fLinefY;
 };
 

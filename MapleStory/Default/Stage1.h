@@ -17,5 +17,8 @@ public:
 public:
 	void RenderBackGround(HDC hDC);
 
+private:
+	void MakeMap();
+
 };
 

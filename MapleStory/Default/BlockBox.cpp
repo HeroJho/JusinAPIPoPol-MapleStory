@@ -19,8 +19,8 @@ void CBlockBox::Initialize(void)
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 50.f;
 	m_tInfo.fCCY = 50.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)0.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = 0.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 0.f;
 	m_tInfo.fTCY = 0.f;

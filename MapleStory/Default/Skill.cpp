@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Skill.h"
+#include "UIMgr.h"
 
 CSkill::CSkill()
 	: m_pFirst(nullptr)
@@ -15,7 +16,7 @@ CSkill::CSkill()
 
 CSkill::~CSkill()
 {
-    Release();
+	Release();
 }
 
 void CSkill::Set_ColSet(float _fCX, float _fCY, float _fPvX, float _fPvY, float _fDeleteTime, float _fSkillTime)
@@ -131,6 +132,7 @@ void CSkill::OnCollision(CObj* _pOther)
 	if (_pOther->Get_Tag() == "Monster")
 	{
 		_pOther->OnHit(this);
+		CUIMgr::Get_Instance()->MakeDamge(1, 1.f, 1000, 9999, _pOther->Get_Info().fX, _pOther->Get_Info().fY, 120.f, 40.f);
 	}
 
 	if (_pOther->Get_Tag() == "Player")

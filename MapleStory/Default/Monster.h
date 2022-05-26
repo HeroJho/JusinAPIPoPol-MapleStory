@@ -22,8 +22,8 @@ protected:
 
 
 protected:
-	STATE					m_ePreState;
-	STATE					m_eCurState;
+	STATE				m_ePreState;
+	STATE				m_eCurState;
 
 };
 

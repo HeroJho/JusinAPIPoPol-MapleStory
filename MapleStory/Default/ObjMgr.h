@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Obj.h"
+#include "StatMgr.h"
 
 class CObjMgr
 {
@@ -10,8 +11,15 @@ private:
 
 public:
 	CObj*		Get_Player() { return m_pPlayer; }
-	void		Set_Player(CObj* _pPlayer) { m_pPlayer = _pPlayer; }
+	void		Set_Player(CObj* _pPlayer) 
+	{ 
+		m_pPlayer = _pPlayer;
+		CStatMgr::Get_Instance()->Initialize();
+	}
 	CObj*		Get_Target(OBJID eID, CObj* pObj);
+	CObj*		Get_RandomTarget(OBJID eID);
+
+	void		PetReset();
 
 public:
 	void		Add_Object(OBJID eID, CObj* pObj);
@@ -21,6 +29,7 @@ public:
 	void		Release(void);
 
 	void		Delete_ID(OBJID eID);
+	void		SetDead_ID(OBJID eID);
 
 public:
 	void MakeMonster(MONSTERID _eID, float _fX, float _fY);

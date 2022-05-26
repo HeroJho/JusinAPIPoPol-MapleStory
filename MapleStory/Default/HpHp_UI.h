@@ -1,7 +1,7 @@
 #pragma once
 #include "Obj.h"
 class CHpHp_UI :
-    public CObj
+	public CObj
 {
 public:
 	CHpHp_UI();

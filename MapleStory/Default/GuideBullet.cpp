@@ -10,7 +10,8 @@ CGuideBullet::CGuideBullet()
 
 CGuideBullet::~CGuideBullet()
 {
-	Release();}
+	Release();
+}
 
 
 void CGuideBullet::Initialize(void)

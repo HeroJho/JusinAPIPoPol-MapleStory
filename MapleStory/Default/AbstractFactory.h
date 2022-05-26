@@ -21,12 +21,11 @@ public:
 	static CObj*	Create(float _fX, float _fY, DIRECTION eDir = DIR_END)
 	{
 		CObj*	pObj = new T;
-
+		pObj->Set_Dir(eDir);
 		pObj->Initialize();
+
 		pObj->Set_Pos(_fX, _fY);
 
-		if (DIR_END >= eDir)
-			pObj->Set_Dir(eDir);
 
 		return pObj;
 	}

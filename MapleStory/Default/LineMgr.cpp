@@ -98,8 +98,8 @@ CLine* CLineMgr::Collision_Line(float& _fX, float& _fY, float* pY, bool _bGetSec
 		*pY = (((y2 - y1) / (x2 - x1)) * (_fX - x1)) + y1;
 	}
 	else
-	{
-		float	x1 = pTarget->Get_Info().tLPoint.fX;
+	{ 
+   		float	x1 = pTarget->Get_Info().tLPoint.fX;
 		float	x2 = pTarget->Get_Info().tRPoint.fX;
 
 		float	y1 = pTarget->Get_Info().tLPoint.fY;
@@ -131,7 +131,6 @@ CLine* CLineMgr::Collision_HangLine(float& _fX, float& _fY, float* pY)
 		{
 			pTarget = iter;
 		}
-
 	}
 
 	if (pTarget)
@@ -192,8 +191,42 @@ void CLineMgr::Scene_1()
 {
 	Release();
 
-	LINE		tf{ 0.f, 930.f, 3670.f, 930.f };
+	LINE		tf{ -5.f, 934.f, 797.f, 934.f };
 	m_LineList.push_back(new CLine(tf));
+	tf.Init(797.f, 934.f, 875.f, 996.f);
+	m_LineList.push_back(new CLine(tf, true));
+	tf.Init(875.f, 996.f, 975.f, 996.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(975.f, 996.f, 1056.f, 1056.f);
+	m_LineList.push_back(new CLine(tf, true));
+	tf.Init(1056.f, 1056.f, 2237.f, 1056.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(99.f, 784.f, 228.f, 784.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(546.f, 725.f, 680.f, 725.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(727.f, 723.f, 1667.f, 723.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1671.f, 785.f, 1755.f, 785.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1772.f, 843.f, 1845.f, 843.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1854.f, 905.f, 1937.f, 905.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1943.f, 963.f, 2028.f, 963.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2037.f, 1024.f, 2119.f, 1024.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1717.f, 604.f, 1843.f, 604.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1626.f, 663.f, 1757.f, 663.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1899.f, 544.f, 2239.f, 554.f);
+	m_LineList.push_back(new CLine(tf));
+
+	tf.Init(779, 720.f, 779.f, 928.f);
+	m_HangLineList.push_back(new CLine(tf));
+
 }
 
 void CLineMgr::Scene_2()
@@ -268,6 +301,49 @@ void CLineMgr::Scene_2()
 
 }
 
+void CLineMgr::Scene_3()
+{
+	Release();
+
+	LINE		tf{ 0.f, 643.f, 1300.f, 643.f };
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1300.f, 643.f, 1388.f, 703.f);
+	m_LineList.push_back(new CLine(tf, true));
+	tf.Init(1388.f, 703.f, 1482.f, 703.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1482.f, 703.f, 1569.f, 766.f);
+	m_LineList.push_back(new CLine(tf, true));
+	tf.Init(1569.f, 766.f, 3546.f, 766.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(961.f, 495.f, 1089.f, 495.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(1140.f, 436.f, 2173.f, 436.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2175.f, 494.f, 2261.f, 494.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2267.f, 554.f, 2351.f, 554.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2361.f, 613.f, 2442.f, 613.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2448.f, 675.f, 2531.f, 675.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2537.f, 735.f, 2622.f, 735.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2132.f, 376.f, 2260.f, 376.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2310.f, 315.f, 2440.f, 315.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(2491.f, 254.f, 3160.f, 254.f);
+	m_LineList.push_back(new CLine(tf));
+
+
+	tf.Init(1035.f, 485.f, 1035.f, 603.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(1447.f, 428.f, 1447.f, 626.f);
+	m_HangLineList.push_back(new CLine(tf));
+
+}
+
 void CLineMgr::Scene_4()
 {
 	Release();
@@ -276,7 +352,7 @@ void CLineMgr::Scene_4()
 	m_LineList.push_back(new CLine(tf));
 	tf.Init(810.f, 942.f, 935.f, 942.f);
 	m_LineList.push_back(new CLine(tf));
-	tf.Init(540.f, 880.f, 833.f, 880.f);
+	tf.Init(540.f, 880.f, 860.f, 880.f);
 	m_LineList.push_back(new CLine(tf));
 	tf.Init(0.f, 823.f, 560.f, 823.f);
 	m_LineList.push_back(new CLine(tf));
@@ -324,6 +400,62 @@ void CLineMgr::Scene_4()
 	m_HangLineList.push_back(new CLine(tf));
 
 
+}
+
+void CLineMgr::Scene_5()
+{
+	Release();
+
+	LINE		tf{ -5.f, 1035.f, 1420.f, 1035.f };
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(867.f, 735.f, 1421.f, 735.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(-5.f, 734.f, 729.f, 734.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(774.f, 675.f, 823.f, 675.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(686.f, 615.f, 733.f, 615.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(755.f, 556.f, 818.f, 556.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(864.f, 496.f, 1419.f, 496.f);
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(-5.f, 435.f, 821.f, 435.f);
+	m_LineList.push_back(new CLine(tf));
+
+
+	tf.Init(339.f, 728.f, 339.f, 968.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(1076.f, 722.f, 1076.f, 969.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(962.f, 483.f, 962.f, 687.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(189.f, 424.f, 189.f, 669.f);
+	m_HangLineList.push_back(new CLine(tf));
+	tf.Init(484.f, 424.f, 484.f, 670.f);
+	m_HangLineList.push_back(new CLine(tf));
+
+}
+
+void CLineMgr::Scene_6()
+{
+	Release();
+
+	LINE		tf{ -5.f, 671.f, 1419.f, 671.f };
+	m_LineList.push_back(new CLine(tf));
+	tf.Init(261.f, 318.f, 1196.f, 318.f);
+	m_LineList.push_back(new CLine(tf));
+
+	tf.Init(528.f, 314.f, 528.f, 620.f);
+	m_HangLineList.push_back(new CLine(tf));
+}
+
+void CLineMgr::Scene_7()
+{
+	Release();
+
+	LINE		tf{ -5.f, 583.f, 1826.f, 583.f };
+	m_LineList.push_back(new CLine(tf));
 }
 
 void CLineMgr::Scene_Boss()

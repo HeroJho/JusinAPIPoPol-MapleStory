@@ -17,6 +17,7 @@
 #include "Portal.h"
 #include "BlockBox.h"
 #include "Mouse.h"
+#include "SoundMgr.h"
 
 CStage4::CStage4()
 {
@@ -36,12 +37,35 @@ void CStage4::Initialize(void)
 	CSpawnMgr::Get_Instance()->Initialize();
 
 	// Bmp ·Îµù
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainL.bmp", L"PlayerPainL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainR.bmp", L"PlayerPainR");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPL.bmp", L"PlayerPainPL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPR.bmp", L"PlayerPainPR");
+
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DeleteDarPeng/DeleteDarPengL.bmp", L"DeleteDarPengL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DeleteDarPeng/DeleteDarPengR.bmp", L"DeleteDarPengR");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DeletePig/DeletePigL.bmp", L"DeletePigL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DeletePig/DeletePigR.bmp", L"DeletePigR");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/MesoBig.bmp", L"MesoBig");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Meso.bmp", L"Meso");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/RedPotion.bmp", L"RedPotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/BluePotion.bmp", L"BluePotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Equip.bmp", L"Equip");
+
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene4/4_Middle.bmp", L"4_Middle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene4/4_Back.bmp", L"4_Back");
 	CLineMgr::Get_Instance()->Scene_4();	// 1. ¸Ê ¶óÀÎ
 	CSpawnMgr::Get_Instance()->Scene_4();   // 2. ¸Ê ½ºÆù
 	MakeMap();								// 3. ¸Ê ºí¶ô, Æ÷Å»
-
 
 	// Player »ý¼º
 	if (!CObjMgr::Get_Instance()->Get_Player())
@@ -59,6 +83,10 @@ void CStage4::Initialize(void)
 	// Ä«¸Þ¶ó ¼³Á¤
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
 	CScrollMgr::Get_Instance()->Initialize();
+
+	//CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
+	//CSoundMgr::Get_Instance()->PlaySound(L"Scene_3_4.wav", SOUND_BGM, 0.5);
+
 }
 
 void CStage4::Update(void)
@@ -131,9 +159,10 @@ void CStage4::RenderBackGround(HDC hDC)
 void CStage4::MakeMap()
 {
 	//// Æ÷Å»
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(1087.f, 790.f, "Portal_4To1"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(1087.f, 790.f, "Portal_4To3"));
 	// ºí¶ô
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(0.f, 801.f, "Block"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(535.f, 790.f, "Block"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(21.f, 361.f, "Block"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(604.f, 356.f, "Block"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(651.f, 421.f, "Block"));

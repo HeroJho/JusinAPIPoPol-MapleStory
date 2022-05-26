@@ -2,7 +2,7 @@
 #include "Obj.h"
 
 class CItem_UI :
-    public CObj
+	public CObj
 {
 public:
 	CItem_UI();
@@ -11,7 +11,9 @@ public:
 public:
 	void SetInfo(ITEM _sInfo) { m_sInfo = _sInfo; };
 	ITEM& GetInfo() { return m_sInfo; }
-	void Use_Item();
+
+	void SetIndex(int _iIndex) { m_iIndex = _iIndex; }
+	int GetIndex() { return m_iIndex; }
 
 public:
 	virtual void Initialize(void) override;
@@ -26,6 +28,6 @@ public:
 private:
 	bool m_bIsOpen;
 	ITEM m_sInfo;
+	int m_iIndex;
 
 };
-

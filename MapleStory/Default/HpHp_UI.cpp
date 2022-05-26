@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "HpHp_UI.h"
 #include "BmpMgr.h"
+#include "StatMgr.h"
 
 
 CHpHp_UI::CHpHp_UI()
@@ -179,7 +180,32 @@ void CHpHp_UI::Render(HDC hDC)
 	SetTextColor(hDC, RGB(255, 255, 255));
 	TCHAR lpOut[1024];
 	wsprintf(lpOut, TEXT("¹è²Å¹ú··ÀÌ"));
-	TextOut(hDC, m_tTRect.left + 58, m_tTRect.top + 6, lpOut, lstrlen(lpOut));
+	TextOut(hDC, m_tTRect.left + 62, m_tTRect.top + 6, lpOut, lstrlen(lpOut));
+
+	SelectObject(hDC, oldFont);
+	DeleteObject(textFont);
+
+
+	m_labelFontInfo.lfHeight = 12;
+	m_labelFontInfo.lfWidth = 6;
+	m_labelFontInfo.lfWeight = FW_BOLD;
+	m_labelFontInfo.lfCharSet = HANGEUL_CHARSET;
+	textFont = CreateFontIndirect(&m_labelFontInfo);
+	oldFont = (HFONT)SelectObject(hDC, textFont);
+
+	SetBkMode(hDC, TRANSPARENT);
+
+	int iLevel = CStatMgr::Get_Instance()->Get_PlayerLevel();
+	SetTextColor(hDC, RGB(0, 0, 0));
+	wsprintf(lpOut, TEXT("Lv. %d"), iLevel);
+	TextOut(hDC, m_tTRect.left + 11, m_tTRect.top + 7, lpOut, lstrlen(lpOut));
+
+	SetTextColor(hDC, RGB(255, 212, 0));
+	wsprintf(lpOut, TEXT("Lv. %d"), iLevel);
+	TextOut(hDC, m_tTRect.left + 10, m_tTRect.top + 6, lpOut, lstrlen(lpOut));
+	wsprintf(lpOut, TEXT("Lv. %d"), iLevel);
+	TextOut(hDC, m_tTRect.left + 9, m_tTRect.top + 5, lpOut, lstrlen(lpOut));
+
 
 	SelectObject(hDC, oldFont);
 	DeleteObject(textFont);

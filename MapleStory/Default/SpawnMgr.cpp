@@ -7,11 +7,6 @@
 CSpawnMgr* CSpawnMgr::m_pInstance = nullptr;
 
 CSpawnMgr::CSpawnMgr()
-	: m_fGenTime(0.f)
-	, m_fOldGenTime(0.f)
-	, m_iLineCount(0)
-	, m_iMaxMonsterCount(0)
-	, m_iMonsterCount(0)
 {
 
 }
@@ -27,7 +22,7 @@ void CSpawnMgr::Initialize(void)
 	m_iMonsterCount = 0;
 	m_iLineCount = 0;
 
-	m_fGenTime = 15000.f;
+	m_fGenTime = 6000.f;
 	m_fOldGenTime = 0.f;
 }
 
@@ -49,7 +44,7 @@ void CSpawnMgr::Update(void)
 					int iRanX = CEventMgr::Get_Instance()->GetRandomNum_Int(iter.rect.left, iter.rect.right);
 					int iRanY = iter.rect.bottom;
 
-					CObjMgr::Get_Instance()->MakeMonster(iter.Id, (float)iRanX, (float)iRanY);
+					CObjMgr::Get_Instance()->MakeMonster(iter.Id, iRanX, iRanY);
 					++m_iMonsterCount;
 					break;
 				}
@@ -57,7 +52,7 @@ void CSpawnMgr::Update(void)
 			}
 		}
 
-		m_fOldGenTime = (float)GetTickCount64();
+		m_fOldGenTime = GetTickCount64();
 	}
 
 }
@@ -71,7 +66,7 @@ void CSpawnMgr::Scene_2()
 {
 	Release();
 
-	m_iMaxMonsterCount = 40;
+	m_iMaxMonsterCount = 30;
 	m_iLineCount = 9;
 
 	SpawnInfo s;
@@ -107,7 +102,7 @@ void CSpawnMgr::Scene_4()
 {
 	Release();
 
-	m_iMaxMonsterCount = 30;
+	m_iMaxMonsterCount = 20;
 	m_iLineCount = 9;
 
 	// 1
@@ -129,10 +124,54 @@ void CSpawnMgr::Scene_4()
 	s.Init(MON_DELPIG, 935 + 200, 2785 - 200, 992);
 	m_lRects.push_back(s);
 
-	s.Init(MON_NIGHTC, 480 + 200, 1414 - 200, 776);
+	s.Init(MON_DELSNAIL, 480 + 200, 1414 - 200, 776);
 	m_lRects.push_back(s);
 
-	s.Init(MON_NIGHTE, 1 + 200, 454 - 200, 814);
+	s.Init(MON_DELPIG, 1 + 200, 454 - 200, 814);
+	m_lRects.push_back(s);
+}
+
+void CSpawnMgr::Scene_5()
+{
+	Release();
+
+	m_iMaxMonsterCount = 25;
+	m_iLineCount = 6;
+
+	// 1
+	SpawnInfo s;
+	s.Init(MON_NIGHTC, 0 + 100, 1420 - 100, 1025);
+	m_lRects.push_back(s);
+	s.Init(MON_NIGHTC, 0 + 100, 1420 - 100, 1025);
+	m_lRects.push_back(s);
+
+	s.Init(MON_NIGHTC, 867 + 100, 1421 - 100, 725);
+	m_lRects.push_back(s);
+
+	s.Init(MON_NIGHTC, 135 + 100, 729 - 100, 724);
+	m_lRects.push_back(s);
+
+	s.Init(MON_NIGHTC, 864 + 100, 1419 - 100, 486);
+	m_lRects.push_back(s);
+
+	s.Init(MON_NIGHTC, 134 + 100, 821 - 100, 425);
+	m_lRects.push_back(s);
+}
+
+void CSpawnMgr::Scene_6()
+{
+	Release();
+
+	m_iMaxMonsterCount = 15;
+	m_iLineCount = 3;
+
+	// 1
+	SpawnInfo s;
+	s.Init(MON_NIGHTE, 0 + 100, 1419 - 100, 650);
+	m_lRects.push_back(s);
+	s.Init(MON_NIGHTE, 261 + 100, 1196 - 100, 290);
+	m_lRects.push_back(s);
+	s.Init(MON_NIGHTE, 261 + 100, 1196 - 100, 290);
 	m_lRects.push_back(s);
 }
 

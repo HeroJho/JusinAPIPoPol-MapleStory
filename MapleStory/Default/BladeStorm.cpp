@@ -8,11 +8,9 @@
 #include "ObjMgr.h"
 
 #include "BladeStormF.h"
+#include "UIMgr.h"
 
 CBladeStorm::CBladeStorm()
-	: m_cHoldKey()
-	, m_fHitTime(0.f)
-	, m_fOldHitTime(0.f)
 {
 }
 
@@ -23,11 +21,6 @@ CBladeStorm::~CBladeStorm()
 
 void CBladeStorm::Initialize(void)
 {
-	CObj* pSkill = CAbstractFactory<CBladeStormF>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
-	pSkill->Set_Target(this);
-	((CBladeStormF*)pSkill)->SetHoldKey('A');
-	CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
-
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Skill/BladeStorm/BladeStormL.bmp", L"BladeStormL");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Skill/BladeStorm/BladeStormR.bmp", L"BladeStormR");
@@ -36,25 +29,25 @@ void CBladeStorm::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 10;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = (DWORD)50.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 50.f;
+	m_tFrame.dwTime = GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 500.f;
 	m_tInfo.fCCY = 250.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-30.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -30.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 1000.f;
 	m_tInfo.fTCY = 500.f;
 
-	Set_Stat(0, 10, 5);
+	Set_Stat(0, 0, 1);
 	m_fSpeed = 0.f;
 
 	m_bCanHit = false;
 	m_CanHitCount = 0;
-	m_CanHitMaxCount = 10;
+	m_CanHitMaxCount = 10.f;
 
 	m_pOldLine = nullptr;
 	m_bJump = false;
@@ -62,13 +55,23 @@ void CBladeStorm::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = (float)GetTickCount64();
+	m_fOldSkillTime = GetTickCount64();
 	m_fSkillTime = 100.f;
 	m_fDeleteTime = 5000.f;
 
-	m_fHitTime = 500.f;
-	m_fOldHitTime = (float)GetTickCount64();
+	m_fHitTime = 300.f;
+	m_fOldHitTime = GetTickCount64();
 
+}
+
+void CBladeStorm::SetHoldKey(TCHAR _cHoldKey)
+{
+	m_cHoldKey = _cHoldKey;
+
+	CBladeStormF* pSkill = (CBladeStormF*)CAbstractFactory<CBladeStormF>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
+	pSkill->Set_Target(this);
+	pSkill->SetHoldKey(m_cHoldKey);
+	CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
 }
 
 int CBladeStorm::Update(void)
@@ -77,16 +80,21 @@ int CBladeStorm::Update(void)
 		return OBJ_DEAD;
 
 
+
+	CSoundMgr::Get_Instance()->PlaySound(L"Skill_4.wav", SOUND_STOM, 1);
+
+
 	if (!(CKeyMgr::Get_Instance()->Key_Pressing(m_cHoldKey)))
 	{
 		m_bDead = true;
+		CSoundMgr::Get_Instance()->StopSound(SOUND_STOM);
 	}
 
 	if (m_fOldHitTime + m_fHitTime < GetTickCount64())
 	{
 		m_CanHitCount = 0;
 		m_bCanHit = false;
-		m_fOldHitTime = (float)GetTickCount64();
+		m_fOldHitTime = GetTickCount64();
 	}
 
 
@@ -96,14 +104,14 @@ int CBladeStorm::Update(void)
 
 	if (m_pTarget->Get_Dir() == DIR_LEFT)
 	{
-		m_tColPivot.x = (LONG) - 300.f;
-		m_tColPivot.y = (LONG)-70.f;
+		m_tColPivot.x = -300.f;
+		m_tColPivot.y = -70.f;
 		SetFrameDir(DIR_LEFT);
 	}
 	else
 	{
-		m_tColPivot.x = (LONG)300.f;
-		m_tColPivot.y = (LONG)-70.f;
+		m_tColPivot.x = 300.f;
+		m_tColPivot.y = -70.f;
 		SetFrameDir(DIR_RIGHT);
 	}
 
@@ -188,6 +196,7 @@ void CBladeStorm::OnCollision(CObj* _pOther)
 	if (_pOther->Get_Tag() == "Monster")
 	{
 		_pOther->OnHit(this);
+		CUIMgr::Get_Instance()->MakeDamge(8, 1.f, m_tStat.iAt * m_tStat.iAt * 500, m_tStat.iAt * m_tStat.iAt * 600, _pOther->Get_Info().fX, _pOther->Get_Info().fY, 120.f, 40.f);
 	}
 }
 
@@ -201,6 +210,7 @@ void CBladeStorm::SetFrameDir(DIRECTION _eDir)
 
 	m_eDir = _eDir;
 }
+
 
 void CBladeStorm::Motion_Change(void)
 {

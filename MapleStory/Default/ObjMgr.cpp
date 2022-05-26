@@ -12,6 +12,7 @@
 #include "DeletePig.h"
 #include "NightE.h"
 #include "NightC.h"
+#include "EventMgr.h"
 
 CObjMgr* CObjMgr::m_pInstance = nullptr;
 
@@ -53,6 +54,41 @@ CObj* CObjMgr::Get_Target(OBJID eID, CObj* pObj)
 	}
 		
 	return pTarget;
+}
+
+CObj* CObjMgr::Get_RandomTarget(OBJID eID)
+{
+	if (m_ObjList[eID].empty())
+		return nullptr;
+
+	int iRandMonNum = CEventMgr::Get_Instance()->GetRandomNum_Int(0, (m_ObjList[eID].size()-1));
+	int iCount = 0;
+	CObj* pTarget = nullptr;
+
+	for (auto& iter : m_ObjList[eID])
+	{
+		if (iter->Get_Dead())
+			continue;
+
+		if (iCount == iRandMonNum)
+		{
+			pTarget = iter;
+			break;
+		}
+
+		++iCount;
+	}
+
+	return pTarget;
+}
+
+void CObjMgr::PetReset()
+{
+	for (auto& iter = m_ObjList[OBJ_PET].begin();
+		iter != m_ObjList[OBJ_PET].end(); ++iter )
+	{
+		((CPet*)(*iter))->SetPlayerPos();
+	}
 }
 
 void CObjMgr::Add_Object(OBJID eID, CObj * pObj)
@@ -104,13 +140,18 @@ void CObjMgr::Late_Update(void)
 	}
 
 
+		CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);   // 플레이어 포탈
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSTER], false);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_NPC], false);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_PET], false);
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BLOCK], m_ObjList[OBJ_MONSTER]);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BLOCK], m_ObjList[OBJ_NPC]);
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BLOCKME], m_ObjList[OBJ_PLAYER]);
-	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MAP], false);   // 플레이어 포탈
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_SKILL], false);   // 몬스터	플레이어스킬
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_VET], false);   // 몬스터	플레이어스킬
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_MONSKILL], false);   // 플레이어 몬스터 스킬
 	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PLAYER], m_ObjList[OBJ_ITEM], false);   // 플레이어 아이템
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_PET], m_ObjList[OBJ_ITEM], false);   // 플레이어 아이템
 }
 
 void CObjMgr::Render(HDC hDC)
@@ -142,6 +183,12 @@ void CObjMgr::Delete_ID(OBJID eID)
 		Safe_Delete(iter);
 
 	m_ObjList[eID].clear();
+}
+
+void CObjMgr::SetDead_ID(OBJID eID)
+{
+	for (auto& iter : m_ObjList[eID])
+		iter->Set_Dead();
 }
 
 

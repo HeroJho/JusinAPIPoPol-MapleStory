@@ -3,8 +3,14 @@
 class CMouse : public CObj
 {
 public:
+	enum MOUSE { IDLE, PICK, HOLD, END };
+
+public:
 	CMouse();
 	virtual ~CMouse();
+
+public:
+	ITEM GetInfo() { return m_sInfo; }
 
 public:
 	virtual void Initialize(void) override;
@@ -15,5 +21,11 @@ public:
 
 public:
 	void OnCollision(CObj* _pOther);
+	void SetItem(CObj* _pOther);
+
+
+private:
+	MOUSE	m_eState;
+	ITEM	m_sInfo;
 };
 

@@ -3,6 +3,7 @@
 
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
+#include "UIMgr.h"
 
 
 CKarmaFury::CKarmaFury()
@@ -22,23 +23,23 @@ void CKarmaFury::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 26;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = (DWORD)50.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 60.f;
+	m_tFrame.dwTime = GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 800.f;
 	m_tInfo.fCCY = 400.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-200.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -200.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 1900.f;
 	m_tInfo.fTCY = 900.f;
 
-	Set_Stat(0, 10,50);
+	Set_Stat(0, 0, 50);
 	m_fSpeed = 0.f;
 
-	m_bCanHit = false;
+	m_bCanHit = true;
 	m_CanHitCount = 0;
 	m_CanHitMaxCount = 15;
 
@@ -48,8 +49,8 @@ void CKarmaFury::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = (float)GetTickCount64();
-	m_fSkillTime = 100.f;
+	m_fOldSkillTime = GetTickCount64();
+	m_fSkillTime = 700.f;
 	m_fDeleteTime = 1500.f;
 
 }
@@ -66,8 +67,10 @@ int CKarmaFury::Update(void)
 	// 히트 시간
 	if (m_fOldSkillTime + m_fSkillTime < GetTickCount64() && !m_bJump)
 	{
-		m_bCanHit = true;
+		m_bCanHit = false;
 		m_bJump = true;
+
+		CScrollMgr::Get_Instance()->StartShake(6.f, 8.f, 200.f);
 	}
 	// 소멸 시간
 	if (m_fOldSkillTime + m_fDeleteTime < GetTickCount64())
@@ -95,7 +98,7 @@ void CKarmaFury::Render(HDC hDC)
 
 	GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
 		int(m_tTRect.left + iScrollX),					// 2,3 인자 :  복사받을 위치 X, Y
-		int(m_tTRect.top - 200 + iScrollY),
+		int(m_tTRect.top - 230 + iScrollY),
 		int(m_tInfo.fTCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
 		int(m_tInfo.fTCY),
 		hMemDC,											// 비트맵을 가지고 있는 DC
@@ -134,6 +137,7 @@ void CKarmaFury::OnCollision(CObj* _pOther)
 	if (_pOther->Get_Tag() == "Monster")
 	{
 		_pOther->OnHit(this);
+		CUIMgr::Get_Instance()->MakeDamge(12, 120.f, m_tStat.iAt * m_tStat.iAt * 500, m_tStat.iAt * m_tStat.iAt * 600, _pOther->Get_Info().fX, _pOther->Get_Info().fY, 120.f, 40.f);
 	}
 }
 

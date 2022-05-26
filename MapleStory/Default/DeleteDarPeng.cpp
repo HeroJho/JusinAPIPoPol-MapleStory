@@ -12,19 +12,11 @@
 #include "MoneyBig.h"
 #include "BluePosion.h"
 #include "Player.h"
+#include "QuestMgr.h"
 
 CDeleteDarPeng::CDeleteDarPeng()
-	: m_fOldTime((float)GetTickCount64())
+	: m_fOldTime(GetTickCount64())
 	, m_fRandTime(0.f)
-	, m_fAttackRange(0.f)
-	, m_fAttackTime(0.f)
-	, m_fChaseTime(0.f)
-	, m_fDeadTime(0.f)
-	, m_fHitTime(0.f)
-	, m_fOldAttackTime(0.f)
-	, m_fOldChaseTime(0.f)
-	, m_fOldDeadTime(0.f)
-	, m_fOldHitTime(0.f)
 {
 
 }
@@ -36,14 +28,12 @@ CDeleteDarPeng::~CDeleteDarPeng()
 
 void CDeleteDarPeng::Initialize(void)
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DeleteDarPeng/DeleteDarPengL.bmp", L"DeleteDarPengL");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DeleteDarPeng/DeleteDarPengR.bmp", L"DeleteDarPengR");
 	Set_FrameKey(L"DeleteDarPengL");
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 4;
 	m_tFrame.iMotion = 3;
-	m_tFrame.dwSpeed = (DWORD)500.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 500.f;
+	m_tFrame.dwTime = GetTickCount();
 
 
 	m_fOldHitTime = 0.f;
@@ -57,8 +47,8 @@ void CDeleteDarPeng::Initialize(void)
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 100.f;
 	m_tInfo.fCCY = 100.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-50.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -50.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 900.f;
 	m_tInfo.fTCY = 400.f;
@@ -78,7 +68,7 @@ void CDeleteDarPeng::Initialize(void)
 
 	m_fAttackRange = 350.f;
 	m_fAttackTime = 2000.f;
-	m_fOldAttackTime = (float)GetTickCount64();
+	m_fOldAttackTime = GetTickCount64();
 }
 
 int CDeleteDarPeng::Update(void)
@@ -168,13 +158,13 @@ void CDeleteDarPeng::ChooseRandStat()
 {
 	if (m_fOldTime + m_fRandTime < GetTickCount64())
 	{
-		m_fRandTime = (float)CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 10000);
+		m_fRandTime = CEventMgr::Get_Instance()->GetRandomNum_Int(4000, 10000);
 		STATE eRandStat = STATE(CEventMgr::Get_Instance()->GetRandomNum_Int(0, 1));
 		DIRECTION eRandDir = DIRECTION(CEventMgr::Get_Instance()->GetRandomNum_Int(0, 1));
 
 		SetCurState(eRandStat, eRandDir);
 
-		m_fOldTime = (float)GetTickCount64();
+		m_fOldTime = GetTickCount64();
 	}
 }
 
@@ -227,7 +217,7 @@ void CDeleteDarPeng::Update_Chase()
 	if (m_fAttackRange > dis)
 	{
 		SetCurState(ATTACK, m_eDir);
-		m_fOldAttackTime = (float)GetTickCount64();
+		m_fOldAttackTime = GetTickCount64();
 
 		CObj* pSkill = CAbstractFactory<CSkill>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
 		pSkill->Set_Target(this);
@@ -242,7 +232,7 @@ void CDeleteDarPeng::Update_Hit()
 	if (m_fOldHitTime + m_fHitTime < GetTickCount64())
 	{
 		SetCurState(CHASE, m_eDir);
-		m_fOldChaseTime = (float)GetTickCount64();
+		m_fOldChaseTime = GetTickCount64();
 	}
 }
 
@@ -268,15 +258,16 @@ void CDeleteDarPeng::OnHit(CObj* _pOther)
 	if (m_tStat.iHp <= 0.f)
 	{
 		SetCurState(DEAD, m_eDir);
-		m_fOldDeadTime = (float)GetTickCount64();
+		m_fOldDeadTime = GetTickCount64();
 		m_bCanHit = false;
 		CSpawnMgr::Get_Instance()->DecreaseCount();
 		DropItem();
-		((CPlayer*)CObjMgr::Get_Instance()->Get_Player())->AddExp(5);
+		((CPlayer*)CObjMgr::Get_Instance()->Get_Player())->AddExp(10);
+		CQuestMgr::Get_Instance()->HuntingMonster(MON_DELSNAIL);
 		return;
 	}
 
-	m_fOldHitTime = (float)GetTickCount64();
+	m_fOldHitTime = GetTickCount64();
 
 	DIRECTION eDir = _pOther->Get_Target()->Get_Dir();
 	m_pTarget = _pOther->Get_Target();
@@ -333,32 +324,32 @@ void CDeleteDarPeng::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 4;
 			m_tFrame.iMotion = 3;
-			m_tFrame.dwSpeed = (DWORD)500.f;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 500.f;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case WALK:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 5;
 			m_tFrame.iMotion = 2;
-			m_tFrame.dwSpeed = (DWORD)150.f;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 150.f;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case CHASE:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 5;
 			m_tFrame.iMotion = 2;
-			m_tFrame.dwSpeed = (DWORD)150.f;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 150.f;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case HIT:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 0;
 			m_tFrame.iMotion = 4;
-			m_tFrame.dwSpeed = (DWORD)200;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case ATTACK:
@@ -366,8 +357,8 @@ void CDeleteDarPeng::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 13;
 			m_tFrame.iMotion = 0;
-			m_tFrame.dwSpeed = (DWORD)100;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 
 		case DEAD:
@@ -375,8 +366,8 @@ void CDeleteDarPeng::Motion_Change(void)
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 15;
 			m_tFrame.iMotion = 1;
-			m_tFrame.dwSpeed = (DWORD)100;
-			m_tFrame.dwTime = (DWORD)GetTickCount64();
+			m_tFrame.dwSpeed = 100;
+			m_tFrame.dwTime = GetTickCount();
 			break;
 		}
 

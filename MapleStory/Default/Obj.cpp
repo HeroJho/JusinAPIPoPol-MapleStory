@@ -35,7 +35,7 @@ void CObj::Set_Stat(int _iMaxHp, int _iMaxMp, int _iAt)
 	m_tStat.iMp = _iMaxMp;
 	m_tStat.iMaxMp = _iMaxMp;
 	m_tStat.iAt = _iAt;
-	
+
 	m_tStat.iLevel = 1;
 	m_tStat.iExp = 0;
 	m_tStat.iMaxExp = m_tStat.iLevel * 100;
@@ -43,14 +43,14 @@ void CObj::Set_Stat(int _iMaxHp, int _iMaxMp, int _iAt)
 
 void CObj::Update_Rect(void)
 {
-	m_tRect.left   = LONG(m_tInfo.fCX - (m_tInfo.fCCX * 0.5f));
-	m_tRect.top    = LONG(m_tInfo.fCY - (m_tInfo.fCCY * 0.5f));
- 	m_tRect.right  = LONG(m_tInfo.fCX + (m_tInfo.fCCX * 0.5f));
+	m_tRect.left = LONG(m_tInfo.fCX - (m_tInfo.fCCX * 0.5f));
+	m_tRect.top = LONG(m_tInfo.fCY - (m_tInfo.fCCY * 0.5f));
+	m_tRect.right = LONG(m_tInfo.fCX + (m_tInfo.fCCX * 0.5f));
 	m_tRect.bottom = LONG(m_tInfo.fCY + (m_tInfo.fCCY * 0.5f));
 
-	m_tTRect.left	= LONG(m_tInfo.fX - (m_tInfo.fTCX * 0.5f));
-	m_tTRect.top	= LONG(m_tInfo.fY - (m_tInfo.fTCY * 0.5f));
-	m_tTRect.right	= LONG(m_tInfo.fX + (m_tInfo.fTCX * 0.5f));
+	m_tTRect.left = LONG(m_tInfo.fX - (m_tInfo.fTCX * 0.5f));
+	m_tTRect.top = LONG(m_tInfo.fY - (m_tInfo.fTCY * 0.5f));
+	m_tTRect.right = LONG(m_tInfo.fX + (m_tInfo.fTCX * 0.5f));
 	m_tTRect.bottom = LONG(m_tInfo.fY + (m_tInfo.fTCY * 0.5f));
 
 	// 콜라이더 위치
@@ -125,7 +125,7 @@ void CObj::Move_Frame(void)
 
 		if (m_tFrame.iFrameStart > m_tFrame.iFrameEnd)
 		{
-			if(m_bOnePlay)
+			if (m_bOnePlay)
 				m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
 			else
 				m_tFrame.iFrameStart = 0;
@@ -137,9 +137,7 @@ void CObj::Move_Frame(void)
 				m_bStayPlay = true;
 			}
 		}
-			
 	}
-
 }
 
 void CObj::ColRender(HDC hDC)
@@ -147,8 +145,8 @@ void CObj::ColRender(HDC hDC)
 	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-	Rectangle(hDC, 									    
-		int(m_tRect.left + iScrollX),					
+	Rectangle(hDC,
+		int(m_tRect.left + iScrollX),
 		int(m_tRect.top + iScrollY),
 		int(m_tRect.right + iScrollX),
 		int(m_tRect.bottom + iScrollY));

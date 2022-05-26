@@ -1,11 +1,11 @@
 #pragma once
 #include "Obj.h"
 class CSkill :
-    public CObj
+	public CObj
 {
 public:
-    CSkill();
-    virtual ~CSkill();
+	CSkill();
+	virtual ~CSkill();
 
 public:
 	void		Set_ColSet(float _fCX, float _fCY, float _fPvX, float _fPvY, float _fDeleteTime, float _fSkillTime);

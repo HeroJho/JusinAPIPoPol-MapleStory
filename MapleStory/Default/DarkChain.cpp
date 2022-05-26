@@ -3,6 +3,7 @@
 
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
+#include "SoundMgr.h"
 
 CDarkChain::CDarkChain()
 {
@@ -15,21 +16,24 @@ CDarkChain::~CDarkChain()
 
 void CDarkChain::Initialize(void)
 {
+	CSoundMgr::Get_Instance()->StopSound(SOUND_MONE3);
+	CSoundMgr::Get_Instance()->PlaySound(L"BlackSkill_6.wav", SOUND_MONE3, 1);
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_1/Skill_1.bmp", L"Skill_1");
 	Set_FrameKey(L"Skill_1");
 	m_bOnePlay = true;
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 25;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = (DWORD)90.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 90.f;
+	m_tFrame.dwTime = GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 200.f;
 	m_tInfo.fCCY = 800.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-30.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -30.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 1200.f;
 	m_tInfo.fTCY = 1800.f;
@@ -47,7 +51,7 @@ void CDarkChain::Initialize(void)
 	m_fValY = 0.f;
 	m_fAirTime = 0.f;
 
-	m_fOldSkillTime = (float)GetTickCount64();
+	m_fOldSkillTime = GetTickCount64();
 	m_fSkillTime = 1000.f;
 	m_fDeleteTime = 2200.f;
 
@@ -90,7 +94,7 @@ void CDarkChain::Render(HDC hDC)
 
 	GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
 		int(m_tTRect.left + iScrollX),					// 2,3 인자 :  복사받을 위치 X, Y
-		int(m_tTRect.top - 37 + iScrollY),
+		int(m_tTRect.top - 300 + iScrollY),
 		int(m_tInfo.fTCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
 		int(m_tInfo.fTCY),
 		hMemDC,											// 비트맵을 가지고 있는 DC

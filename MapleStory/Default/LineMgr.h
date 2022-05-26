@@ -20,7 +20,11 @@ public:
 public:
 	void		Scene_1();
 	void		Scene_2();
+	void		Scene_3();
 	void		Scene_4();
+	void		Scene_5();
+	void		Scene_6();
+	void		Scene_7();
 	void		Scene_Boss();
 
 #pragma region ins

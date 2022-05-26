@@ -18,6 +18,12 @@
 #include "BladeStorm.h"
 #include "DoubleJump.h"
 #include "SkillMgr.h"
+#include "SlotMgr.h"
+#include "LevelUp.h"
+#include "SoundMgr.h"
+#include "Fall.h"
+#include "SceneMgr.h"
+#include "Damge.h"
 
 
 CPlayer::CPlayer()
@@ -35,6 +41,8 @@ CPlayer::CPlayer()
 	, m_fSkillTime(0.f)
 	, m_pDropLine(nullptr)
 	, m_pHangLine(nullptr)
+	, m_bHold(false)
+	, m_bHitAnim(false)
 {
 }
 
@@ -43,11 +51,23 @@ CPlayer::~CPlayer()
 	Release();
 }
 
+void CPlayer::ResetDead()
+{
+	IncreaseHp(CStatMgr::Get_Instance()->Get_PlayerMaxHP());
+	IncreaseMp(CStatMgr::Get_Instance()->Get_PlayerMaxMP());
+	
+	SetCurState(HIT, m_eDir);
+
+	m_bHit = true;
+	m_fOldHitTime = (float)GetTickCount64();
+	m_fOldHitAnimTime = GetTickCount64();
+}
+
 void CPlayer::Initialize(void)
 {
 	CSkillMgr::Get_Instance()->Initialize();
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+
+
 	Set_FrameKey(L"PlayerL");
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 3;
@@ -73,8 +93,8 @@ void CPlayer::Initialize(void)
 
 	m_fOldSkillTime = 0.f;
 	m_fSkillTime = 800.f;
-
-	Set_Stat(100, 200, 10);
+	
+	Set_Stat(5, 200, 10);
 
 	m_eCurState = IDLE;
 	m_fSpeed = 3.f;
@@ -92,6 +112,10 @@ void CPlayer::Initialize(void)
 
 	m_bDoubleJump = false;
 	m_eDoubleDir = DIR_END;
+
+	m_fHitAnimTime = 100.f;
+	m_fOldHitAnimTime = 0.f;
+	m_fRotAngle = 0.f;
 }
 
 int CPlayer::Update(void)
@@ -100,7 +124,14 @@ int CPlayer::Update(void)
 		return OBJ_DEAD;
 
 	// 연산을 진행
-	
+	if (m_eCurState == DEAD)
+	{
+		Update_Rect();
+		return OBJ_NOEVENT;
+	}
+
+		
+
 	switch (m_eCurState)
 	{
 	case CPlayer::IDLE:
@@ -142,6 +173,13 @@ int CPlayer::Update(void)
 
 void CPlayer::Late_Update(void)
 {
+	if (m_eCurState == DEAD)
+	{
+		Update_Gravity();
+		return;
+	}
+
+
 	switch (m_eCurState)
 	{
 	case CPlayer::IDLE:
@@ -186,14 +224,93 @@ void CPlayer::Late_Update(void)
 
 void CPlayer::Render(HDC hDC)
 {
+
 	int		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+
+	if (m_eCurState == DEAD)
+	{
+		HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"PlayerDead");
+
+		m_fRotAngle += 2.f;
+
+		int fX = 20 * cosf((m_fRotAngle)*PI / 180.f);
+		int fY = 20 * sinf((m_fRotAngle)*PI / 180.f);
+
+		GdiTransparentBlt(hDC,
+			int(m_tTRect.left + iScrollX) + 65 + fX,
+			int(m_tTRect.top - 37 + iScrollY) + 20 + fY,
+			60,
+			80,
+			hMemDC,
+			0,
+			0,
+			60,
+			80,
+			RGB(255, 0, 255));
+		return;
+	}
+
 
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
 	if (m_bHit)
 	{
-		// TODO : 피격 스프라이트  처리
+		if (m_fOldHitAnimTime + m_fHitAnimTime < GetTickCount64())
+		{
+			if (m_bHitAnim)
+				m_bHitAnim = false;
+			else
+				m_bHitAnim = true;
+
+			m_fOldHitAnimTime = GetTickCount64();
+		}
+
+		if (m_bHitAnim)
+		{
+			if(m_eDir == DIR_LEFT)
+				hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"PlayerPainL");
+			else
+				hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"PlayerPainR");
+
+			GdiTransparentBlt(hDC,
+				int(m_tTRect.left + iScrollX),
+				int(m_tTRect.top - 37 + iScrollY),
+				int(m_tInfo.fTCX),
+				int(m_tInfo.fTCY),
+				hMemDC,
+				m_tFrame.iFrameStart * (int)m_tInfo.fTCX,
+				m_tFrame.iMotion * (int)m_tInfo.fTCY,
+				(int)m_tInfo.fTCX,
+				(int)m_tInfo.fTCY,
+				RGB(165, 0, 165));
+		}
+		else
+		{
+			if (m_eDir == DIR_LEFT)
+				hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"PlayerPainPL");
+			else
+				hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"PlayerPainPR");
+
+			GdiTransparentBlt(hDC,
+				int(m_tTRect.left + iScrollX),
+				int(m_tTRect.top - 37 + iScrollY),
+				int(m_tInfo.fTCX),
+				int(m_tInfo.fTCY),
+				hMemDC,
+				m_tFrame.iFrameStart * (int)m_tInfo.fTCX,
+				m_tFrame.iMotion * (int)m_tInfo.fTCY,
+				(int)m_tInfo.fTCX,
+				(int)m_tInfo.fTCY,
+				RGB(255, 0, 255));
+		}
+
+	}
+	else
+	{
+		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+
 		GdiTransparentBlt(hDC, 						
 			int(m_tTRect.left + iScrollX),			
 			int(m_tTRect.top - 37 + iScrollY),
@@ -206,51 +323,38 @@ void CPlayer::Render(HDC hDC)
 			(int)m_tInfo.fTCY,
 			RGB(255, 0, 255));						
 	}
-	else
+
+	if (CSceneMgr::Get_Instance()->Get_CurSceneId() != SC_ENDING)
 	{
-		GdiTransparentBlt(hDC, 									// 복사 받을, 최종적으로 그림을 그릴 DC
-			int(m_tTRect.left + iScrollX),					// 2,3 인자 :  복사받을 위치 X, Y
-			int(m_tTRect.top - 37 + iScrollY),
-			int(m_tInfo.fTCX),								// 4,5 인자 : 복사받을 가로, 세로 길이
-			int(m_tInfo.fTCY),
-			hMemDC,											// 비트맵을 가지고 있는 DC
-			m_tFrame.iFrameStart * (int)m_tInfo.fTCX,		// 비트맵 출력 시작 좌표, X,Y
-			m_tFrame.iMotion * (int)m_tInfo.fTCY,
-			(int)m_tInfo.fTCX,								// 복사할 비트맵의 가로, 세로 길이
-			(int)m_tInfo.fTCY,
-			RGB(255, 0, 255));								// 제거하고자 하는 색상
+		LOGFONT m_labelFontInfo{};
+		m_labelFontInfo.lfHeight = 13;
+		m_labelFontInfo.lfWidth = 7;
+		m_labelFontInfo.lfCharSet = HANGEUL_CHARSET;
+		HFONT textFont, oldFont;
+		textFont = CreateFontIndirect(&m_labelFontInfo);
+		oldFont = (HFONT)SelectObject(hDC, textFont);
+
+		SetBkMode(hDC, OPAQUE);
+		SetBkColor(hDC, RGB(0, 0, 0));
+		SetTextColor(hDC, RGB(255, 255, 255));
+		TCHAR lpOut[1024];
+		wsprintf(lpOut, TEXT("배꼽벌렁이"));
+		TextOut(hDC, m_tTRect.left + iScrollX + 65, m_tTRect.top - 37 + iScrollY + 145, lpOut, lstrlen(lpOut));
+
+		SelectObject(hDC, oldFont);
+		DeleteObject(textFont);
 	}
-
-
-	LOGFONT m_labelFontInfo{};
-	m_labelFontInfo.lfHeight = 13;
-	m_labelFontInfo.lfWidth = 7;
-	m_labelFontInfo.lfCharSet = HANGEUL_CHARSET;
-	HFONT textFont, oldFont;
-	textFont = CreateFontIndirect(&m_labelFontInfo);
-	oldFont = (HFONT)SelectObject(hDC, textFont);
-
-	SetBkMode(hDC, OPAQUE);
-	SetBkColor(hDC, RGB(0, 0, 0));
-	SetTextColor(hDC, RGB(255, 255, 255));
-	TCHAR lpOut[1024];
-	wsprintf(lpOut, TEXT("배꼽벌렁이"));
-	TextOut(hDC, m_tTRect.left + iScrollX + 65, m_tTRect.top - 37 + iScrollY + 145, lpOut, lstrlen(lpOut));
-
-	SelectObject(hDC, oldFont);
-	DeleteObject(textFont);
-
 
 }
 void CPlayer::Release(void)
 {
-	
+
 }
 
 
 void CPlayer::SetCurState(STATE _eState, DIRECTION _eDir)
 {
-	if(_eDir == DIR_LEFT)
+	if (_eDir == DIR_LEFT)
 		m_pFrameKey = L"PlayerL";
 	else
 		m_pFrameKey = L"PlayerR";
@@ -290,7 +394,7 @@ void CPlayer::Update_Gravity(void)
 		// m_tInfo.fY -= m_fJumpPower * m_fAirTime - 1.f * m_fAirTime * m_fAirTime * 0.5f;
 		m_tInfo.fY += m_fValY;
 
-		if(m_eCurState != ATTACK && m_eCurState != SKILL)
+		if (m_eCurState != ATTACK && m_eCurState != SKILL && m_eCurState != DEAD)
 			SetCurState(AIR, m_eDir);
 	}
 
@@ -305,7 +409,7 @@ void CPlayer::Update_Gravity(void)
 				m_eDoubleDir = m_eDir;
 			}
 
-			if(m_eDoubleDir == DIR_LEFT)
+			if (m_eDoubleDir == DIR_LEFT)
 				m_tInfo.fX -= 6.f;
 			else
 				m_tInfo.fX += 6.f;
@@ -325,6 +429,7 @@ void CPlayer::Update_Gravity(void)
 		m_bOnAir = false;
 		m_bDrop = false;
 		m_pDropLine = nullptr;
+		m_pHangLine = nullptr;
 		m_fValY = 0.f;
 	}
 	else if (m_fDropY > m_tInfo.fY)
@@ -333,6 +438,7 @@ void CPlayer::Update_Gravity(void)
 		if (!(m_pOldLine == m_pCurLine && m_pCurLine->Get_Diagonal()))
 		{
 			m_bOnAir = true;
+			m_pHangLine = nullptr;
 		}
 	}
 
@@ -340,6 +446,7 @@ void CPlayer::Update_Gravity(void)
 	{
 		m_tInfo.fY = m_fDropY;
 		m_pDropLine = nullptr;
+		m_pHangLine = nullptr;
 		m_bDrop = false;
 		m_bJump = false;
 		m_bDoubleJump = false;
@@ -358,18 +465,19 @@ void CPlayer::Update_Hang(void)
 	if (!m_pHangLine)
 	{
 		SetCurState(IDLE, m_eDir);
+		m_pHangLine = nullptr;
 		return;
 	}
 
 	m_tInfo.fX = m_pHangLine->Get_Info().tLPoint.fX;
-	
+
 	m_pDropLine = nullptr;
 	m_bDrop = false;
 	m_bJump = false;
 	m_bDoubleJump = false;
 	m_eDoubleDir = DIR_END;
 	m_fValY = 2.f;
-	if(m_eCurState != HANGWALK)
+	if (m_eCurState != HANGWALK)
 		SetCurState(HANGIDLE, m_eDir);
 }
 
@@ -407,7 +515,8 @@ void CPlayer::Skill_Update(void)
 
 void CPlayer::Key_Input(void)
 {
-	float	fY = 0.f;
+	if (m_bHold)
+		return;
 
 	// GetKeyState
 	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LEFT))
@@ -438,17 +547,27 @@ void CPlayer::Key_Input(void)
 			CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
 
 
+
 			m_bDoubleJump = true;
 			m_bOnAir = true;
 		}
 
 		if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
 		{
+			if (!m_bDrop)
+			{
+				CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+				CSoundMgr::Get_Instance()->PlaySound(L"Jump.wav", SOUND_PEFFECT3, 1);
+			}
+
 			m_bDrop = true;
 			m_bOnAir = true;
 		}
-		else
+		else if(!m_bJump)
 		{
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Jump.wav", SOUND_PEFFECT3, 1);
+
 			m_fJumpPower = 9.2f;
 			m_bJump = true;
 			m_bOnAir = true;
@@ -460,40 +579,65 @@ void CPlayer::Key_Input(void)
 		SetCurState(HANGIDLE, m_eDir);
 	}
 
-
-	// TODO: 스킬 매니저
-	if (m_eCurState == SKILL || m_eCurState == ATTACK)
-		return;
-
-
-	if (CKeyMgr::Get_Instance()->Key_Down('Q'))
+	if (CKeyMgr::Get_Instance()->Key_Down('A'))
 	{
-		SetCurState(ATTACK, m_eDir);
-
-		CObj* pSkill = CAbstractFactory<CSkill>::Create(m_tInfo.fCX, m_tInfo.fCY, "Skill");
-		pSkill->Set_Target(this);
-
-		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		CSlotMgr::Get_Instance()->UseA();
 	}
-	else if (CKeyMgr::Get_Instance()->Key_Down('W'))
+	else if (CKeyMgr::Get_Instance()->Key_Down('S'))
 	{
-		if(CSkillMgr::Get_Instance()->UseSkill(SK_SKILL1))
-			SetCurState(SKILL, m_eDir);
+		CSlotMgr::Get_Instance()->UseS();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('D'))
+	{
+		CSlotMgr::Get_Instance()->UseD();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+	{
+		CSlotMgr::Get_Instance()->UseZ();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('X'))
+	{
+		CSlotMgr::Get_Instance()->UseX();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('C'))
+	{
+		CSlotMgr::Get_Instance()->UseC();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('1'))
+	{
+		CSlotMgr::Get_Instance()->Use1();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('2'))
+	{
+		CSlotMgr::Get_Instance()->Use2();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('3'))
+	{
+		CSlotMgr::Get_Instance()->Use3();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('4'))
+	{
+		CSlotMgr::Get_Instance()->Use4();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('5'))
+	{
+		CSlotMgr::Get_Instance()->Use5();
+	}
+	else if (CKeyMgr::Get_Instance()->Key_Down('6'))
+	{
+		CSlotMgr::Get_Instance()->Use6();
 	}
 	else if (CKeyMgr::Get_Instance()->Key_Down('E'))
 	{
-		if (CSkillMgr::Get_Instance()->UseSkill(SK_SKILL2))
-			SetCurState(SKILL, m_eDir);
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down('R'))
-	{
-		if (CSkillMgr::Get_Instance()->UseSkill(SK_SKILL4))
-			SetCurState(SKILL, m_eDir);
-	}
-	else if (CKeyMgr::Get_Instance()->Key_Down('A'))
-	{
-		if (CSkillMgr::Get_Instance()->UseSkill(SK_SKILL3))
-			SetCurState(SKILL, m_eDir);
+		CObj* pSkill = CAbstractFactory<CSkill>::Create(m_tInfo.fX, m_tInfo.fY, "Skill");
+		pSkill->Set_Target(this);
+		((CSkill*)pSkill)->Set_SkillInfo(CStatMgr::Get_Instance()->Get_PlayerAT(), 1);
+		CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
+		SetStateAttack();
+
+		CSkillMgr::Get_Instance()->CreateVect();
+		CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT);
+		CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_PEFFECT, 1);
 	}
 
 }
@@ -633,20 +777,65 @@ void CPlayer::Motion_Change(void)
 
 void CPlayer::OnHit(CObj* _pOther)
 {
+	if (m_eCurState == DEAD)
+		return;
+
 	if (m_bHit)
 		return;
 
 	m_tStat.iHp -= _pOther->Get_Stat().iAt;
-	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, m_tStat.iMaxHp);
+	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, CStatMgr::Get_Instance()->Get_PlayerMaxHP());
+
+	CDamge* pDamage = (CDamge*)CAbstractFactory<CDamge>::Create(m_tInfo.fX, m_tInfo.fY - 60.f);
+	pDamage->Init(_pOther->Get_Stat().iAt * _pOther->Get_Stat().iAt, _pOther->Get_Stat().iAt * _pOther->Get_Stat().iAt * 10, 9);
+	CObjMgr::Get_Instance()->Add_Object(OBJ_SKILLE, pDamage);
+
+
+	// CUIMgr::Get_Instance()->MakeDamge(5, 1.f, _pOther->Get_Stat().iAt * 34, _pOther->Get_Stat().iAt * 64, m_tInfo.fX, m_tInfo.fY, 120.f, 35.f);
 	if (m_tStat.iHp <= 0.f)
 	{
 		m_tStat.iHp = 0.f;
+		m_bDoubleJump = false;
+		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CFall>::Create(m_tInfo.fX, m_tInfo.fY - 250.f));
+		SetCurState(DEAD, m_eDir);
+		CUIMgr::Get_Instance()->OpenDead();
+		return;
 	}
 
 	SetCurState(HIT, m_eDir);
 
 	m_bHit = true;
 	m_fOldHitTime = (float)GetTickCount64();
+	m_fOldHitAnimTime = GetTickCount64();
+
+	m_fJumpPower = 5.f;
+	m_bJump = true;
+	m_bOnAir = true;
+}
+
+void CPlayer::OnHit(int _iValue)
+{
+	if (m_eCurState == DEAD)
+		return;
+
+	m_tStat.iHp -= _iValue;
+	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, CStatMgr::Get_Instance()->Get_PlayerMaxHP());
+	CUIMgr::Get_Instance()->MakeDamge(5, 1.f, _iValue * 34, _iValue * 64, m_tInfo.fX, m_tInfo.fY, 120.f, 35.f);
+	if (m_tStat.iHp <= 0.f)
+	{
+		m_tStat.iHp = 0.f;
+		m_bDoubleJump = false;
+		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CFall>::Create(m_tInfo.fX, m_tInfo.fY - 250.f));
+		SetCurState(DEAD, m_eDir);
+		CUIMgr::Get_Instance()->OpenDead();
+		return;
+	}
+
+	SetCurState(HIT, m_eDir);
+
+	m_bHit = true;
+	m_fOldHitTime = (float)GetTickCount64();
+	m_fOldHitAnimTime = GetTickCount64();
 
 	m_fJumpPower = 5.f;
 	m_bJump = true;
@@ -660,7 +849,7 @@ bool CPlayer::DecreaseMp(int _iValue)
 
 	m_tStat.iMp -= _iValue;
 
-	CUIMgr::Get_Instance()->ChangePlayerMp(m_tStat.iMp, m_tStat.iMaxMp);
+	CUIMgr::Get_Instance()->ChangePlayerMp(m_tStat.iMp, CStatMgr::Get_Instance()->Get_PlayerMaxMP());
 
 	return true;
 }
@@ -684,24 +873,36 @@ void CPlayer::LevelUp()
 {
 	++m_tStat.iLevel;
 	m_tStat.iMaxExp = m_tStat.iLevel * 200;
+
+	CStatMgr::Get_Instance()->AddStatPoint(10);
+	CStatMgr::Get_Instance()->AddSkillPoint(5);
+
+	IncreaseHp(CStatMgr::Get_Instance()->Get_PlayerMaxHP());
+	IncreaseMp(CStatMgr::Get_Instance()->Get_PlayerMaxMP());
+
+
+	CObj* pSkill = CAbstractFactory<CLevelUp>::Create(m_tInfo.fX, m_tInfo.fY, "Skill");
+	pSkill->Set_Target(this);
+	((CSkill*)pSkill)->Set_SkillInfo(500, 45);
+	CObjMgr::Get_Instance()->Add_Object(OBJ_SKILL, pSkill);
 }
 
 void CPlayer::IncreaseHp(int _iValue)
 {
 	m_tStat.iHp += _iValue;
-	if (m_tStat.iMaxHp < m_tStat.iHp)
-		m_tStat.iHp = m_tStat.iMaxHp;
+	if (CStatMgr::Get_Instance()->Get_PlayerMaxHP() < m_tStat.iHp)
+		m_tStat.iHp = CStatMgr::Get_Instance()->Get_PlayerMaxHP();
 
-	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, m_tStat.iMaxHp);
+	CUIMgr::Get_Instance()->ChangePlayerHp(m_tStat.iHp, CStatMgr::Get_Instance()->Get_PlayerMaxHP());
 }
 
 void CPlayer::IncreaseMp(int _iValue)
 {
 	m_tStat.iMp += _iValue;
-	if (m_tStat.iMaxMp < m_tStat.iMp)
-		m_tStat.iMp = m_tStat.iMaxMp;
+	if (CStatMgr::Get_Instance()->Get_PlayerMaxMP() < m_tStat.iMp)
+		m_tStat.iMp = CStatMgr::Get_Instance()->Get_PlayerMaxMP();
 
-	CUIMgr::Get_Instance()->ChangePlayerMp(m_tStat.iMp, m_tStat.iMaxMp);
+	CUIMgr::Get_Instance()->ChangePlayerMp(m_tStat.iMp, CStatMgr::Get_Instance()->Get_PlayerMaxMP());
 }
 
 void CPlayer::OnePlayEnd(void)
@@ -713,13 +914,16 @@ void CPlayer::OnePlayEnd(void)
 
 void CPlayer::OnCollision(CObj* _pOther)
 {
+	if (m_eCurState == DEAD)
+		return;
+
 	if (_pOther->Get_Tag() == "Monster")
 	{
 		// OnHit(_pOther);
 	}
 	else if (_pOther->Get_Tag() == "Item")
 	{
-		if (CKeyMgr::Get_Instance()->Key_Down('Z'))
+		if (CKeyMgr::Get_Instance()->Key_Down('Q'))
 		{
 			_pOther->OnHit(this);
 		}
@@ -727,20 +931,74 @@ void CPlayer::OnCollision(CObj* _pOther)
 
 
 
-	if (CKeyMgr::Get_Instance()->Key_Down('X'))
+	if (CKeyMgr::Get_Instance()->Key_Down('W'))
 	{
 		if (_pOther->Get_Tag() == "Portal_1To2")
+		{
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_2);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
 		else if (_pOther->Get_Tag() == "Portal_2To1")
+		{
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
-		else if (_pOther->Get_Tag() == "Portal_1ToBoss")
-			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_BOSS);
-		else if (_pOther->Get_Tag() == "Portal_BossTo1")
-			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
-		else if (_pOther->Get_Tag() == "Portal_4To1")
-			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_1);
-		else if (_pOther->Get_Tag() == "Portal_1To4")
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_4To3")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_3);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_3To4")
+		{
 			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_4);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_4To5")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_5);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_5To3")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_3);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_5To6")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_6);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_6To5")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_5);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_6To7")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_7);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_7To6")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_6);
+			CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
+		else if (_pOther->Get_Tag() == "Portal_7ToBoss")
+		{
+			CEventMgr::Get_Instance()->AddSceneChangeEvent(SC_STAGE_COO);
+			//CSoundMgr::Get_Instance()->StopSound(SOUND_PEFFECT3);
+			//CSoundMgr::Get_Instance()->PlaySound(L"Portal.wav", SOUND_PEFFECT3, 1);
+		}
 	}
 
 }

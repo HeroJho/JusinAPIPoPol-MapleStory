@@ -11,6 +11,7 @@ public:
 
 public:
 	void SetCurState(BOSS_STATE _eState, DIRECTION _eDir);
+	void IncreaseMp(int _iValue);
 
 public:
 	virtual void Initialize(void) override;
@@ -31,6 +32,7 @@ private:
 
 	void Skill_1_Temp();
 	void Skill_2_Temp();
+	void Skill_3_Temp();
 	void Skill_4_Temp();
 
 	virtual void OnCollision(CObj* _pOther) override;
@@ -60,8 +62,17 @@ private:
 	int   m_iSkill2_Count;
 	float m_fSkill2_DelayTime;
 	float m_fSkill2_OldDelayTime;
+
+	int   m_iSkill3_Count;
+	float m_fSkill3_DelayTime;
+	float m_fSkill3_OldDelayTime;
+
 	int   m_iSkill4_Count;
 	float m_fSkill4_DelayTime;
 	float m_fSkill4_OldDelayTime;
+
+	float m_fDomi_DelayTime;
+	float m_fDomi_OldDelayTime;
+	bool m_bDomi;
 };
 

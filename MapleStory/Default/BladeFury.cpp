@@ -3,6 +3,8 @@
 
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
+#include "UIMgr.h"
+#include "StatMgr.h"
 
 CBladeFury::CBladeFury()
 {
@@ -120,7 +122,7 @@ void CBladeFury::OnCollision(CObj* _pOther)
 
 	if (!m_pFirst)
 		m_pFirst = _pOther;
-	else if(m_pFirst == _pOther)
+	else if (m_pFirst == _pOther)
 	{
 		m_pFirst = nullptr;
 		m_bCanHit = true;
@@ -132,10 +134,12 @@ void CBladeFury::OnCollision(CObj* _pOther)
 	if (_pOther->Get_Tag() == "Monster")
 	{
 		_pOther->OnHit(this);
+
+		CUIMgr::Get_Instance()->MakeDamge(5, 1.f, m_tStat.iAt * m_tStat.iAt * 500, m_tStat.iAt * m_tStat.iAt * 600, _pOther->Get_Info().fX, _pOther->Get_Info().fY, 120.f, 35.f);
 	}
 }
 
 void CBladeFury::Motion_Change(void)
 {
-	
+
 }

@@ -9,21 +9,10 @@ private:
 	CScrollMgr();
 	~CScrollMgr();
 
-public:
-	void		Set_Target(CObj* _pTarget) { m_pTarget = _pTarget; }
-
-	float		Get_ScrollX(void) { return m_fScrollX; }
-	float		Get_ScrollY(void) { return m_fScrollY; }
-
-
-public:
-	void		Initialize(void);
-	void		Update(void);
-
 
 #pragma region Ins
 public:
-	static		CScrollMgr*		Get_Instance(void)
+	static		CScrollMgr* Get_Instance(void)
 	{
 		if (!m_pInstance)
 		{
@@ -43,8 +32,27 @@ public:
 	}
 
 private:
-	static CScrollMgr*		m_pInstance;
+	static CScrollMgr* m_pInstance;
 #pragma endregion
+
+
+public:
+	void		Set_Target(CObj* _pTarget) { m_pTarget = _pTarget; }
+
+	float		Get_ScrollX(void) { return m_fScrollX; }
+	float		Get_ScrollY(void) { return m_fScrollY; }
+
+	void		StartShake(float _fShakeValue, float _fShakeSpeed, float _fTime ,float _fATime = 0.f);
+
+public:
+	void Nomal();
+	void Shake();
+
+public:
+	void		Initialize(void);
+	void		Update(void);
+
+
 
 
 private:
@@ -54,5 +62,16 @@ private:
 
 	bool					m_bMoveX;
 	bool					m_bMoveY;
+
+	bool					m_bShake;
+	bool					m_bShakeTurn;
+	float					m_bShakeTemp;
+	float					m_fShakeValue;
+	float					m_fShakeTime;
+	float					m_fShakeOldTime;
+	float					m_fShakeSpeed;
+
+	float					m_fATime;
+	float					m_fOldATime;
 };
 

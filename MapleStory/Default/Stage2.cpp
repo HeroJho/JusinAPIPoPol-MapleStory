@@ -15,13 +15,14 @@
 #include "Monster.h"
 #include "Portal.h"
 #include "BlockBox.h"
+#include "SoundMgr.h"
 
 CStage2::CStage2()
 {
-	m_tMapSize.left = (LONG)0.f;
-	m_tMapSize.top = (LONG)0.f;
-	m_tMapSize.right = (LONG)2238.f;
-	m_tMapSize.bottom = (LONG)2035.f - 300.f;
+	m_tMapSize.left = 0.f;
+	m_tMapSize.top = 0.f;
+	m_tMapSize.right = 2238.f;
+	m_tMapSize.bottom = 2035.f - 300.f;
 }
 
 CStage2::~CStage2()
@@ -34,8 +35,28 @@ void CStage2::Initialize(void)
 	CSpawnMgr::Get_Instance()->Initialize();
 
 	// Bmp ·Îµù
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainL.bmp", L"PlayerPainL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainR.bmp", L"PlayerPainR");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPL.bmp", L"PlayerPainPL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPR.bmp", L"PlayerPainPR");
+
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene2/2_Middle.bmp", L"2_Middle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/Scene2/2_Back.bmp", L"2_Back");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/MesoBig.bmp", L"MesoBig");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Meso.bmp", L"Meso");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/RedPotion.bmp", L"RedPotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/BluePotion.bmp", L"BluePotion");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Item/Equip.bmp", L"Equip");
+
+
 	CLineMgr::Get_Instance()->Scene_2();	// 1. ¸Ê ¶óÀÎ
 	CSpawnMgr::Get_Instance()->Scene_2();   // 2. ¸Ê ½ºÆù
 	MakeMap();								// 3. ¸Ê ºí¶ô, Æ÷Å»
@@ -57,6 +78,9 @@ void CStage2::Initialize(void)
 	// Ä«¸Þ¶ó ¼³Á¤
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
 	CScrollMgr::Get_Instance()->Initialize();
+
+	CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
+	CSoundMgr::Get_Instance()->PlaySound(L"Scene_2.wav", SOUND_BGM, 0.5);
 }
 
 void CStage2::Update(void)
@@ -102,7 +126,7 @@ void CStage2::RenderBackGround(HDC hDC)
 	HDC		hBackMemDC = CBmpMgr::Get_Instance()->Find_Image(L"2_Back");
 	GdiTransparentBlt(hDC,
 		(iScrollX / 2),
-		(iScrollY / 2) - 300,
+		(iScrollY / 2) - 300.f,
 		2238,
 		2035,
 		hBackMemDC,
@@ -139,4 +163,8 @@ void CStage2::MakeMap()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(367.f, 1248.f, "Block"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(11.f, 1545.f, "Block"));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BLOCK, CAbstractFactory<CBlockBox>::Create(1771.f, 1007.f, "Block"));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_PET, CAbstractFactory<CPet>::Create(321, 1130, "Pet"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_PET, CAbstractFactory<CPet>::Create(1558, 629, "Pet"));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_PET, CAbstractFactory<CPet>::Create(1611, 1370, "Pet"));
 }

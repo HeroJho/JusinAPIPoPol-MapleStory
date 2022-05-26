@@ -17,7 +17,7 @@ public:
 public:
 	virtual void OnCollision(CObj* _pOther) override;
 	void SetFrameDir(DIRECTION _eDir);
-	void SetHoldKey(TCHAR _cHoldKey) { m_cHoldKey = _cHoldKey; }
+	void SetHoldKey(TCHAR _cHoldKey);
 
 private:
 	void		Motion_Change(void);

@@ -4,13 +4,9 @@
 #include "BmpMgr.h"
 #include "ObjMgr.h"
 #include "InvenMgr.h"
+#include "SoundMgr.h"
 
 CBluePosion::CBluePosion()
-	: m_bEat(false)
-	, m_bUpDown(false)
-	, m_fOldUpTime(0.f)
-	, m_fUpTime(0.f)
-	, m_iMove(0)
 {
 }
 
@@ -28,15 +24,15 @@ void CBluePosion::Initialize(void)
 	m_tFrame.iFrameStart = 0;
 	m_tFrame.iFrameEnd = 0;
 	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = (DWORD)1000.f;
-	m_tFrame.dwTime = (DWORD)GetTickCount64();
+	m_tFrame.dwSpeed = 1000.f;
+	m_tFrame.dwTime = GetTickCount64();
 
 
 	// 콜리젼 크기, 피봇 설정
 	m_tInfo.fCCX = 25.f;
 	m_tInfo.fCCY = 25.f;
-	m_tColPivot.x = (LONG)0.f;
-	m_tColPivot.y = (LONG)-10.f;
+	m_tColPivot.x = 0.f;
+	m_tColPivot.y = -10.f;
 	// 텍스쳐 크기 설정
 	m_tInfo.fTCX = 30.f;
 	m_tInfo.fTCY = 30.f;
@@ -79,7 +75,7 @@ void CBluePosion::Late_Update(void)
 			Set_Dead();
 		m_tInfo.fY -= 7.5f;
 
-		float fPx = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX - m_tInfo.fX;
+		float fPx = m_pTarget->Get_Info().fX - m_tInfo.fX;
 		if (fPx < -5.f)
 			m_tInfo.fX -= 3.f;
 		else if (fPx > 5.f)
@@ -136,11 +132,15 @@ void CBluePosion::OnHit(CObj* _pOther)
 	if (m_bEat)
 		return;
 
+	CSoundMgr::Get_Instance()->StopSound(SOUND_ITEM);
+	CSoundMgr::Get_Instance()->PlaySound(L"PickUpItem.wav", SOUND_ITEM, 1);
+
 	ITEM sInfo = CInvenMgr::Get_Instance()->MakeItemInfo(this);
 	CInvenMgr::Get_Instance()->Add_Item(sInfo);
 
+	m_pTarget = _pOther;
 	m_bEat = true;
-	m_fOldUpTime = (float)GetTickCount64();
+	m_fOldUpTime = GetTickCount64();
 }
 
 void CBluePosion::OnCollision(CObj* _pOther)

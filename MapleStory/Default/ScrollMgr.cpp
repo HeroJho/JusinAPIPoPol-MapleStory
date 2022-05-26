@@ -12,6 +12,12 @@ CScrollMgr::CScrollMgr()
 	, m_fScrollY(0.f)
 	, m_bMoveX(false)
 	, m_bMoveY(false)
+	, m_bShake(false)
+	, m_bShakeTemp(0.f)
+	, m_fShakeTime(0.f)
+	, m_fShakeOldTime(0.f)
+	, m_fShakeValue(0.f)
+	, m_bShakeTurn(false)
 {
 	
 }
@@ -24,8 +30,12 @@ CScrollMgr::~CScrollMgr()
 void CScrollMgr::Initialize(void)
 {
 	// x, y축 제한
+
 	if (!m_pTarget)
 		return;
+
+	m_fScrollX = -m_pTarget->Get_Info().fX + WINCX * 0.5f;
+	m_fScrollY = -m_pTarget->Get_Info().fY + WINCY * 0.5f;
 
 	int		iOffSetX = WINCX >> 1;
 	int		iOffSetY = WINCY >> 1;
@@ -50,6 +60,30 @@ void CScrollMgr::Initialize(void)
 
 void CScrollMgr::Update(void)
 {
+	if (m_bShake)
+		Shake();
+
+	Nomal();
+}
+
+
+void CScrollMgr::StartShake(float _fShakeValue, float _fShakeSpeed, float _fTime , float _fATime)
+{
+	m_bShake = true;
+	m_fShakeValue = _fShakeValue;
+	
+	m_bShakeTemp = 0.f;
+	m_fShakeTime = _fTime;
+	m_fShakeOldTime = GetTickCount64();
+
+	m_fShakeSpeed = _fShakeSpeed;
+
+	m_fATime = _fATime;
+	m_fOldATime = GetTickCount64();
+}
+
+void CScrollMgr::Nomal()
+{
 	// target이 없다면 0, 0 고정
 	if (!m_pTarget)
 		return;
@@ -60,7 +94,7 @@ void CScrollMgr::Update(void)
 
 	int		iOffSetX = WINCX >> 1;
 	int		iOffSetY = WINCY >> 1;
-	int		iItvX = 100;
+	int		iItvX = 200;
 	int		iItvY = 100;
 	if (iOffSetX - iItvX > m_pTarget->Get_Info().fX + m_fScrollX)
 	{
@@ -85,9 +119,19 @@ void CScrollMgr::Update(void)
 		float disX = m_pTarget->Get_Info().fX + m_fScrollX - iOffSetX;
 
 		if (disX > 3.f)
-			m_fScrollX += -3.f;
+		{
+			if (disX > 200.f)
+				m_fScrollX += -6.f;
+			else
+				m_fScrollX += -3.f;
+		}
 		else if (disX < -3.f)
-			m_fScrollX += 3.f;
+		{
+			if (disX < -200.f)
+				m_fScrollX += 6.f;
+			else
+				m_fScrollX += 3.f;
+		}
 		else
 			m_bMoveX = false;
 	}
@@ -96,9 +140,19 @@ void CScrollMgr::Update(void)
 		float disY = m_pTarget->Get_Info().fY + m_fScrollY - iOffSetY;
 
 		if (disY > 3.f)
-			m_fScrollY += -3.f;
+		{
+			if (disY > 200.f)
+				m_fScrollY += -6.f;
+			else
+				m_fScrollY += -3.f;
+		}
 		else if (disY < -3.f)
-			m_fScrollY += 3.f;
+		{
+			if (disY < -200.f)
+				m_fScrollY += 6.f;
+			else
+				m_fScrollY += 3.f;
+		}
 		else
 			m_bMoveY = false;
 	}
@@ -122,5 +176,47 @@ void CScrollMgr::Update(void)
 		m_fScrollY = -pCurScene->Get_MapSize().bottom + WINCY;
 	}
 
+}
+
+void CScrollMgr::Shake()
+{
+	if (m_fOldATime + m_fATime < GetTickCount64())
+	{
+		if (m_fShakeOldTime + m_fShakeTime < GetTickCount64())
+		{
+			m_bShake = false;
+			return;
+		}
+
+		if (m_bShakeTemp > m_fShakeValue)
+		{
+			m_bShakeTurn = false;
+
+		}
+		else if (m_bShakeTemp < -m_fShakeValue)
+		{
+			m_bShakeTurn = true;
+		}
+
+		if (m_bShakeTurn)
+		{
+			m_bShakeTemp += m_fShakeSpeed;
+			m_fScrollX += 10.f;
+			m_fScrollY += 10.f;
+		}
+		else
+		{
+			m_bShakeTemp -= m_fShakeSpeed;
+			m_fScrollX -= 10.f;
+			m_fScrollY -= 10.f;
+		}
+
+
+	}
+	else
+		m_fShakeOldTime = GetTickCount64();
+
+
 
 }
+

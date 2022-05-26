@@ -15,6 +15,8 @@
 #include "DarkedMage.h"
 
 #include "SpawnMgr.h"
+#include "UIMgr.h"
+#include "SoundMgr.h"
 
 CStage_Boss::CStage_Boss()
 {
@@ -32,9 +34,28 @@ CStage_Boss::~CStage_Boss()
 void CStage_Boss::Initialize(void)
 {
 	// Bmp 로딩
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerL.bmp", L"PlayerL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerR.bmp", L"PlayerR");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainL.bmp", L"PlayerPainL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainR.bmp", L"PlayerPainR");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPL.bmp", L"PlayerPainPL");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/PlayerPainPR.bmp", L"PlayerPainPR");
+
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Map/SceneBoss/Boss_Back.bmp", L"Boss_Back");
+
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/DarkedMage.bmp", L"DarkedMage");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_1/Skill_1.bmp", L"Skill_1");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_2/Skill_2.bmp", L"Skill_2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/DarkedMage/Skill_4/Skill_4.bmp", L"Skill_4");
+
+
 	CLineMgr::Get_Instance()->Scene_Boss();
 	CSpawnMgr::Get_Instance()->Initialize();
+	CUIMgr::Get_Instance()->Initialize();
 
 
 	// Player 생성
@@ -52,19 +73,19 @@ void CStage_Boss::Initialize(void)
 	pBoss->Set_Target(CObjMgr::Get_Instance()->Get_Player());
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, pBoss);
 
-
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CPortal>::Create(177.f, 685.f, "Portal_BossTo1"));
-
-
 	// 카메라 설정
 	CScrollMgr::Get_Instance()->Set_Target(CObjMgr::Get_Instance()->Get_Player());
 	CScrollMgr::Get_Instance()->Initialize();
+
+	CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
+	CSoundMgr::Get_Instance()->PlaySound(L"Scene_Boss.wav", SOUND_BGM, 0.4);
 }
 
 void CStage_Boss::Update(void)
 {
 	CObjMgr::Get_Instance()->Update();
 	CScrollMgr::Get_Instance()->Update();
+	CUIMgr::Get_Instance()->Update();
 }
 
 void CStage_Boss::Late_Update(void)
@@ -78,7 +99,8 @@ void CStage_Boss::Render(HDC hDC)
 	RenderBackGround(hDC);
 
 	CObjMgr::Get_Instance()->Render(hDC);
-	CLineMgr::Get_Instance()->Render(hDC);
+	// CLineMgr::Get_Instance()->Render(hDC);
+	CUIMgr::Get_Instance()->Render(hDC);
 }
 
 void CStage_Boss::Release(void)
@@ -91,6 +113,8 @@ void CStage_Boss::Release(void)
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_SKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSKILL);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_PET);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_VET);
 }
 
 void CStage_Boss::RenderBackGround(HDC hDC)
